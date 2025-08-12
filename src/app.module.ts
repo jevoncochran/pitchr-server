@@ -5,10 +5,21 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { LeadsModule } from './leads/leads.module';
 import { IndustriesModule } from './industries/industries.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
-  imports: [UsersModule, DatabaseModule, LeadsModule, IndustriesModule],
+  imports: [
+    UsersModule,
+    DatabaseModule,
+    LeadsModule,
+    IndustriesModule,
+    ThrottlerModule.forRoot([
+      { name: 'short', ttl: 1000, limit: 3 },
+      { name: 'long', ttl: 60000, limit: 100 },
+    ]),
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}

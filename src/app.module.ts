@@ -7,6 +7,7 @@ import { LeadsModule } from './leads/leads.module';
 import { IndustriesModule } from './industries/industries.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { BusinessTypesModule } from './business-types/business-types.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { APP_GUARD } from '@nestjs/core';
       { name: 'short', ttl: 1000, limit: 3 },
       { name: 'long', ttl: 60000, limit: 100 },
     ]),
+    BusinessTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

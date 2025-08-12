@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "public"."Lead" ALTER COLUMN "igHandle" DROP NOT NULL,
+ALTER COLUMN "igFollowerCount" DROP NOT NULL,
+ALTER COLUMN "email" DROP NOT NULL,
+ALTER COLUMN "website" DROP NOT NULL,
+ALTER COLUMN "priority" DROP NOT NULL;

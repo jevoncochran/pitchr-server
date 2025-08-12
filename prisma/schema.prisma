@@ -48,11 +48,11 @@ model Lead {
   businessType    BusinessType    @relation(fields: [businessTypeId], references: [id])
   businessTypeId    String
 
-  igHandle    String
-  igFollowerCount   Int
+  igHandle    String?
+  igFollowerCount   Int?
 
-  email   String
-  website   String
+  email   String?
+  website   String?
 
   status    Status
   
@@ -63,7 +63,7 @@ model Lead {
 
   touchPoint    TouchPoint[]
   notes   Note[]
-  priority    Priority
+  priority    Priority?
 }
 
 model Staff {

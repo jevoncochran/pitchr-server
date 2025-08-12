@@ -1,0 +1,206 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int   @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  firstName   String
+  lastName    String
+  email   String  @unique
+  role    Role
+  touchPoints   TouchPoint[]
+}
+
+enum Role {
+  STAFF
+  ADMIN
+}
+
+model Lead {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  business    String
+
+  locations Location[]
+  // Primary location reference (nullable if not set yet)
+  primaryLocation   Location?   @relation("PrimaryLocation", fields: [primaryLocationId], references: [id])
+  primaryLocationId   String?   @unique
+
+  staff   BusinessStaff[]   // All staff (including owners) linked to this lead
+
+  industry    Industry    @relation(fields: [industryId], references: [id])
+  industryId    String
+  businessType    BusinessType    @relation(fields: [businessTypeId], references: [id])
+  businessTypeId    String
+
+  igHandle    String
+  igFollowerCount   Int
+
+  email   String
+  website   String
+
+  status    Status
+  
+  isBlackOwned    Boolean   @default(false)
+  isWomanOwned    Boolean   @default(false)
+  isLatinoOwned   Boolean   @default(false)
+  isImmigrantOwned    Boolean   @default(false)
+
+  touchPoint    TouchPoint[]
+  notes   Note[]
+  priority    Priority
+}
+
+model Staff {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  firstName   String
+  lastName    String
+  email   String
+  phoneNumbers    PhoneNumber[]
+
+  businessLinks   BusinessStaff[]   // All businesses this employee is linked to
+}
+
+model BusinessStaff {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  business    Lead  @relation(fields: [businessId], references: [id])
+  businessId    String
+
+  staff   Staff @relation(fields: [staffId], references: [id])
+  staffId   String
+
+  position    Position  @relation(fields: [positionId], references: [id])
+  positionId    String
+
+  @@unique([businessId, staffId, positionId]) // Prevent duplicate same-role entries for the same business
+}
+
+model Position {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  name    String  @unique
+  businessStaff   BusinessStaff[]
+}
+
+model Industry {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  name    String  @unique 
+
+  leads   Lead[]
+}
+
+model BusinessType {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  name    String  @unique
+  leads   Lead[]
+}
+
+model Location {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  business    Lead    @relation(fields: [businessId], references: [id])
+  businessId    String
+
+  addressLine1    String
+  addressLine2   String?
+  city    String
+  state   String
+  zip   String
+
+  phoneNumbers    PhoneNumber[]
+
+  // Optional reverse relation to know if this location is primary
+  primaryForBusiness    Lead?   @relation("PrimaryLocation")
+}
+
+model PhoneNumber {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  number    String
+  label   String?
+
+  location    Location? @relation(fields: [locationId], references: [id])
+  locationId    String?
+
+  staff   Staff?    @relation(fields: [staffId], references: [id])
+  staffId   String?
+}
+
+model Note {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  text    String
+
+  lead    Lead    @relation(fields: [leadId], references: [id])
+  leadId    String
+}
+
+model TouchPoint {
+  id    String  @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  date    DateTime
+  type    TouchPointType
+
+  lead    Lead    @relation(fields: [leadId], references: [id])
+  leadId    String
+  contactedBy   User    @relation(fields: [contactedById], references: [id])
+  contactedById   Int
+
+  receivedResponse    Boolean
+  summary   String
+}
+
+enum Status {
+  COLD
+  WARM
+  CONVERTED
+}
+
+enum Priority {
+  ONE 
+  TWO
+  THREE
+}
+
+enum TouchPointType {
+  EMAIL
+  INSTAGRAM_DM
+  CALL
+  TEXT
+  IN_PERSON
+}

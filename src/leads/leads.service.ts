@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLeadDto } from './dto/create-lead.dto';
-import { UpdateLeadDto } from './dto/update-lead.dto';
+import { Prisma } from 'generated/prisma';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class LeadsService {
-  create(createLeadDto: CreateLeadDto) {
-    return 'This action adds a new lead';
+  constructor(private readonly databaseService: DatabaseService) {}
+
+  async create(createLeadDto: Prisma.LeadCreateInput) {
+    return this.databaseService.lead.create({ data: createLeadDto });
   }
 
-  findAll() {
-    return `This action returns all leads`;
+  async findAll() {
+    return this.databaseService.lead.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lead`;
+  async findOne(id: string) {
+    return this.databaseService.lead.findUnique({ where: { id } });
   }
 
-  update(id: number, updateLeadDto: UpdateLeadDto) {
-    return `This action updates a #${id} lead`;
+  async update(id: string, updateLeadDto: Prisma.LeadUpdateInput) {
+    return this.databaseService.lead.update({
+      where: { id },
+      data: updateLeadDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lead`;
+  async remove(id: string) {
+    return this.databaseService.lead.delete({ where: { id } });
   }
 }

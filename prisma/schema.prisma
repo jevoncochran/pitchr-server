@@ -185,8 +185,8 @@ model TouchPoint {
   contactedBy   User    @relation(fields: [contactedById], references: [id])
   contactedById   String
 
-  receivedResponse    Boolean
-  summary   String
+  receivedResponse    Boolean   @default(false)
+  summary   String?
 }
 
 enum Status {

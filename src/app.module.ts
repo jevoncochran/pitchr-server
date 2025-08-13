@@ -12,6 +12,7 @@ import { NotesModule } from './notes/notes.module';
 import { TouchpointsModule } from './touchpoints/touchpoints.module';
 import { PositionsModule } from './positions/positions.module';
 import { StaffModule } from './staff/staff.module';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { StaffModule } from './staff/staff.module';
     TouchpointsModule,
     PositionsModule,
     StaffModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

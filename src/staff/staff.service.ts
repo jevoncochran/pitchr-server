@@ -6,26 +6,26 @@ import { DatabaseService } from 'src/database/database.service';
 export class StaffService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createStaffDto: Prisma.StaffCreateInput) {
+  async create(createStaffDto: Prisma.StaffCreateInput) {
     return this.databaseService.staff.create({ data: createStaffDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.databaseService.staff.findMany();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.databaseService.staff.findUnique({ where: { id } });
   }
 
-  update(id: string, updateStaffDto: Prisma.StaffUpdateInput) {
+  async update(id: string, updateStaffDto: Prisma.StaffUpdateInput) {
     return this.databaseService.staff.update({
       where: { id },
       data: updateStaffDto,
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.databaseService.staff.delete({ where: { id } });
   }
 }

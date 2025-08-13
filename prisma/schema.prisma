@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id    Int   @id @default(autoincrement())
+  id    String   @id @default(uuid())
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   firstName   String
@@ -23,6 +23,7 @@ model User {
   email   String  @unique
   role    Role
   touchPoints   TouchPoint[]
+  notes   Note[]
 }
 
 enum Role {
@@ -166,6 +167,9 @@ model Note {
 
   lead    Lead    @relation(fields: [leadId], references: [id])
   leadId    String
+
+  author    User    @relation(fields: [userId], references: [id])
+  userId    String
 }
 
 model TouchPoint {
@@ -179,7 +183,7 @@ model TouchPoint {
   lead    Lead    @relation(fields: [leadId], references: [id])
   leadId    String
   contactedBy   User    @relation(fields: [contactedById], references: [id])
-  contactedById   Int
+  contactedById   String
 
   receivedResponse    Boolean
   summary   String

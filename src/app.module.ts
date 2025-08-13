@@ -8,6 +8,7 @@ import { IndustriesModule } from './industries/industries.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { BusinessTypesModule } from './business-types/business-types.module';
+import { NotesModule } from './notes/notes.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { BusinessTypesModule } from './business-types/business-types.module';
       { name: 'long', ttl: 60000, limit: 100 },
     ]),
     BusinessTypesModule,
+    NotesModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

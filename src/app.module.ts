@@ -11,6 +11,7 @@ import { BusinessTypesModule } from './business-types/business-types.module';
 import { NotesModule } from './notes/notes.module';
 import { TouchpointsModule } from './touchpoints/touchpoints.module';
 import { PositionsModule } from './positions/positions.module';
+import { StaffModule } from './staff/staff.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PositionsModule } from './positions/positions.module';
     NotesModule,
     TouchpointsModule,
     PositionsModule,
+    StaffModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

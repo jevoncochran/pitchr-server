@@ -15,6 +15,8 @@ import { StaffModule } from './staff/staff.module';
 import { LocationsModule } from './locations/locations.module';
 import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
 import { BusinessStaffModule } from './business-staff/business-staff.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -34,8 +36,13 @@ import { BusinessStaffModule } from './business-staff/business-staff.module';
     LocationsModule,
     PhoneNumbersModule,
     BusinessStaffModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+  ],
 })
 export class AppModule {}

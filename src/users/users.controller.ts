@@ -23,7 +23,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
+  findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
@@ -37,7 +37,7 @@ export class UsersController {
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id') id: string,
     @Body(ValidationPipe)
     updateUserDto: Prisma.UserUpdateInput,
   ) {
@@ -45,7 +45,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: string) {
+  delete(@Param('id') id: string) {
     return this.usersService.delete(id);
   }
 }

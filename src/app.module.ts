@@ -14,6 +14,7 @@ import { PositionsModule } from './positions/positions.module';
 import { StaffModule } from './staff/staff.module';
 import { LocationsModule } from './locations/locations.module';
 import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
+import { BusinessStaffModule } from './business-staff/business-staff.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
     StaffModule,
     LocationsModule,
     PhoneNumbersModule,
+    BusinessStaffModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

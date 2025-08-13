@@ -6,28 +6,31 @@ import { DatabaseService } from 'src/database/database.service';
 export class PhoneNumbersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createPhoneNumberDto: Prisma.PhoneNumberCreateInput) {
+  async create(createPhoneNumberDto: Prisma.PhoneNumberCreateInput) {
     return this.databaseService.phoneNumber.create({
       data: createPhoneNumberDto,
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.databaseService.phoneNumber.findMany();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.databaseService.phoneNumber.findUnique({ where: { id } });
   }
 
-  update(id: string, updatePhoneNumberDto: Prisma.PhoneNumberUpdateInput) {
+  async update(
+    id: string,
+    updatePhoneNumberDto: Prisma.PhoneNumberUpdateInput,
+  ) {
     return this.databaseService.phoneNumber.update({
       where: { id },
       data: updatePhoneNumberDto,
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.databaseService.phoneNumber.delete({ where: { id } });
   }
 }

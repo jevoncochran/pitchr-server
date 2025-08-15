@@ -35,6 +35,23 @@ export class LeadsService {
     return expandedLeads;
   }
 
+  async findNewUncoctactedLeads() {
+    const newUncoctactedLeads = [];
+    const allLeads = await this.databaseService.lead.findMany();
+
+    for (const lead of allLeads) {
+      const touchpoints = await this.databaseService.touchPoint.findMany({
+        where: { leadId: lead.id },
+      });
+
+      if (touchpoints.length === 0) {
+        newUncoctactedLeads.push(lead);
+      }
+    }
+
+    return newUncoctactedLeads;
+  }
+
   async findPostVisitLeads() {
     const allLeads = await this.databaseService.lead.findMany();
     const postVisitLeads = [];

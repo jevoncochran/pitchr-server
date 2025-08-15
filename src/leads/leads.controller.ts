@@ -24,8 +24,14 @@ export class LeadsController {
     return this.leadsService.findAll();
   }
 
-  @Get('post-visit')
+  // Leads that have not been contacted at all
+  @Get('new')
+  findNewUncoctactedLeads() {
+    return this.leadsService.findNewUncoctactedLeads();
+  }
+
   // Leads that have been visited in person and now require immediate follow-up
+  @Get('post-visit')
   findPostVisitLeads() {
     return this.leadsService.findPostVisitLeads();
   }

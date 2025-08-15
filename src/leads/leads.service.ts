@@ -11,7 +11,28 @@ export class LeadsService {
   }
 
   async findAll() {
-    return this.databaseService.lead.findMany();
+    const leads = await this.databaseService.lead.findMany();
+
+    const expandedLeads = [];
+    for (const lead of leads) {
+      const industry = await this.databaseService.industry.findUnique({
+        where: { id: lead.industryId },
+      });
+
+      const businessType = await this.databaseService.businessType.findUnique({
+        where: { id: lead.businessTypeId },
+      });
+
+      const expandedLead = {
+        ...lead,
+        industry: industry?.name,
+        businessType: businessType?.name,
+      };
+
+      expandedLeads.push(expandedLead);
+    }
+
+    return expandedLeads;
   }
 
   async findOne(id: string) {

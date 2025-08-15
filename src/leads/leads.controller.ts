@@ -24,6 +24,18 @@ export class LeadsController {
     return this.leadsService.findAll();
   }
 
+  @Get('post-visit')
+  // Leads that have been visited in person and now require immediate follow-up
+  findPostVisitLeads() {
+    return this.leadsService.findPostVisitLeads();
+  }
+
+  // Leads that have not been contacted in 7 days or more
+  @Get('estranged')
+  findEstrangedLeads() {
+    return this.leadsService.findEstrangedLeads();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.leadsService.findOne(id);

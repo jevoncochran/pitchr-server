@@ -11,28 +11,19 @@ export class LeadsService {
   }
 
   async findAll() {
-    const leads = await this.databaseService.lead.findMany();
-
-    const expandedLeads = [];
-    for (const lead of leads) {
-      const industry = await this.databaseService.industry.findUnique({
-        where: { id: lead.industryId },
-      });
-
-      const businessType = await this.databaseService.businessType.findUnique({
-        where: { id: lead.businessTypeId },
-      });
-
-      const expandedLead = {
-        ...lead,
-        industry: industry?.name,
-        businessType: businessType?.name,
-      };
-
-      expandedLeads.push(expandedLead);
-    }
-
-    return expandedLeads;
+    return this.databaseService.lead.findMany({
+      include: {
+        industry: true,
+        businessType: true,
+        touchPoint: {
+          orderBy: { date: 'desc' },
+          take: 1,
+        },
+        assignedTo: {
+          select: { id: true, firstName: true, lastName: true },
+        },
+      },
+    });
   }
 
   async findNewUncoctactedLeads() {
@@ -105,7 +96,38 @@ export class LeadsService {
   }
 
   async findOne(id: string) {
-    return this.databaseService.lead.findUnique({ where: { id } });
+    return this.databaseService.lead.findUnique({
+      where: { id },
+      include: {
+        industry: true,
+        businessType: true,
+        locations: {
+          include: { phoneNumbers: true },
+        },
+        touchPoint: {
+          orderBy: { date: 'desc' },
+          include: {
+            contactedBy: {
+              select: { id: true, firstName: true, lastName: true },
+            },
+          },
+        },
+        notes: {
+          orderBy: { createdAt: 'desc' },
+          include: {
+            author: {
+              select: { id: true, firstName: true, lastName: true },
+            },
+          },
+        },
+        reminders: {
+          orderBy: { dueDate: 'asc' },
+        },
+        assignedTo: {
+          select: { id: true, firstName: true, lastName: true },
+        },
+      },
+    });
   }
 
   async update(id: string, updateLeadDto: Prisma.LeadUpdateInput) {

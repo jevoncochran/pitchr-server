@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -25,6 +25,7 @@ model User {
   role    Role
   touchPoints   TouchPoint[]
   notes   Note[]
+  assignedLeads Lead[]    @relation("LeadAssignment")
 }
 
 enum Role {
@@ -56,8 +57,12 @@ model Lead {
   email   String?
   website   String?
 
-  status    Status
-  
+  pipelineStage   PipelineStage   @default(NEW)
+  source          LeadSource?
+  discoveredVia   DiscoveredVia?
+  discoveredViaOther  String?
+  convertedAt     DateTime?
+
   isBlackOwned    Boolean   @default(false)
   isWomanOwned    Boolean   @default(false)
   isLatinoOwned   Boolean   @default(false)
@@ -65,7 +70,14 @@ model Lead {
 
   touchPoint    TouchPoint[]
   notes   Note[]
+  reminders     Reminder[]
   priority    Priority?
+
+  sequenceStep    Int     @default(0)
+  sequenceActive  Boolean @default(false)
+
+  assignedTo    User?    @relation("LeadAssignment", fields: [assignedToId], references: [id])
+  assignedToId  String?
 }
 
 model Staff {
@@ -190,10 +202,31 @@ model TouchPoint {
   summary   String?
 }
 
-enum Status {
-  COLD
-  WARM
+enum PipelineStage {
+  NEW
+  CONTACTED
+  ENGAGED
+  MEETING_SCHEDULED
+  PROPOSAL_SENT
   CONVERTED
+  DORMANT
+}
+
+enum LeadSource {
+  OUTREACH
+  REFERRAL
+  FORM
+}
+
+enum DiscoveredVia {
+  OUTREACH
+  REFERRAL
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  YOUTUBE
+  GOOGLE
+  OTHER
 }
 
 enum Priority {
@@ -208,10 +241,31 @@ enum TouchPointType {
   CALL
   TEXT
   IN_PERSON
+  MEETING
 }
 
 enum PhoneType {
   MOBILE
   OFFICE
   HOME
+}
+
+model Reminder {
+  id          String         @id @default(uuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  lead        Lead           @relation(fields: [leadId], references: [id])
+  leadId      String
+
+  type        TouchPointType
+  dueDate     DateTime
+  note        String?
+
+  completed        Boolean        @default(false)
+  completedAt      DateTime?
+
+  isCheckIn        Boolean        @default(false)
+  isResponseCheck  Boolean        @default(false)
+  isEmailSentCheck Boolean        @default(false)
 }

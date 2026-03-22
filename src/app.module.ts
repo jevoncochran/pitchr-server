@@ -16,6 +16,7 @@ import { LocationsModule } from './locations/locations.module';
 import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
 import { BusinessStaffModule } from './business-staff/business-staff.module';
 import { AuthModule } from './auth/auth.module';
+import { RemindersModule } from './reminders/reminders.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
@@ -37,6 +38,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     PhoneNumbersModule,
     BusinessStaffModule,
     AuthModule,
+    RemindersModule,
   ],
   controllers: [AppController],
   providers: [

@@ -13,7 +13,13 @@ export class TouchpointsService {
   }
 
   async findAll() {
-    return this.databaseService.touchPoint.findMany();
+    return this.databaseService.touchPoint.findMany({
+      orderBy: { date: 'desc' },
+      include: {
+        lead: { select: { id: true, business: true } },
+        contactedBy: { select: { id: true, firstName: true, lastName: true } },
+      },
+    });
   }
 
   async findOne(id: string) {

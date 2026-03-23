@@ -71,6 +71,7 @@ model Lead {
   touchPoint    TouchPoint[]
   notes   Note[]
   reminders     Reminder[]
+  attachments   Attachment[]
   priority    Priority?
 
   sequenceStep    Int     @default(0)
@@ -195,6 +196,25 @@ model TouchPoint {
   sequencePosition    SequencePosition?
 
   reminders   Reminder[]
+  attachments Attachment[]
+}
+
+model Attachment {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id])
+
+  touchpointId String?
+  touchpoint   TouchPoint? @relation(fields: [touchpointId], references: [id])
+
+  url         String
+  key         String
+  filename    String
+  mimeType    String
+  size        Int
+  caption     String?
 }
 
 enum SequencePosition {

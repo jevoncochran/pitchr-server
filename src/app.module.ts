@@ -15,6 +15,7 @@ import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
 import { AuthModule } from './auth/auth.module';
 import { RemindersModule } from './reminders/reminders.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { AttachmentsModule } from './attachments/attachments.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
@@ -35,6 +36,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     AuthModule,
     RemindersModule,
     ContactsModule,
+    AttachmentsModule,
   ],
   controllers: [AppController],
   providers: [

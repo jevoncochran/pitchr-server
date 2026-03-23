@@ -59,6 +59,11 @@ export type Note = $Result.DefaultSelection<Prisma.$NotePayload>
  */
 export type TouchPoint = $Result.DefaultSelection<Prisma.$TouchPointPayload>
 /**
+ * Model Attachment
+ * 
+ */
+export type Attachment = $Result.DefaultSelection<Prisma.$AttachmentPayload>
+/**
  * Model Reminder
  * 
  */
@@ -409,6 +414,16 @@ export class PrismaClient<
     * ```
     */
   get touchPoint(): Prisma.TouchPointDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attachment`: Exposes CRUD operations for the **Attachment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Attachments
+    * const attachments = await prisma.attachment.findMany()
+    * ```
+    */
+  get attachment(): Prisma.AttachmentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.reminder`: Exposes CRUD operations for the **Reminder** model.
@@ -868,6 +883,7 @@ export namespace Prisma {
     PhoneNumber: 'PhoneNumber',
     Note: 'Note',
     TouchPoint: 'TouchPoint',
+    Attachment: 'Attachment',
     Reminder: 'Reminder'
   };
 
@@ -887,7 +903,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "lead" | "contact" | "industry" | "businessType" | "location" | "phoneNumber" | "note" | "touchPoint" | "reminder"
+      modelProps: "user" | "lead" | "contact" | "industry" | "businessType" | "location" | "phoneNumber" | "note" | "touchPoint" | "attachment" | "reminder"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1557,6 +1573,80 @@ export namespace Prisma {
           }
         }
       }
+      Attachment: {
+        payload: Prisma.$AttachmentPayload<ExtArgs>
+        fields: Prisma.AttachmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttachmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttachmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          findFirst: {
+            args: Prisma.AttachmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttachmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          findMany: {
+            args: Prisma.AttachmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+          }
+          create: {
+            args: Prisma.AttachmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          createMany: {
+            args: Prisma.AttachmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AttachmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+          }
+          delete: {
+            args: Prisma.AttachmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          update: {
+            args: Prisma.AttachmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.AttachmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttachmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AttachmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.AttachmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttachmentPayload>
+          }
+          aggregate: {
+            args: Prisma.AttachmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttachment>
+          }
+          groupBy: {
+            args: Prisma.AttachmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttachmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AttachmentCountArgs<ExtArgs>
+            result: $Utils.Optional<AttachmentCountAggregateOutputType> | number
+          }
+        }
+      }
       Reminder: {
         payload: Prisma.$ReminderPayload<ExtArgs>
         fields: Prisma.ReminderFieldRefs
@@ -1732,6 +1822,7 @@ export namespace Prisma {
     phoneNumber?: PhoneNumberOmit
     note?: NoteOmit
     touchPoint?: TouchPointOmit
+    attachment?: AttachmentOmit
     reminder?: ReminderOmit
   }
 
@@ -1886,6 +1977,7 @@ export namespace Prisma {
     touchPoint: number
     notes: number
     reminders: number
+    attachments: number
     referrals: number
   }
 
@@ -1895,6 +1987,7 @@ export namespace Prisma {
     touchPoint?: boolean | LeadCountOutputTypeCountTouchPointArgs
     notes?: boolean | LeadCountOutputTypeCountNotesArgs
     reminders?: boolean | LeadCountOutputTypeCountRemindersArgs
+    attachments?: boolean | LeadCountOutputTypeCountAttachmentsArgs
     referrals?: boolean | LeadCountOutputTypeCountReferralsArgs
   }
 
@@ -1942,6 +2035,13 @@ export namespace Prisma {
    */
   export type LeadCountOutputTypeCountRemindersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReminderWhereInput
+  }
+
+  /**
+   * LeadCountOutputType without action
+   */
+  export type LeadCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
   }
 
   /**
@@ -2051,10 +2151,12 @@ export namespace Prisma {
 
   export type TouchPointCountOutputType = {
     reminders: number
+    attachments: number
   }
 
   export type TouchPointCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reminders?: boolean | TouchPointCountOutputTypeCountRemindersArgs
+    attachments?: boolean | TouchPointCountOutputTypeCountAttachmentsArgs
   }
 
   // Custom InputTypes
@@ -2073,6 +2175,13 @@ export namespace Prisma {
    */
   export type TouchPointCountOutputTypeCountRemindersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReminderWhereInput
+  }
+
+  /**
+   * TouchPointCountOutputType without action
+   */
+  export type TouchPointCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
   }
 
 
@@ -3711,6 +3820,7 @@ export namespace Prisma {
     touchPoint?: boolean | Lead$touchPointArgs<ExtArgs>
     notes?: boolean | Lead$notesArgs<ExtArgs>
     reminders?: boolean | Lead$remindersArgs<ExtArgs>
+    attachments?: boolean | Lead$attachmentsArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
     referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
     referrals?: boolean | Lead$referralsArgs<ExtArgs>
@@ -3851,6 +3961,7 @@ export namespace Prisma {
     touchPoint?: boolean | Lead$touchPointArgs<ExtArgs>
     notes?: boolean | Lead$notesArgs<ExtArgs>
     reminders?: boolean | Lead$remindersArgs<ExtArgs>
+    attachments?: boolean | Lead$attachmentsArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
     referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
     referrals?: boolean | Lead$referralsArgs<ExtArgs>
@@ -3882,6 +3993,7 @@ export namespace Prisma {
       touchPoint: Prisma.$TouchPointPayload<ExtArgs>[]
       notes: Prisma.$NotePayload<ExtArgs>[]
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
+      attachments: Prisma.$AttachmentPayload<ExtArgs>[]
       assignedTo: Prisma.$UserPayload<ExtArgs> | null
       referredByLead: Prisma.$LeadPayload<ExtArgs> | null
       referrals: Prisma.$LeadPayload<ExtArgs>[]
@@ -4324,6 +4436,7 @@ export namespace Prisma {
     touchPoint<T extends Lead$touchPointArgs<ExtArgs> = {}>(args?: Subset<T, Lead$touchPointArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TouchPointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notes<T extends Lead$notesArgs<ExtArgs> = {}>(args?: Subset<T, Lead$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reminders<T extends Lead$remindersArgs<ExtArgs> = {}>(args?: Subset<T, Lead$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends Lead$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignedTo<T extends Lead$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Lead$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     referredByLead<T extends Lead$referredByLeadArgs<ExtArgs> = {}>(args?: Subset<T, Lead$referredByLeadArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     referrals<T extends Lead$referralsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4923,6 +5036,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReminderScalarFieldEnum | ReminderScalarFieldEnum[]
+  }
+
+  /**
+   * Lead.attachments
+   */
+  export type Lead$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    cursor?: AttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
   }
 
   /**
@@ -11795,6 +11932,7 @@ export namespace Prisma {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     contactedBy?: boolean | UserDefaultArgs<ExtArgs>
     reminders?: boolean | TouchPoint$remindersArgs<ExtArgs>
+    attachments?: boolean | TouchPoint$attachmentsArgs<ExtArgs>
     _count?: boolean | TouchPointCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["touchPoint"]>
 
@@ -11846,6 +11984,7 @@ export namespace Prisma {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     contactedBy?: boolean | UserDefaultArgs<ExtArgs>
     reminders?: boolean | TouchPoint$remindersArgs<ExtArgs>
+    attachments?: boolean | TouchPoint$attachmentsArgs<ExtArgs>
     _count?: boolean | TouchPointCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TouchPointIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11863,6 +12002,7 @@ export namespace Prisma {
       lead: Prisma.$LeadPayload<ExtArgs>
       contactedBy: Prisma.$UserPayload<ExtArgs>
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
+      attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12272,6 +12412,7 @@ export namespace Prisma {
     lead<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     contactedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     reminders<T extends TouchPoint$remindersArgs<ExtArgs> = {}>(args?: Subset<T, TouchPoint$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends TouchPoint$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, TouchPoint$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12731,6 +12872,30 @@ export namespace Prisma {
   }
 
   /**
+   * TouchPoint.attachments
+   */
+  export type TouchPoint$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    cursor?: AttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
    * TouchPoint without action
    */
   export type TouchPointDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12746,6 +12911,1190 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TouchPointInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Attachment
+   */
+
+  export type AggregateAttachment = {
+    _count: AttachmentCountAggregateOutputType | null
+    _avg: AttachmentAvgAggregateOutputType | null
+    _sum: AttachmentSumAggregateOutputType | null
+    _min: AttachmentMinAggregateOutputType | null
+    _max: AttachmentMaxAggregateOutputType | null
+  }
+
+  export type AttachmentAvgAggregateOutputType = {
+    size: number | null
+  }
+
+  export type AttachmentSumAggregateOutputType = {
+    size: number | null
+  }
+
+  export type AttachmentMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    leadId: string | null
+    touchpointId: string | null
+    url: string | null
+    key: string | null
+    filename: string | null
+    mimeType: string | null
+    size: number | null
+    caption: string | null
+  }
+
+  export type AttachmentMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    leadId: string | null
+    touchpointId: string | null
+    url: string | null
+    key: string | null
+    filename: string | null
+    mimeType: string | null
+    size: number | null
+    caption: string | null
+  }
+
+  export type AttachmentCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    leadId: number
+    touchpointId: number
+    url: number
+    key: number
+    filename: number
+    mimeType: number
+    size: number
+    caption: number
+    _all: number
+  }
+
+
+  export type AttachmentAvgAggregateInputType = {
+    size?: true
+  }
+
+  export type AttachmentSumAggregateInputType = {
+    size?: true
+  }
+
+  export type AttachmentMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    leadId?: true
+    touchpointId?: true
+    url?: true
+    key?: true
+    filename?: true
+    mimeType?: true
+    size?: true
+    caption?: true
+  }
+
+  export type AttachmentMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    leadId?: true
+    touchpointId?: true
+    url?: true
+    key?: true
+    filename?: true
+    mimeType?: true
+    size?: true
+    caption?: true
+  }
+
+  export type AttachmentCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    leadId?: true
+    touchpointId?: true
+    url?: true
+    key?: true
+    filename?: true
+    mimeType?: true
+    size?: true
+    caption?: true
+    _all?: true
+  }
+
+  export type AttachmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attachment to aggregate.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Attachments
+    **/
+    _count?: true | AttachmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttachmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttachmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttachmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttachmentMaxAggregateInputType
+  }
+
+  export type GetAttachmentAggregateType<T extends AttachmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttachment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttachment[P]>
+      : GetScalarType<T[P], AggregateAttachment[P]>
+  }
+
+
+
+
+  export type AttachmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithAggregationInput | AttachmentOrderByWithAggregationInput[]
+    by: AttachmentScalarFieldEnum[] | AttachmentScalarFieldEnum
+    having?: AttachmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttachmentCountAggregateInputType | true
+    _avg?: AttachmentAvgAggregateInputType
+    _sum?: AttachmentSumAggregateInputType
+    _min?: AttachmentMinAggregateInputType
+    _max?: AttachmentMaxAggregateInputType
+  }
+
+  export type AttachmentGroupByOutputType = {
+    id: string
+    createdAt: Date
+    leadId: string
+    touchpointId: string | null
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption: string | null
+    _count: AttachmentCountAggregateOutputType | null
+    _avg: AttachmentAvgAggregateOutputType | null
+    _sum: AttachmentSumAggregateOutputType | null
+    _min: AttachmentMinAggregateOutputType | null
+    _max: AttachmentMaxAggregateOutputType | null
+  }
+
+  type GetAttachmentGroupByPayload<T extends AttachmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttachmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttachmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttachmentGroupByOutputType[P]>
+            : GetScalarType<T[P], AttachmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttachmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    leadId?: boolean
+    touchpointId?: boolean
+    url?: boolean
+    key?: boolean
+    filename?: boolean
+    mimeType?: boolean
+    size?: boolean
+    caption?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchpoint?: boolean | Attachment$touchpointArgs<ExtArgs>
+  }, ExtArgs["result"]["attachment"]>
+
+  export type AttachmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    leadId?: boolean
+    touchpointId?: boolean
+    url?: boolean
+    key?: boolean
+    filename?: boolean
+    mimeType?: boolean
+    size?: boolean
+    caption?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchpoint?: boolean | Attachment$touchpointArgs<ExtArgs>
+  }, ExtArgs["result"]["attachment"]>
+
+  export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    leadId?: boolean
+    touchpointId?: boolean
+    url?: boolean
+    key?: boolean
+    filename?: boolean
+    mimeType?: boolean
+    size?: boolean
+    caption?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchpoint?: boolean | Attachment$touchpointArgs<ExtArgs>
+  }, ExtArgs["result"]["attachment"]>
+
+  export type AttachmentSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    leadId?: boolean
+    touchpointId?: boolean
+    url?: boolean
+    key?: boolean
+    filename?: boolean
+    mimeType?: boolean
+    size?: boolean
+    caption?: boolean
+  }
+
+  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "leadId" | "touchpointId" | "url" | "key" | "filename" | "mimeType" | "size" | "caption", ExtArgs["result"]["attachment"]>
+  export type AttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchpoint?: boolean | Attachment$touchpointArgs<ExtArgs>
+  }
+  export type AttachmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchpoint?: boolean | Attachment$touchpointArgs<ExtArgs>
+  }
+  export type AttachmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchpoint?: boolean | Attachment$touchpointArgs<ExtArgs>
+  }
+
+  export type $AttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Attachment"
+    objects: {
+      lead: Prisma.$LeadPayload<ExtArgs>
+      touchpoint: Prisma.$TouchPointPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      leadId: string
+      touchpointId: string | null
+      url: string
+      key: string
+      filename: string
+      mimeType: string
+      size: number
+      caption: string | null
+    }, ExtArgs["result"]["attachment"]>
+    composites: {}
+  }
+
+  type AttachmentGetPayload<S extends boolean | null | undefined | AttachmentDefaultArgs> = $Result.GetResult<Prisma.$AttachmentPayload, S>
+
+  type AttachmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttachmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttachmentCountAggregateInputType | true
+    }
+
+  export interface AttachmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Attachment'], meta: { name: 'Attachment' } }
+    /**
+     * Find zero or one Attachment that matches the filter.
+     * @param {AttachmentFindUniqueArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttachmentFindUniqueArgs>(args: SelectSubset<T, AttachmentFindUniqueArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Attachment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttachmentFindUniqueOrThrowArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttachmentFindUniqueOrThrowArgs>(args: SelectSubset<T, AttachmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attachment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentFindFirstArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttachmentFindFirstArgs>(args?: SelectSubset<T, AttachmentFindFirstArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attachment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentFindFirstOrThrowArgs} args - Arguments to find a Attachment
+     * @example
+     * // Get one Attachment
+     * const attachment = await prisma.attachment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttachmentFindFirstOrThrowArgs>(args?: SelectSubset<T, AttachmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Attachments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Attachments
+     * const attachments = await prisma.attachment.findMany()
+     * 
+     * // Get first 10 Attachments
+     * const attachments = await prisma.attachment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attachmentWithIdOnly = await prisma.attachment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttachmentFindManyArgs>(args?: SelectSubset<T, AttachmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Attachment.
+     * @param {AttachmentCreateArgs} args - Arguments to create a Attachment.
+     * @example
+     * // Create one Attachment
+     * const Attachment = await prisma.attachment.create({
+     *   data: {
+     *     // ... data to create a Attachment
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttachmentCreateArgs>(args: SelectSubset<T, AttachmentCreateArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Attachments.
+     * @param {AttachmentCreateManyArgs} args - Arguments to create many Attachments.
+     * @example
+     * // Create many Attachments
+     * const attachment = await prisma.attachment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttachmentCreateManyArgs>(args?: SelectSubset<T, AttachmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Attachments and returns the data saved in the database.
+     * @param {AttachmentCreateManyAndReturnArgs} args - Arguments to create many Attachments.
+     * @example
+     * // Create many Attachments
+     * const attachment = await prisma.attachment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Attachments and only return the `id`
+     * const attachmentWithIdOnly = await prisma.attachment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AttachmentCreateManyAndReturnArgs>(args?: SelectSubset<T, AttachmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Attachment.
+     * @param {AttachmentDeleteArgs} args - Arguments to delete one Attachment.
+     * @example
+     * // Delete one Attachment
+     * const Attachment = await prisma.attachment.delete({
+     *   where: {
+     *     // ... filter to delete one Attachment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttachmentDeleteArgs>(args: SelectSubset<T, AttachmentDeleteArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Attachment.
+     * @param {AttachmentUpdateArgs} args - Arguments to update one Attachment.
+     * @example
+     * // Update one Attachment
+     * const attachment = await prisma.attachment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttachmentUpdateArgs>(args: SelectSubset<T, AttachmentUpdateArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Attachments.
+     * @param {AttachmentDeleteManyArgs} args - Arguments to filter Attachments to delete.
+     * @example
+     * // Delete a few Attachments
+     * const { count } = await prisma.attachment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttachmentDeleteManyArgs>(args?: SelectSubset<T, AttachmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Attachments
+     * const attachment = await prisma.attachment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttachmentUpdateManyArgs>(args: SelectSubset<T, AttachmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attachments and returns the data updated in the database.
+     * @param {AttachmentUpdateManyAndReturnArgs} args - Arguments to update many Attachments.
+     * @example
+     * // Update many Attachments
+     * const attachment = await prisma.attachment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Attachments and only return the `id`
+     * const attachmentWithIdOnly = await prisma.attachment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AttachmentUpdateManyAndReturnArgs>(args: SelectSubset<T, AttachmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Attachment.
+     * @param {AttachmentUpsertArgs} args - Arguments to update or create a Attachment.
+     * @example
+     * // Update or create a Attachment
+     * const attachment = await prisma.attachment.upsert({
+     *   create: {
+     *     // ... data to create a Attachment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Attachment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttachmentUpsertArgs>(args: SelectSubset<T, AttachmentUpsertArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Attachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentCountArgs} args - Arguments to filter Attachments to count.
+     * @example
+     * // Count the number of Attachments
+     * const count = await prisma.attachment.count({
+     *   where: {
+     *     // ... the filter for the Attachments we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttachmentCountArgs>(
+      args?: Subset<T, AttachmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttachmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Attachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttachmentAggregateArgs>(args: Subset<T, AttachmentAggregateArgs>): Prisma.PrismaPromise<GetAttachmentAggregateType<T>>
+
+    /**
+     * Group by Attachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttachmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttachmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttachmentGroupByArgs['orderBy'] }
+        : { orderBy?: AttachmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttachmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttachmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Attachment model
+   */
+  readonly fields: AttachmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Attachment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lead<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    touchpoint<T extends Attachment$touchpointArgs<ExtArgs> = {}>(args?: Subset<T, Attachment$touchpointArgs<ExtArgs>>): Prisma__TouchPointClient<$Result.GetResult<Prisma.$TouchPointPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Attachment model
+   */
+  interface AttachmentFieldRefs {
+    readonly id: FieldRef<"Attachment", 'String'>
+    readonly createdAt: FieldRef<"Attachment", 'DateTime'>
+    readonly leadId: FieldRef<"Attachment", 'String'>
+    readonly touchpointId: FieldRef<"Attachment", 'String'>
+    readonly url: FieldRef<"Attachment", 'String'>
+    readonly key: FieldRef<"Attachment", 'String'>
+    readonly filename: FieldRef<"Attachment", 'String'>
+    readonly mimeType: FieldRef<"Attachment", 'String'>
+    readonly size: FieldRef<"Attachment", 'Int'>
+    readonly caption: FieldRef<"Attachment", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Attachment findUnique
+   */
+  export type AttachmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment findUniqueOrThrow
+   */
+  export type AttachmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment findFirst
+   */
+  export type AttachmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attachments.
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attachments.
+     */
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Attachment findFirstOrThrow
+   */
+  export type AttachmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachment to fetch.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attachments.
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attachments.
+     */
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Attachment findMany
+   */
+  export type AttachmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Attachments to fetch.
+     */
+    where?: AttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attachments to fetch.
+     */
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Attachments.
+     */
+    cursor?: AttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attachments.
+     */
+    skip?: number
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Attachment create
+   */
+  export type AttachmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Attachment.
+     */
+    data: XOR<AttachmentCreateInput, AttachmentUncheckedCreateInput>
+  }
+
+  /**
+   * Attachment createMany
+   */
+  export type AttachmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Attachments.
+     */
+    data: AttachmentCreateManyInput | AttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Attachment createManyAndReturn
+   */
+  export type AttachmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Attachments.
+     */
+    data: AttachmentCreateManyInput | AttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Attachment update
+   */
+  export type AttachmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Attachment.
+     */
+    data: XOR<AttachmentUpdateInput, AttachmentUncheckedUpdateInput>
+    /**
+     * Choose, which Attachment to update.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment updateMany
+   */
+  export type AttachmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Attachments.
+     */
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Attachments to update
+     */
+    where?: AttachmentWhereInput
+    /**
+     * Limit how many Attachments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attachment updateManyAndReturn
+   */
+  export type AttachmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to update Attachments.
+     */
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Attachments to update
+     */
+    where?: AttachmentWhereInput
+    /**
+     * Limit how many Attachments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Attachment upsert
+   */
+  export type AttachmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Attachment to update in case it exists.
+     */
+    where: AttachmentWhereUniqueInput
+    /**
+     * In case the Attachment found by the `where` argument doesn't exist, create a new Attachment with this data.
+     */
+    create: XOR<AttachmentCreateInput, AttachmentUncheckedCreateInput>
+    /**
+     * In case the Attachment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttachmentUpdateInput, AttachmentUncheckedUpdateInput>
+  }
+
+  /**
+   * Attachment delete
+   */
+  export type AttachmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    /**
+     * Filter which Attachment to delete.
+     */
+    where: AttachmentWhereUniqueInput
+  }
+
+  /**
+   * Attachment deleteMany
+   */
+  export type AttachmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attachments to delete
+     */
+    where?: AttachmentWhereInput
+    /**
+     * Limit how many Attachments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attachment.touchpoint
+   */
+  export type Attachment$touchpointArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TouchPoint
+     */
+    select?: TouchPointSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TouchPoint
+     */
+    omit?: TouchPointOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TouchPointInclude<ExtArgs> | null
+    where?: TouchPointWhereInput
+  }
+
+  /**
+   * Attachment without action
+   */
+  export type AttachmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
   }
 
 
@@ -14099,6 +15448,22 @@ export namespace Prisma {
   export type TouchPointScalarFieldEnum = (typeof TouchPointScalarFieldEnum)[keyof typeof TouchPointScalarFieldEnum]
 
 
+  export const AttachmentScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    leadId: 'leadId',
+    touchpointId: 'touchpointId',
+    url: 'url',
+    key: 'key',
+    filename: 'filename',
+    mimeType: 'mimeType',
+    size: 'size',
+    caption: 'caption'
+  };
+
+  export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
+
+
   export const ReminderScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -14448,6 +15813,7 @@ export namespace Prisma {
     touchPoint?: TouchPointListRelationFilter
     notes?: NoteListRelationFilter
     reminders?: ReminderListRelationFilter
+    attachments?: AttachmentListRelationFilter
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     referredByLead?: XOR<LeadNullableScalarRelationFilter, LeadWhereInput> | null
     referrals?: LeadListRelationFilter
@@ -14497,6 +15863,7 @@ export namespace Prisma {
     touchPoint?: TouchPointOrderByRelationAggregateInput
     notes?: NoteOrderByRelationAggregateInput
     reminders?: ReminderOrderByRelationAggregateInput
+    attachments?: AttachmentOrderByRelationAggregateInput
     assignedTo?: UserOrderByWithRelationInput
     referredByLead?: LeadOrderByWithRelationInput
     referrals?: LeadOrderByRelationAggregateInput
@@ -14549,6 +15916,7 @@ export namespace Prisma {
     touchPoint?: TouchPointListRelationFilter
     notes?: NoteListRelationFilter
     reminders?: ReminderListRelationFilter
+    attachments?: AttachmentListRelationFilter
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     referredByLead?: XOR<LeadNullableScalarRelationFilter, LeadWhereInput> | null
     referrals?: LeadListRelationFilter
@@ -15044,6 +16412,7 @@ export namespace Prisma {
     lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
     contactedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     reminders?: ReminderListRelationFilter
+    attachments?: AttachmentListRelationFilter
   }
 
   export type TouchPointOrderByWithRelationInput = {
@@ -15060,6 +16429,7 @@ export namespace Prisma {
     lead?: LeadOrderByWithRelationInput
     contactedBy?: UserOrderByWithRelationInput
     reminders?: ReminderOrderByRelationAggregateInput
+    attachments?: AttachmentOrderByRelationAggregateInput
   }
 
   export type TouchPointWhereUniqueInput = Prisma.AtLeast<{
@@ -15079,6 +16449,7 @@ export namespace Prisma {
     lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
     contactedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     reminders?: ReminderListRelationFilter
+    attachments?: AttachmentListRelationFilter
   }, "id">
 
   export type TouchPointOrderByWithAggregationInput = {
@@ -15111,6 +16482,91 @@ export namespace Prisma {
     receivedResponse?: BoolWithAggregatesFilter<"TouchPoint"> | boolean
     summary?: StringNullableWithAggregatesFilter<"TouchPoint"> | string | null
     sequencePosition?: EnumSequencePositionNullableWithAggregatesFilter<"TouchPoint"> | $Enums.SequencePosition | null
+  }
+
+  export type AttachmentWhereInput = {
+    AND?: AttachmentWhereInput | AttachmentWhereInput[]
+    OR?: AttachmentWhereInput[]
+    NOT?: AttachmentWhereInput | AttachmentWhereInput[]
+    id?: StringFilter<"Attachment"> | string
+    createdAt?: DateTimeFilter<"Attachment"> | Date | string
+    leadId?: StringFilter<"Attachment"> | string
+    touchpointId?: StringNullableFilter<"Attachment"> | string | null
+    url?: StringFilter<"Attachment"> | string
+    key?: StringFilter<"Attachment"> | string
+    filename?: StringFilter<"Attachment"> | string
+    mimeType?: StringFilter<"Attachment"> | string
+    size?: IntFilter<"Attachment"> | number
+    caption?: StringNullableFilter<"Attachment"> | string | null
+    lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
+    touchpoint?: XOR<TouchPointNullableScalarRelationFilter, TouchPointWhereInput> | null
+  }
+
+  export type AttachmentOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    leadId?: SortOrder
+    touchpointId?: SortOrderInput | SortOrder
+    url?: SortOrder
+    key?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    caption?: SortOrderInput | SortOrder
+    lead?: LeadOrderByWithRelationInput
+    touchpoint?: TouchPointOrderByWithRelationInput
+  }
+
+  export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AttachmentWhereInput | AttachmentWhereInput[]
+    OR?: AttachmentWhereInput[]
+    NOT?: AttachmentWhereInput | AttachmentWhereInput[]
+    createdAt?: DateTimeFilter<"Attachment"> | Date | string
+    leadId?: StringFilter<"Attachment"> | string
+    touchpointId?: StringNullableFilter<"Attachment"> | string | null
+    url?: StringFilter<"Attachment"> | string
+    key?: StringFilter<"Attachment"> | string
+    filename?: StringFilter<"Attachment"> | string
+    mimeType?: StringFilter<"Attachment"> | string
+    size?: IntFilter<"Attachment"> | number
+    caption?: StringNullableFilter<"Attachment"> | string | null
+    lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
+    touchpoint?: XOR<TouchPointNullableScalarRelationFilter, TouchPointWhereInput> | null
+  }, "id">
+
+  export type AttachmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    leadId?: SortOrder
+    touchpointId?: SortOrderInput | SortOrder
+    url?: SortOrder
+    key?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    caption?: SortOrderInput | SortOrder
+    _count?: AttachmentCountOrderByAggregateInput
+    _avg?: AttachmentAvgOrderByAggregateInput
+    _max?: AttachmentMaxOrderByAggregateInput
+    _min?: AttachmentMinOrderByAggregateInput
+    _sum?: AttachmentSumOrderByAggregateInput
+  }
+
+  export type AttachmentScalarWhereWithAggregatesInput = {
+    AND?: AttachmentScalarWhereWithAggregatesInput | AttachmentScalarWhereWithAggregatesInput[]
+    OR?: AttachmentScalarWhereWithAggregatesInput[]
+    NOT?: AttachmentScalarWhereWithAggregatesInput | AttachmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Attachment"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Attachment"> | Date | string
+    leadId?: StringWithAggregatesFilter<"Attachment"> | string
+    touchpointId?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
+    url?: StringWithAggregatesFilter<"Attachment"> | string
+    key?: StringWithAggregatesFilter<"Attachment"> | string
+    filename?: StringWithAggregatesFilter<"Attachment"> | string
+    mimeType?: StringWithAggregatesFilter<"Attachment"> | string
+    size?: IntWithAggregatesFilter<"Attachment"> | number
+    caption?: StringNullableWithAggregatesFilter<"Attachment"> | string | null
   }
 
   export type ReminderWhereInput = {
@@ -15339,6 +16795,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -15385,6 +16842,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -15427,6 +16885,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -15473,6 +16932,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -16014,6 +17474,7 @@ export namespace Prisma {
     lead: LeadCreateNestedOneWithoutTouchPointInput
     contactedBy: UserCreateNestedOneWithoutTouchPointsInput
     reminders?: ReminderCreateNestedManyWithoutTouchPointInput
+    attachments?: AttachmentCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointUncheckedCreateInput = {
@@ -16028,6 +17489,7 @@ export namespace Prisma {
     summary?: string | null
     sequencePosition?: $Enums.SequencePosition | null
     reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointUpdateInput = {
@@ -16042,6 +17504,7 @@ export namespace Prisma {
     lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
     contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
     reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
+    attachments?: AttachmentUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointUncheckedUpdateInput = {
@@ -16056,6 +17519,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointCreateManyInput = {
@@ -16093,6 +17557,95 @@ export namespace Prisma {
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+  }
+
+  export type AttachmentCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+    lead: LeadCreateNestedOneWithoutAttachmentsInput
+    touchpoint?: TouchPointCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type AttachmentUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    leadId: string
+    touchpointId?: string | null
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+  }
+
+  export type AttachmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    lead?: LeadUpdateOneRequiredWithoutAttachmentsNestedInput
+    touchpoint?: TouchPointUpdateOneWithoutAttachmentsNestedInput
+  }
+
+  export type AttachmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leadId?: StringFieldUpdateOperationsInput | string
+    touchpointId?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AttachmentCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    leadId: string
+    touchpointId?: string | null
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+  }
+
+  export type AttachmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AttachmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leadId?: StringFieldUpdateOperationsInput | string
+    touchpointId?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReminderCreateInput = {
@@ -16457,6 +18010,12 @@ export namespace Prisma {
     none?: ReminderWhereInput
   }
 
+  export type AttachmentListRelationFilter = {
+    every?: AttachmentWhereInput
+    some?: AttachmentWhereInput
+    none?: AttachmentWhereInput
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -16481,6 +18040,10 @@ export namespace Prisma {
   }
 
   export type ReminderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttachmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17017,6 +18580,53 @@ export namespace Prisma {
     isNot?: TouchPointWhereInput | null
   }
 
+  export type AttachmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    leadId?: SortOrder
+    touchpointId?: SortOrder
+    url?: SortOrder
+    key?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    caption?: SortOrder
+  }
+
+  export type AttachmentAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type AttachmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    leadId?: SortOrder
+    touchpointId?: SortOrder
+    url?: SortOrder
+    key?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    caption?: SortOrder
+  }
+
+  export type AttachmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    leadId?: SortOrder
+    touchpointId?: SortOrder
+    url?: SortOrder
+    key?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    caption?: SortOrder
+  }
+
+  export type AttachmentSumOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
   export type ReminderCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -17256,6 +18866,13 @@ export namespace Prisma {
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
   }
 
+  export type AttachmentCreateNestedManyWithoutLeadInput = {
+    create?: XOR<AttachmentCreateWithoutLeadInput, AttachmentUncheckedCreateWithoutLeadInput> | AttachmentCreateWithoutLeadInput[] | AttachmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutLeadInput | AttachmentCreateOrConnectWithoutLeadInput[]
+    createMany?: AttachmentCreateManyLeadInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+  }
+
   export type UserCreateNestedOneWithoutAssignedLeadsInput = {
     create?: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAssignedLeadsInput
@@ -17308,6 +18925,13 @@ export namespace Prisma {
     connectOrCreate?: ReminderCreateOrConnectWithoutLeadInput | ReminderCreateOrConnectWithoutLeadInput[]
     createMany?: ReminderCreateManyLeadInputEnvelope
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
+  export type AttachmentUncheckedCreateNestedManyWithoutLeadInput = {
+    create?: XOR<AttachmentCreateWithoutLeadInput, AttachmentUncheckedCreateWithoutLeadInput> | AttachmentCreateWithoutLeadInput[] | AttachmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutLeadInput | AttachmentCreateOrConnectWithoutLeadInput[]
+    createMany?: AttachmentCreateManyLeadInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
   }
 
   export type LeadUncheckedCreateNestedManyWithoutReferredByLeadInput = {
@@ -17457,6 +19081,20 @@ export namespace Prisma {
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
   }
 
+  export type AttachmentUpdateManyWithoutLeadNestedInput = {
+    create?: XOR<AttachmentCreateWithoutLeadInput, AttachmentUncheckedCreateWithoutLeadInput> | AttachmentCreateWithoutLeadInput[] | AttachmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutLeadInput | AttachmentCreateOrConnectWithoutLeadInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutLeadInput | AttachmentUpsertWithWhereUniqueWithoutLeadInput[]
+    createMany?: AttachmentCreateManyLeadInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutLeadInput | AttachmentUpdateWithWhereUniqueWithoutLeadInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutLeadInput | AttachmentUpdateManyWithWhereWithoutLeadInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
   export type UserUpdateOneWithoutAssignedLeadsNestedInput = {
     create?: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAssignedLeadsInput
@@ -17559,6 +19197,20 @@ export namespace Prisma {
     update?: ReminderUpdateWithWhereUniqueWithoutLeadInput | ReminderUpdateWithWhereUniqueWithoutLeadInput[]
     updateMany?: ReminderUpdateManyWithWhereWithoutLeadInput | ReminderUpdateManyWithWhereWithoutLeadInput[]
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutLeadNestedInput = {
+    create?: XOR<AttachmentCreateWithoutLeadInput, AttachmentUncheckedCreateWithoutLeadInput> | AttachmentCreateWithoutLeadInput[] | AttachmentUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutLeadInput | AttachmentCreateOrConnectWithoutLeadInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutLeadInput | AttachmentUpsertWithWhereUniqueWithoutLeadInput[]
+    createMany?: AttachmentCreateManyLeadInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutLeadInput | AttachmentUpdateWithWhereUniqueWithoutLeadInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutLeadInput | AttachmentUpdateManyWithWhereWithoutLeadInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
   }
 
   export type LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput = {
@@ -17828,11 +19480,25 @@ export namespace Prisma {
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
   }
 
+  export type AttachmentCreateNestedManyWithoutTouchpointInput = {
+    create?: XOR<AttachmentCreateWithoutTouchpointInput, AttachmentUncheckedCreateWithoutTouchpointInput> | AttachmentCreateWithoutTouchpointInput[] | AttachmentUncheckedCreateWithoutTouchpointInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutTouchpointInput | AttachmentCreateOrConnectWithoutTouchpointInput[]
+    createMany?: AttachmentCreateManyTouchpointInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+  }
+
   export type ReminderUncheckedCreateNestedManyWithoutTouchPointInput = {
     create?: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput> | ReminderCreateWithoutTouchPointInput[] | ReminderUncheckedCreateWithoutTouchPointInput[]
     connectOrCreate?: ReminderCreateOrConnectWithoutTouchPointInput | ReminderCreateOrConnectWithoutTouchPointInput[]
     createMany?: ReminderCreateManyTouchPointInputEnvelope
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
+  export type AttachmentUncheckedCreateNestedManyWithoutTouchpointInput = {
+    create?: XOR<AttachmentCreateWithoutTouchpointInput, AttachmentUncheckedCreateWithoutTouchpointInput> | AttachmentCreateWithoutTouchpointInput[] | AttachmentUncheckedCreateWithoutTouchpointInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutTouchpointInput | AttachmentCreateOrConnectWithoutTouchpointInput[]
+    createMany?: AttachmentCreateManyTouchpointInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
   }
 
   export type EnumTouchPointTypeFieldUpdateOperationsInput = {
@@ -17873,6 +19539,20 @@ export namespace Prisma {
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
   }
 
+  export type AttachmentUpdateManyWithoutTouchpointNestedInput = {
+    create?: XOR<AttachmentCreateWithoutTouchpointInput, AttachmentUncheckedCreateWithoutTouchpointInput> | AttachmentCreateWithoutTouchpointInput[] | AttachmentUncheckedCreateWithoutTouchpointInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutTouchpointInput | AttachmentCreateOrConnectWithoutTouchpointInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutTouchpointInput | AttachmentUpsertWithWhereUniqueWithoutTouchpointInput[]
+    createMany?: AttachmentCreateManyTouchpointInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutTouchpointInput | AttachmentUpdateWithWhereUniqueWithoutTouchpointInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutTouchpointInput | AttachmentUpdateManyWithWhereWithoutTouchpointInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
   export type ReminderUncheckedUpdateManyWithoutTouchPointNestedInput = {
     create?: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput> | ReminderCreateWithoutTouchPointInput[] | ReminderUncheckedCreateWithoutTouchPointInput[]
     connectOrCreate?: ReminderCreateOrConnectWithoutTouchPointInput | ReminderCreateOrConnectWithoutTouchPointInput[]
@@ -17885,6 +19565,50 @@ export namespace Prisma {
     update?: ReminderUpdateWithWhereUniqueWithoutTouchPointInput | ReminderUpdateWithWhereUniqueWithoutTouchPointInput[]
     updateMany?: ReminderUpdateManyWithWhereWithoutTouchPointInput | ReminderUpdateManyWithWhereWithoutTouchPointInput[]
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutTouchpointNestedInput = {
+    create?: XOR<AttachmentCreateWithoutTouchpointInput, AttachmentUncheckedCreateWithoutTouchpointInput> | AttachmentCreateWithoutTouchpointInput[] | AttachmentUncheckedCreateWithoutTouchpointInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutTouchpointInput | AttachmentCreateOrConnectWithoutTouchpointInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutTouchpointInput | AttachmentUpsertWithWhereUniqueWithoutTouchpointInput[]
+    createMany?: AttachmentCreateManyTouchpointInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutTouchpointInput | AttachmentUpdateWithWhereUniqueWithoutTouchpointInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutTouchpointInput | AttachmentUpdateManyWithWhereWithoutTouchpointInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
+  export type LeadCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<LeadCreateWithoutAttachmentsInput, LeadUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutAttachmentsInput
+    connect?: LeadWhereUniqueInput
+  }
+
+  export type TouchPointCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<TouchPointCreateWithoutAttachmentsInput, TouchPointUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: TouchPointCreateOrConnectWithoutAttachmentsInput
+    connect?: TouchPointWhereUniqueInput
+  }
+
+  export type LeadUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<LeadCreateWithoutAttachmentsInput, LeadUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutAttachmentsInput
+    upsert?: LeadUpsertWithoutAttachmentsInput
+    connect?: LeadWhereUniqueInput
+    update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutAttachmentsInput, LeadUpdateWithoutAttachmentsInput>, LeadUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type TouchPointUpdateOneWithoutAttachmentsNestedInput = {
+    create?: XOR<TouchPointCreateWithoutAttachmentsInput, TouchPointUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: TouchPointCreateOrConnectWithoutAttachmentsInput
+    upsert?: TouchPointUpsertWithoutAttachmentsInput
+    disconnect?: TouchPointWhereInput | boolean
+    delete?: TouchPointWhereInput | boolean
+    connect?: TouchPointWhereUniqueInput
+    update?: XOR<XOR<TouchPointUpdateToOneWithWhereWithoutAttachmentsInput, TouchPointUpdateWithoutAttachmentsInput>, TouchPointUncheckedUpdateWithoutAttachmentsInput>
   }
 
   export type LeadCreateNestedOneWithoutRemindersInput = {
@@ -18265,6 +19989,7 @@ export namespace Prisma {
     sequencePosition?: $Enums.SequencePosition | null
     lead: LeadCreateNestedOneWithoutTouchPointInput
     reminders?: ReminderCreateNestedManyWithoutTouchPointInput
+    attachments?: AttachmentCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointUncheckedCreateWithoutContactedByInput = {
@@ -18278,6 +20003,7 @@ export namespace Prisma {
     summary?: string | null
     sequencePosition?: $Enums.SequencePosition | null
     reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointCreateOrConnectWithoutContactedByInput = {
@@ -18355,6 +20081,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
@@ -18399,6 +20126,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -18681,6 +20409,7 @@ export namespace Prisma {
     sequencePosition?: $Enums.SequencePosition | null
     contactedBy: UserCreateNestedOneWithoutTouchPointsInput
     reminders?: ReminderCreateNestedManyWithoutTouchPointInput
+    attachments?: AttachmentCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointUncheckedCreateWithoutLeadInput = {
@@ -18694,6 +20423,7 @@ export namespace Prisma {
     summary?: string | null
     sequencePosition?: $Enums.SequencePosition | null
     reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointCreateOrConnectWithoutLeadInput = {
@@ -18772,6 +20502,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttachmentCreateWithoutLeadInput = {
+    id?: string
+    createdAt?: Date | string
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+    touchpoint?: TouchPointCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type AttachmentUncheckedCreateWithoutLeadInput = {
+    id?: string
+    createdAt?: Date | string
+    touchpointId?: string | null
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+  }
+
+  export type AttachmentCreateOrConnectWithoutLeadInput = {
+    where: AttachmentWhereUniqueInput
+    create: XOR<AttachmentCreateWithoutLeadInput, AttachmentUncheckedCreateWithoutLeadInput>
+  }
+
+  export type AttachmentCreateManyLeadInputEnvelope = {
+    data: AttachmentCreateManyLeadInput | AttachmentCreateManyLeadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserCreateWithoutAssignedLeadsInput = {
     id?: string
     createdAt?: Date | string
@@ -18842,6 +20606,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
   }
@@ -18887,6 +20652,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
   }
 
   export type LeadCreateOrConnectWithoutReferralsInput = {
@@ -18933,6 +20699,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
@@ -18977,6 +20744,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -19208,6 +20976,38 @@ export namespace Prisma {
     isEmailSentCheck?: BoolFilter<"Reminder"> | boolean
   }
 
+  export type AttachmentUpsertWithWhereUniqueWithoutLeadInput = {
+    where: AttachmentWhereUniqueInput
+    update: XOR<AttachmentUpdateWithoutLeadInput, AttachmentUncheckedUpdateWithoutLeadInput>
+    create: XOR<AttachmentCreateWithoutLeadInput, AttachmentUncheckedCreateWithoutLeadInput>
+  }
+
+  export type AttachmentUpdateWithWhereUniqueWithoutLeadInput = {
+    where: AttachmentWhereUniqueInput
+    data: XOR<AttachmentUpdateWithoutLeadInput, AttachmentUncheckedUpdateWithoutLeadInput>
+  }
+
+  export type AttachmentUpdateManyWithWhereWithoutLeadInput = {
+    where: AttachmentScalarWhereInput
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyWithoutLeadInput>
+  }
+
+  export type AttachmentScalarWhereInput = {
+    AND?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+    OR?: AttachmentScalarWhereInput[]
+    NOT?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+    id?: StringFilter<"Attachment"> | string
+    createdAt?: DateTimeFilter<"Attachment"> | Date | string
+    leadId?: StringFilter<"Attachment"> | string
+    touchpointId?: StringNullableFilter<"Attachment"> | string | null
+    url?: StringFilter<"Attachment"> | string
+    key?: StringFilter<"Attachment"> | string
+    filename?: StringFilter<"Attachment"> | string
+    mimeType?: StringFilter<"Attachment"> | string
+    size?: IntFilter<"Attachment"> | number
+    caption?: StringNullableFilter<"Attachment"> | string | null
+  }
+
   export type UserUpsertWithoutAssignedLeadsInput = {
     update: XOR<UserUpdateWithoutAssignedLeadsInput, UserUncheckedUpdateWithoutAssignedLeadsInput>
     create: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
@@ -19295,6 +21095,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
   }
@@ -19340,6 +21141,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
   }
 
   export type LeadUpsertWithWhereUniqueWithoutReferredByLeadInput = {
@@ -19396,6 +21198,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -19441,6 +21244,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -19498,6 +21302,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -19543,6 +21348,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -19584,6 +21390,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -19629,6 +21436,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -19696,6 +21504,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -19741,6 +21550,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -19808,6 +21618,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -19853,6 +21664,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -19925,6 +21737,7 @@ export namespace Prisma {
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -19970,6 +21783,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -20027,6 +21841,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -20072,6 +21887,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -20152,6 +21968,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -20197,6 +22014,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -20306,6 +22124,7 @@ export namespace Prisma {
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -20351,6 +22170,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -20439,6 +22259,7 @@ export namespace Prisma {
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -20484,6 +22305,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -20562,6 +22384,7 @@ export namespace Prisma {
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -20607,6 +22430,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -20686,6 +22510,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttachmentCreateWithoutTouchpointInput = {
+    id?: string
+    createdAt?: Date | string
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+    lead: LeadCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type AttachmentUncheckedCreateWithoutTouchpointInput = {
+    id?: string
+    createdAt?: Date | string
+    leadId: string
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+  }
+
+  export type AttachmentCreateOrConnectWithoutTouchpointInput = {
+    where: AttachmentWhereUniqueInput
+    create: XOR<AttachmentCreateWithoutTouchpointInput, AttachmentUncheckedCreateWithoutTouchpointInput>
+  }
+
+  export type AttachmentCreateManyTouchpointInputEnvelope = {
+    data: AttachmentCreateManyTouchpointInput | AttachmentCreateManyTouchpointInput[]
+    skipDuplicates?: boolean
+  }
+
   export type LeadUpsertWithoutTouchPointInput = {
     update: XOR<LeadUpdateWithoutTouchPointInput, LeadUncheckedUpdateWithoutTouchPointInput>
     create: XOR<LeadCreateWithoutTouchPointInput, LeadUncheckedCreateWithoutTouchPointInput>
@@ -20735,6 +22593,7 @@ export namespace Prisma {
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -20780,6 +22639,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -20836,6 +22696,286 @@ export namespace Prisma {
     data: XOR<ReminderUpdateManyMutationInput, ReminderUncheckedUpdateManyWithoutTouchPointInput>
   }
 
+  export type AttachmentUpsertWithWhereUniqueWithoutTouchpointInput = {
+    where: AttachmentWhereUniqueInput
+    update: XOR<AttachmentUpdateWithoutTouchpointInput, AttachmentUncheckedUpdateWithoutTouchpointInput>
+    create: XOR<AttachmentCreateWithoutTouchpointInput, AttachmentUncheckedCreateWithoutTouchpointInput>
+  }
+
+  export type AttachmentUpdateWithWhereUniqueWithoutTouchpointInput = {
+    where: AttachmentWhereUniqueInput
+    data: XOR<AttachmentUpdateWithoutTouchpointInput, AttachmentUncheckedUpdateWithoutTouchpointInput>
+  }
+
+  export type AttachmentUpdateManyWithWhereWithoutTouchpointInput = {
+    where: AttachmentScalarWhereInput
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyWithoutTouchpointInput>
+  }
+
+  export type LeadCreateWithoutAttachmentsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationCreateNestedManyWithoutBusinessInput
+    primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
+    industry: IndustryCreateNestedOneWithoutLeadsInput
+    businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
+    touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
+    notes?: NoteCreateNestedManyWithoutLeadInput
+    reminders?: ReminderCreateNestedManyWithoutLeadInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
+  }
+
+  export type LeadUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    primaryLocationId?: string | null
+    industryId: string
+    businessTypeId: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
+    touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
+    notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
+  }
+
+  export type LeadCreateOrConnectWithoutAttachmentsInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutAttachmentsInput, LeadUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type TouchPointCreateWithoutAttachmentsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    date: Date | string
+    type: $Enums.TouchPointType
+    receivedResponse?: boolean
+    summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+    lead: LeadCreateNestedOneWithoutTouchPointInput
+    contactedBy: UserCreateNestedOneWithoutTouchPointsInput
+    reminders?: ReminderCreateNestedManyWithoutTouchPointInput
+  }
+
+  export type TouchPointUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    date: Date | string
+    type: $Enums.TouchPointType
+    leadId: string
+    contactedById: string
+    receivedResponse?: boolean
+    summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
+  }
+
+  export type TouchPointCreateOrConnectWithoutAttachmentsInput = {
+    where: TouchPointWhereUniqueInput
+    create: XOR<TouchPointCreateWithoutAttachmentsInput, TouchPointUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type LeadUpsertWithoutAttachmentsInput = {
+    update: XOR<LeadUpdateWithoutAttachmentsInput, LeadUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<LeadCreateWithoutAttachmentsInput, LeadUncheckedCreateWithoutAttachmentsInput>
+    where?: LeadWhereInput
+  }
+
+  export type LeadUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: LeadWhereInput
+    data: XOR<LeadUpdateWithoutAttachmentsInput, LeadUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type LeadUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    locations?: LocationUpdateManyWithoutBusinessNestedInput
+    primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
+    industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
+    businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
+    touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
+    notes?: NoteUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
+  }
+
+  export type LeadUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: StringFieldUpdateOperationsInput | string
+    primaryLocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    industryId?: StringFieldUpdateOperationsInput | string
+    businessTypeId?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
+    touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
+  }
+
+  export type TouchPointUpsertWithoutAttachmentsInput = {
+    update: XOR<TouchPointUpdateWithoutAttachmentsInput, TouchPointUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<TouchPointCreateWithoutAttachmentsInput, TouchPointUncheckedCreateWithoutAttachmentsInput>
+    where?: TouchPointWhereInput
+  }
+
+  export type TouchPointUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: TouchPointWhereInput
+    data: XOR<TouchPointUpdateWithoutAttachmentsInput, TouchPointUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type TouchPointUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    receivedResponse?: BoolFieldUpdateOperationsInput | boolean
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
+    contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
+    reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
+  }
+
+  export type TouchPointUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    leadId?: StringFieldUpdateOperationsInput | string
+    contactedById?: StringFieldUpdateOperationsInput | string
+    receivedResponse?: BoolFieldUpdateOperationsInput | boolean
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
+  }
+
   export type LeadCreateWithoutRemindersInput = {
     id?: string
     createdAt?: Date | string
@@ -20874,6 +23014,7 @@ export namespace Prisma {
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
     referredByLead?: LeadCreateNestedOneWithoutReferralsInput
     referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
@@ -20919,6 +23060,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutLeadInput
     referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
@@ -20938,6 +23080,7 @@ export namespace Prisma {
     sequencePosition?: $Enums.SequencePosition | null
     lead: LeadCreateNestedOneWithoutTouchPointInput
     contactedBy: UserCreateNestedOneWithoutTouchPointsInput
+    attachments?: AttachmentCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointUncheckedCreateWithoutRemindersInput = {
@@ -20951,6 +23094,7 @@ export namespace Prisma {
     receivedResponse?: boolean
     summary?: string | null
     sequencePosition?: $Enums.SequencePosition | null
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutTouchpointInput
   }
 
   export type TouchPointCreateOrConnectWithoutRemindersInput = {
@@ -21007,6 +23151,7 @@ export namespace Prisma {
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -21052,6 +23197,7 @@ export namespace Prisma {
     contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -21077,6 +23223,7 @@ export namespace Prisma {
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
     contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
+    attachments?: AttachmentUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointUncheckedUpdateWithoutRemindersInput = {
@@ -21090,6 +23237,7 @@ export namespace Prisma {
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    attachments?: AttachmentUncheckedUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointCreateManyContactedByInput = {
@@ -21160,6 +23308,7 @@ export namespace Prisma {
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
     reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
+    attachments?: AttachmentUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointUncheckedUpdateWithoutContactedByInput = {
@@ -21173,6 +23322,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointUncheckedUpdateManyWithoutContactedByInput = {
@@ -21250,6 +23400,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
@@ -21294,6 +23445,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -21391,6 +23543,18 @@ export namespace Prisma {
     isCheckIn?: boolean
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
+  }
+
+  export type AttachmentCreateManyLeadInput = {
+    id?: string
+    createdAt?: Date | string
+    touchpointId?: string | null
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
   }
 
   export type LeadCreateManyReferredByLeadInput = {
@@ -21517,6 +23681,7 @@ export namespace Prisma {
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
     reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
+    attachments?: AttachmentUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointUncheckedUpdateWithoutLeadInput = {
@@ -21530,6 +23695,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutTouchpointNestedInput
   }
 
   export type TouchPointUncheckedUpdateManyWithoutLeadInput = {
@@ -21613,6 +23779,42 @@ export namespace Prisma {
     isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type AttachmentUpdateWithoutLeadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    touchpoint?: TouchPointUpdateOneWithoutAttachmentsNestedInput
+  }
+
+  export type AttachmentUncheckedUpdateWithoutLeadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    touchpointId?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutLeadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    touchpointId?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type LeadUpdateWithoutReferredByLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21652,6 +23854,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
@@ -21696,6 +23899,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -21811,6 +24015,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -21856,6 +24061,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -21971,6 +24177,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
     referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
     referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
@@ -22016,6 +24223,7 @@ export namespace Prisma {
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutLeadNestedInput
     referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
@@ -22103,6 +24311,18 @@ export namespace Prisma {
     isEmailSentCheck?: boolean
   }
 
+  export type AttachmentCreateManyTouchpointInput = {
+    id?: string
+    createdAt?: Date | string
+    leadId: string
+    url: string
+    key: string
+    filename: string
+    mimeType: string
+    size: number
+    caption?: string | null
+  }
+
   export type ReminderUpdateWithoutTouchPointInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22146,6 +24366,42 @@ export namespace Prisma {
     isCheckIn?: BoolFieldUpdateOperationsInput | boolean
     isResponseCheck?: BoolFieldUpdateOperationsInput | boolean
     isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type AttachmentUpdateWithoutTouchpointInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    lead?: LeadUpdateOneRequiredWithoutAttachmentsNestedInput
+  }
+
+  export type AttachmentUncheckedUpdateWithoutTouchpointInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leadId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutTouchpointInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leadId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

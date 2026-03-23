@@ -240,6 +240,19 @@ exports.Prisma.TouchPointScalarFieldEnum = {
   sequencePosition: 'sequencePosition'
 };
 
+exports.Prisma.AttachmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  leadId: 'leadId',
+  touchpointId: 'touchpointId',
+  url: 'url',
+  key: 'key',
+  filename: 'filename',
+  mimeType: 'mimeType',
+  size: 'size',
+  caption: 'caption'
+};
+
 exports.Prisma.ReminderScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -350,6 +363,7 @@ exports.Prisma.ModelName = {
   PhoneNumber: 'PhoneNumber',
   Note: 'Note',
   TouchPoint: 'TouchPoint',
+  Attachment: 'Attachment',
   Reminder: 'Reminder'
 };
 

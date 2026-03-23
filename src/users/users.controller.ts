@@ -7,11 +7,10 @@ import {
   Param,
   Patch,
   Post,
-  ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Prisma } from 'src/generated/prisma';
+import { Prisma } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {

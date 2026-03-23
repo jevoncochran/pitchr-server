@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { RemindersService } from './reminders.service';
-import { Prisma } from 'src/generated/prisma';
+import { Prisma } from '@prisma/client';
 
 @Controller('reminders')
 export class RemindersController {

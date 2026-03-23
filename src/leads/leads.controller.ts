@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { LeadsService } from './leads.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 
 @Controller('leads')
 export class LeadsController {
@@ -22,6 +22,24 @@ export class LeadsController {
   @Get()
   findAll() {
     return this.leadsService.findAll();
+  }
+
+  // Leads that have not been contacted at all
+  @Get('new')
+  findNewUncoctactedLeads() {
+    return this.leadsService.findNewUncoctactedLeads();
+  }
+
+  // Leads that have been visited in person and now require immediate follow-up
+  @Get('post-visit')
+  findPostVisitLeads() {
+    return this.leadsService.findPostVisitLeads();
+  }
+
+  // Leads that have not been contacted in 7 days or more
+  @Get('estranged')
+  findEstrangedLeads() {
+    return this.leadsService.findEstrangedLeads();
   }
 
   @Get(':id')

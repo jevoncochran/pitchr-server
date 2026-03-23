@@ -1,0 +1,286 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(uuid())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  firstName     String
+  lastName      String
+  email         String       @unique
+  password      String
+  role          Role
+  touchPoints   TouchPoint[]
+  notes         Note[]
+  assignedLeads Lead[]       @relation("LeadAssignment")
+}
+
+enum Role {
+  STAFF
+  ADMIN
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  business  String
+
+  locations         Location[]
+  // Primary location reference (nullable if not set yet)
+  primaryLocation   Location?  @relation("PrimaryLocation", fields: [primaryLocationId], references: [id])
+  primaryLocationId String?    @unique
+
+  contacts Contact[]
+
+  industry       Industry     @relation(fields: [industryId], references: [id])
+  industryId     String
+  businessType   BusinessType @relation(fields: [businessTypeId], references: [id])
+  businessTypeId String
+
+  igHandle        String?
+  igFollowerCount Int?
+
+  email   String?
+  website String?
+
+  pipelineStage      PipelineStage  @default(NEW)
+  source             LeadSource?
+  discoveredVia      DiscoveredVia?
+  discoveredViaOther String?
+  convertedAt        DateTime?
+
+  isBlackOwned     Boolean @default(false)
+  isWomanOwned     Boolean @default(false)
+  isLatinoOwned    Boolean @default(false)
+  isImmigrantOwned Boolean @default(false)
+
+  touchPoint TouchPoint[]
+  notes      Note[]
+  reminders  Reminder[]
+  priority   Priority?
+
+  sequenceStep   Int     @default(0)
+  sequenceActive Boolean @default(false)
+  isHot          Boolean @default(false)
+
+  assignedTo   User?   @relation("LeadAssignment", fields: [assignedToId], references: [id])
+  assignedToId String?
+
+  referredByLead   Lead?   @relation("LeadReferrals", fields: [referredByLeadId], references: [id])
+  referredByLeadId String?
+  referredByName   String?
+  referrals        Lead[]  @relation("LeadReferrals")
+
+  instagramHandle    String?
+  instagramFollowers Int?
+  tiktokHandle       String?
+  tiktokFollowers    Int?
+  youtubeHandle      String?
+  youtubeFollowers   Int?
+  facebookHandle     String?
+  facebookFollowers  Int?
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName       String
+  lastName        String
+  title           String? // e.g. "Owner", "Director of Marketing"
+  email           String?
+  phone           String?
+  isDecisionMaker Boolean @default(false)
+  notes           String?
+
+  lead   Lead   @relation(fields: [leadId], references: [id])
+  leadId String
+}
+
+model Industry {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+
+  leads Lead[]
+}
+
+model BusinessType {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String @unique
+  leads Lead[]
+}
+
+model Location {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  business   Lead   @relation(fields: [businessId], references: [id])
+  businessId String
+
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  zip          String
+
+  phoneNumbers PhoneNumber[]
+
+  // Optional reverse relation to know if this location is primary
+  primaryForBusiness Lead? @relation("PrimaryLocation")
+}
+
+model PhoneNumber {
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  number    String
+  label     PhoneType?
+
+  location   Location? @relation(fields: [locationId], references: [id])
+  locationId String?
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  text String
+
+  lead   Lead   @relation(fields: [leadId], references: [id])
+  leadId String
+
+  author User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model TouchPoint {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  date DateTime
+  type TouchPointType
+
+  lead          Lead   @relation(fields: [leadId], references: [id])
+  leadId        String
+  contactedBy   User   @relation(fields: [contactedById], references: [id])
+  contactedById String
+
+  receivedResponse Boolean @default(false)
+  summary          String?
+
+  sequencePosition SequencePosition?
+
+  reminders Reminder[]
+}
+
+enum SequencePosition {
+  VISIT_A
+  A1
+  A2
+  A3
+  VISIT_B
+  B1
+  B2
+  B3
+  VISIT_C
+  C1
+  C2
+  C3
+}
+
+enum PipelineStage {
+  NEW
+  CONTACTED
+  ENGAGED
+  MEETING_SCHEDULED
+  PROPOSAL_SENT
+  CONVERTED
+  DORMANT
+  NOT_A_FIT
+  LOST
+}
+
+enum LeadSource {
+  OUTREACH
+  REFERRAL
+  FORM
+}
+
+enum DiscoveredVia {
+  OUTREACH
+  REFERRAL
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  YOUTUBE
+  GOOGLE
+  OTHER
+}
+
+enum Priority {
+  ONE
+  TWO
+  THREE
+}
+
+enum TouchPointType {
+  EMAIL
+  INSTAGRAM_DM
+  CALL
+  TEXT
+  IN_PERSON
+  MEETING
+}
+
+enum PhoneType {
+  MOBILE
+  OFFICE
+  HOME
+}
+
+model Reminder {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lead   Lead   @relation(fields: [leadId], references: [id])
+  leadId String
+
+  touchPoint   TouchPoint? @relation(fields: [touchPointId], references: [id])
+  touchPointId String?
+
+  type    TouchPointType
+  dueDate DateTime
+  note    String?
+
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  isCheckIn        Boolean @default(false)
+  isResponseCheck  Boolean @default(false)
+  isEmailSentCheck Boolean @default(false)
+}

@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { TouchpointsService } from './touchpoints.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 
 @Controller('touchpoints')
 export class TouchpointsController {

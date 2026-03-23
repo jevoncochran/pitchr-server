@@ -6,7 +6,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { DatabaseService } from 'src/database/database.service';
 import { JwtService } from '@nestjs/jwt';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class AuthService {
@@ -42,6 +42,12 @@ export class AuthService {
   async login(user: any) {
     const payload = { sub: user.id, email: user.email, role: user.role };
     return {
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
       access_token: this.jwtService.sign(payload),
     };
   }

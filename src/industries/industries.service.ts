@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
@@ -11,7 +11,12 @@ export class IndustriesService {
   }
 
   async findAll() {
-    return this.databaseService.industry.findMany();
+    const industries = await this.databaseService.industry.findMany();
+    const industriesSimplified = [];
+    for (const industry of industries) {
+      industriesSimplified.push({ id: industry.id, name: industry.name });
+    }
+    return industriesSimplified;
   }
 
   async findOne(id: string) {

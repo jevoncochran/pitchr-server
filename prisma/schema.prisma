@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -25,6 +25,7 @@ model User {
   role    Role
   touchPoints   TouchPoint[]
   notes   Note[]
+  assignedLeads Lead[]    @relation("LeadAssignment")
 }
 
 enum Role {
@@ -43,7 +44,7 @@ model Lead {
   primaryLocation   Location?   @relation("PrimaryLocation", fields: [primaryLocationId], references: [id])
   primaryLocationId   String?   @unique
 
-  staff   BusinessStaff[]   // All staff (including owners) linked to this lead
+  contacts  Contact[]
 
   industry    Industry    @relation(fields: [industryId], references: [id])
   industryId    String
@@ -56,8 +57,12 @@ model Lead {
   email   String?
   website   String?
 
-  status    Status
-  
+  pipelineStage   PipelineStage   @default(NEW)
+  source          LeadSource?
+  discoveredVia   DiscoveredVia?
+  discoveredViaOther  String?
+  convertedAt     DateTime?
+
   isBlackOwned    Boolean   @default(false)
   isWomanOwned    Boolean   @default(false)
   isLatinoOwned   Boolean   @default(false)
@@ -65,45 +70,46 @@ model Lead {
 
   touchPoint    TouchPoint[]
   notes   Note[]
+  reminders     Reminder[]
   priority    Priority?
+
+  sequenceStep    Int     @default(0)
+  sequenceActive  Boolean @default(false)
+  isHot           Boolean @default(false)
+
+  assignedTo    User?    @relation("LeadAssignment", fields: [assignedToId], references: [id])
+  assignedToId  String?
+
+  referredByLead    Lead?    @relation("LeadReferrals", fields: [referredByLeadId], references: [id])
+  referredByLeadId  String?
+  referredByName    String?
+  referrals         Lead[]   @relation("LeadReferrals")
+
+  instagramHandle   String?
+  instagramFollowers Int?
+  tiktokHandle      String?
+  tiktokFollowers   Int?
+  youtubeHandle     String?
+  youtubeFollowers  Int?
+  facebookHandle    String?
+  facebookFollowers Int?
 }
 
-model Staff {
-  id    String  @id @default(uuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  firstName   String
-  lastName    String
-  email   String?
-  phoneNumbers    PhoneNumber[]
+model Contact {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  businessLinks   BusinessStaff[]   // All businesses this employee is linked to
-}
+  firstName       String
+  lastName        String
+  title           String?   // e.g. "Owner", "Director of Marketing"
+  email           String?
+  phone           String?
+  isDecisionMaker Boolean  @default(false)
+  notes           String?
 
-model BusinessStaff {
-  id    String  @id @default(uuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  business    Lead  @relation(fields: [businessId], references: [id])
-  businessId    String
-
-  staff   Staff @relation(fields: [staffId], references: [id])
-  staffId   String
-
-  position    Position  @relation(fields: [positionId], references: [id])
-  positionId    String
-
-  @@unique([businessId, staffId, positionId]) // Prevent duplicate same-role entries for the same business
-}
-
-model Position {
-  id    String  @id @default(uuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  name    String  @unique
-  businessStaff   BusinessStaff[]
+  lead    Lead   @relation(fields: [leadId], references: [id])
+  leadId  String
 }
 
 model Industry {
@@ -154,9 +160,6 @@ model PhoneNumber {
 
   location    Location? @relation(fields: [locationId], references: [id])
   locationId    String?
-
-  staff   Staff?    @relation(fields: [staffId], references: [id])
-  staffId   String?
 }
 
 model Note {
@@ -188,12 +191,54 @@ model TouchPoint {
 
   receivedResponse    Boolean   @default(false)
   summary   String?
+
+  sequencePosition    SequencePosition?
+
+  reminders   Reminder[]
 }
 
-enum Status {
-  COLD
-  WARM
+enum SequencePosition {
+  VISIT_A
+  A1
+  A2
+  A3
+  VISIT_B
+  B1
+  B2
+  B3
+  VISIT_C
+  C1
+  C2
+  C3
+}
+
+enum PipelineStage {
+  NEW
+  CONTACTED
+  ENGAGED
+  MEETING_SCHEDULED
+  PROPOSAL_SENT
   CONVERTED
+  DORMANT
+  NOT_A_FIT
+  LOST
+}
+
+enum LeadSource {
+  OUTREACH
+  REFERRAL
+  FORM
+}
+
+enum DiscoveredVia {
+  OUTREACH
+  REFERRAL
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  YOUTUBE
+  GOOGLE
+  OTHER
 }
 
 enum Priority {
@@ -208,10 +253,34 @@ enum TouchPointType {
   CALL
   TEXT
   IN_PERSON
+  MEETING
 }
 
 enum PhoneType {
   MOBILE
   OFFICE
   HOME
+}
+
+model Reminder {
+  id          String         @id @default(uuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  lead        Lead           @relation(fields: [leadId], references: [id])
+  leadId      String
+
+  touchPoint   TouchPoint?   @relation(fields: [touchPointId], references: [id])
+  touchPointId String?
+
+  type        TouchPointType
+  dueDate     DateTime
+  note        String?
+
+  completed        Boolean        @default(false)
+  completedAt      DateTime?
+
+  isCheckIn        Boolean        @default(false)
+  isResponseCheck  Boolean        @default(false)
+  isEmailSentCheck Boolean        @default(false)
 }

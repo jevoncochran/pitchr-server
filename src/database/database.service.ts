@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import { PrismaClient } from 'src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 // Load .env from the project root explicitly so Prisma always finds DATABASE_URL
 // regardless of where the generated client ends up after compilation

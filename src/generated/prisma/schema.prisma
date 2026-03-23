@@ -44,7 +44,7 @@ model Lead {
   primaryLocation   Location?  @relation("PrimaryLocation", fields: [primaryLocationId], references: [id])
   primaryLocationId String?    @unique
 
-  staff BusinessStaff[] // All staff (including owners) linked to this lead
+  contacts Contact[]
 
   industry       Industry     @relation(fields: [industryId], references: [id])
   industryId     String
@@ -75,47 +75,41 @@ model Lead {
 
   sequenceStep   Int     @default(0)
   sequenceActive Boolean @default(false)
+  isHot          Boolean @default(false)
 
   assignedTo   User?   @relation("LeadAssignment", fields: [assignedToId], references: [id])
   assignedToId String?
+
+  referredByLead   Lead?   @relation("LeadReferrals", fields: [referredByLeadId], references: [id])
+  referredByLeadId String?
+  referredByName   String?
+  referrals        Lead[]  @relation("LeadReferrals")
+
+  instagramHandle    String?
+  instagramFollowers Int?
+  tiktokHandle       String?
+  tiktokFollowers    Int?
+  youtubeHandle      String?
+  youtubeFollowers   Int?
+  facebookHandle     String?
+  facebookFollowers  Int?
 }
 
-model Staff {
-  id           String        @id @default(uuid())
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  firstName    String
-  lastName     String
-  email        String?
-  phoneNumbers PhoneNumber[]
-
-  businessLinks BusinessStaff[] // All businesses this employee is linked to
-}
-
-model BusinessStaff {
+model Contact {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  business   Lead   @relation(fields: [businessId], references: [id])
-  businessId String
+  firstName       String
+  lastName        String
+  title           String? // e.g. "Owner", "Director of Marketing"
+  email           String?
+  phone           String?
+  isDecisionMaker Boolean @default(false)
+  notes           String?
 
-  staff   Staff  @relation(fields: [staffId], references: [id])
-  staffId String
-
-  position   Position @relation(fields: [positionId], references: [id])
-  positionId String
-
-  @@unique([businessId, staffId, positionId]) // Prevent duplicate same-role entries for the same business
-}
-
-model Position {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  name          String          @unique
-  businessStaff BusinessStaff[]
+  lead   Lead   @relation(fields: [leadId], references: [id])
+  leadId String
 }
 
 model Industry {
@@ -166,9 +160,6 @@ model PhoneNumber {
 
   location   Location? @relation(fields: [locationId], references: [id])
   locationId String?
-
-  staff   Staff?  @relation(fields: [staffId], references: [id])
-  staffId String?
 }
 
 model Note {
@@ -200,6 +191,25 @@ model TouchPoint {
 
   receivedResponse Boolean @default(false)
   summary          String?
+
+  sequencePosition SequencePosition?
+
+  reminders Reminder[]
+}
+
+enum SequencePosition {
+  VISIT_A
+  A1
+  A2
+  A3
+  VISIT_B
+  B1
+  B2
+  B3
+  VISIT_C
+  C1
+  C2
+  C3
 }
 
 enum PipelineStage {
@@ -210,6 +220,8 @@ enum PipelineStage {
   PROPOSAL_SENT
   CONVERTED
   DORMANT
+  NOT_A_FIT
+  LOST
 }
 
 enum LeadSource {
@@ -257,6 +269,9 @@ model Reminder {
 
   lead   Lead   @relation(fields: [leadId], references: [id])
   leadId String
+
+  touchPoint   TouchPoint? @relation(fields: [touchPointId], references: [id])
+  touchPointId String?
 
   type    TouchPointType
   dueDate DateTime

@@ -10,13 +10,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { BusinessTypesModule } from './business-types/business-types.module';
 import { NotesModule } from './notes/notes.module';
 import { TouchpointsModule } from './touchpoints/touchpoints.module';
-import { PositionsModule } from './positions/positions.module';
-import { StaffModule } from './staff/staff.module';
 import { LocationsModule } from './locations/locations.module';
 import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
-import { BusinessStaffModule } from './business-staff/business-staff.module';
 import { AuthModule } from './auth/auth.module';
 import { RemindersModule } from './reminders/reminders.module';
+import { ContactsModule } from './contacts/contacts.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
@@ -32,13 +30,11 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     BusinessTypesModule,
     NotesModule,
     TouchpointsModule,
-    PositionsModule,
-    StaffModule,
     LocationsModule,
     PhoneNumbersModule,
-    BusinessStaffModule,
     AuthModule,
     RemindersModule,
+    ContactsModule,
   ],
   controllers: [AppController],
   providers: [

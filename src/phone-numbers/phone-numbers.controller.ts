@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { PhoneNumbersService } from './phone-numbers.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 
 @Controller('phone-numbers')
 export class PhoneNumbersController {

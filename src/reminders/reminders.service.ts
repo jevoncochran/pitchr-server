@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
 
 // What to do when check-in at step N says "no response"
 const SEQUENCE_MAP: Record<number, { type: string; note: string }> = {
-  1: { type: 'EMAIL', note: 'Send email 2' },
-  2: { type: 'EMAIL', note: 'Send email 3' },
+  1: { type: 'EMAIL', note: 'Send outreach A2' },
+  2: { type: 'EMAIL', note: 'Send outreach A3' },
   3: {
     type: 'IN_PERSON',
-    note: 'Visit 2 — stop by in person, then send follow-up email same day',
+    note: 'Visit B — stop by in person, then send follow-up outreach same day',
   },
-  4: { type: 'EMAIL', note: 'Send email 5' },
-  5: { type: 'EMAIL', note: 'Send email 6' },
+  4: { type: 'EMAIL', note: 'Send outreach B2' },
+  5: { type: 'EMAIL', note: 'Send outreach B3' },
   6: {
     type: 'IN_PERSON',
-    note: 'Visit 3 — last in-person push, then send follow-up email same day',
+    note: 'Visit C — last in-person push, then send follow-up outreach same day',
   },
-  7: { type: 'EMAIL', note: 'Send email 8' },
-  8: { type: 'EMAIL', note: 'Send email 9' },
+  7: { type: 'EMAIL', note: 'Send outreach C2' },
+  8: { type: 'EMAIL', note: 'Send outreach C3' },
 };
 
 @Injectable()

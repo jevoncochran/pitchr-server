@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
@@ -34,6 +34,28 @@ export class TouchpointsService {
   }
 
   async remove(id: string) {
+    const tp = await this.databaseService.touchPoint.findUnique({
+      where: { id },
+    });
+
+    if (tp) {
+      // Delete reminders directly linked to this touchpoint
+      await this.databaseService.reminder.deleteMany({
+        where: { touchPointId: id, completed: false },
+      });
+
+      // Also delete any incomplete sequence reminders created after this touchpoint
+      // was logged — these are downstream effects (e.g. check-in answered "No" →
+      // "Send email 2" action) that have no touchPointId but still belong to the chain
+      await this.databaseService.reminder.deleteMany({
+        where: {
+          leadId: tp.leadId,
+          completed: false,
+          createdAt: { gt: tp.createdAt },
+        },
+      });
+    }
+
     return this.databaseService.touchPoint.delete({ where: { id } });
   }
 }

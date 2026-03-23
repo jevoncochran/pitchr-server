@@ -155,32 +155,32 @@ exports.Prisma.LeadScalarFieldEnum = {
   priority: 'priority',
   sequenceStep: 'sequenceStep',
   sequenceActive: 'sequenceActive',
-  assignedToId: 'assignedToId'
+  isHot: 'isHot',
+  assignedToId: 'assignedToId',
+  referredByLeadId: 'referredByLeadId',
+  referredByName: 'referredByName',
+  instagramHandle: 'instagramHandle',
+  instagramFollowers: 'instagramFollowers',
+  tiktokHandle: 'tiktokHandle',
+  tiktokFollowers: 'tiktokFollowers',
+  youtubeHandle: 'youtubeHandle',
+  youtubeFollowers: 'youtubeFollowers',
+  facebookHandle: 'facebookHandle',
+  facebookFollowers: 'facebookFollowers'
 };
 
-exports.Prisma.StaffScalarFieldEnum = {
+exports.Prisma.ContactScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   firstName: 'firstName',
   lastName: 'lastName',
-  email: 'email'
-};
-
-exports.Prisma.BusinessStaffScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  businessId: 'businessId',
-  staffId: 'staffId',
-  positionId: 'positionId'
-};
-
-exports.Prisma.PositionScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  name: 'name'
+  title: 'title',
+  email: 'email',
+  phone: 'phone',
+  isDecisionMaker: 'isDecisionMaker',
+  notes: 'notes',
+  leadId: 'leadId'
 };
 
 exports.Prisma.IndustryScalarFieldEnum = {
@@ -215,8 +215,7 @@ exports.Prisma.PhoneNumberScalarFieldEnum = {
   updatedAt: 'updatedAt',
   number: 'number',
   label: 'label',
-  locationId: 'locationId',
-  staffId: 'staffId'
+  locationId: 'locationId'
 };
 
 exports.Prisma.NoteScalarFieldEnum = {
@@ -237,7 +236,8 @@ exports.Prisma.TouchPointScalarFieldEnum = {
   leadId: 'leadId',
   contactedById: 'contactedById',
   receivedResponse: 'receivedResponse',
-  summary: 'summary'
+  summary: 'summary',
+  sequencePosition: 'sequencePosition'
 };
 
 exports.Prisma.ReminderScalarFieldEnum = {
@@ -245,6 +245,7 @@ exports.Prisma.ReminderScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   leadId: 'leadId',
+  touchPointId: 'touchPointId',
   type: 'type',
   dueDate: 'dueDate',
   note: 'note',
@@ -281,7 +282,9 @@ exports.PipelineStage = exports.$Enums.PipelineStage = {
   MEETING_SCHEDULED: 'MEETING_SCHEDULED',
   PROPOSAL_SENT: 'PROPOSAL_SENT',
   CONVERTED: 'CONVERTED',
-  DORMANT: 'DORMANT'
+  DORMANT: 'DORMANT',
+  NOT_A_FIT: 'NOT_A_FIT',
+  LOST: 'LOST'
 };
 
 exports.LeadSource = exports.$Enums.LeadSource = {
@@ -322,12 +325,25 @@ exports.TouchPointType = exports.$Enums.TouchPointType = {
   MEETING: 'MEETING'
 };
 
+exports.SequencePosition = exports.$Enums.SequencePosition = {
+  VISIT_A: 'VISIT_A',
+  A1: 'A1',
+  A2: 'A2',
+  A3: 'A3',
+  VISIT_B: 'VISIT_B',
+  B1: 'B1',
+  B2: 'B2',
+  B3: 'B3',
+  VISIT_C: 'VISIT_C',
+  C1: 'C1',
+  C2: 'C2',
+  C3: 'C3'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Lead: 'Lead',
-  Staff: 'Staff',
-  BusinessStaff: 'BusinessStaff',
-  Position: 'Position',
+  Contact: 'Contact',
   Industry: 'Industry',
   BusinessType: 'BusinessType',
   Location: 'Location',

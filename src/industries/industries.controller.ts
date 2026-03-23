@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { IndustriesService } from './industries.service';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 
 @Controller('industries')
 export class IndustryController {

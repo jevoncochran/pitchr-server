@@ -24,20 +24,10 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Lead = $Result.DefaultSelection<Prisma.$LeadPayload>
 /**
- * Model Staff
+ * Model Contact
  * 
  */
-export type Staff = $Result.DefaultSelection<Prisma.$StaffPayload>
-/**
- * Model BusinessStaff
- * 
- */
-export type BusinessStaff = $Result.DefaultSelection<Prisma.$BusinessStaffPayload>
-/**
- * Model Position
- * 
- */
-export type Position = $Result.DefaultSelection<Prisma.$PositionPayload>
+export type Contact = $Result.DefaultSelection<Prisma.$ContactPayload>
 /**
  * Model Industry
  * 
@@ -86,6 +76,24 @@ export namespace $Enums {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const SequencePosition: {
+  VISIT_A: 'VISIT_A',
+  A1: 'A1',
+  A2: 'A2',
+  A3: 'A3',
+  VISIT_B: 'VISIT_B',
+  B1: 'B1',
+  B2: 'B2',
+  B3: 'B3',
+  VISIT_C: 'VISIT_C',
+  C1: 'C1',
+  C2: 'C2',
+  C3: 'C3'
+};
+
+export type SequencePosition = (typeof SequencePosition)[keyof typeof SequencePosition]
+
+
 export const PipelineStage: {
   NEW: 'NEW',
   CONTACTED: 'CONTACTED',
@@ -93,7 +101,9 @@ export const PipelineStage: {
   MEETING_SCHEDULED: 'MEETING_SCHEDULED',
   PROPOSAL_SENT: 'PROPOSAL_SENT',
   CONVERTED: 'CONVERTED',
-  DORMANT: 'DORMANT'
+  DORMANT: 'DORMANT',
+  NOT_A_FIT: 'NOT_A_FIT',
+  LOST: 'LOST'
 };
 
 export type PipelineStage = (typeof PipelineStage)[keyof typeof PipelineStage]
@@ -156,6 +166,10 @@ export type PhoneType = (typeof PhoneType)[keyof typeof PhoneType]
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type SequencePosition = $Enums.SequencePosition
+
+export const SequencePosition: typeof $Enums.SequencePosition
 
 export type PipelineStage = $Enums.PipelineStage
 
@@ -327,34 +341,14 @@ export class PrismaClient<
   get lead(): Prisma.LeadDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.staff`: Exposes CRUD operations for the **Staff** model.
+   * `prisma.contact`: Exposes CRUD operations for the **Contact** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Staff
-    * const staff = await prisma.staff.findMany()
+    * // Fetch zero or more Contacts
+    * const contacts = await prisma.contact.findMany()
     * ```
     */
-  get staff(): Prisma.StaffDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.businessStaff`: Exposes CRUD operations for the **BusinessStaff** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more BusinessStaffs
-    * const businessStaffs = await prisma.businessStaff.findMany()
-    * ```
-    */
-  get businessStaff(): Prisma.BusinessStaffDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.position`: Exposes CRUD operations for the **Position** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Positions
-    * const positions = await prisma.position.findMany()
-    * ```
-    */
-  get position(): Prisma.PositionDelegate<ExtArgs, ClientOptions>;
+  get contact(): Prisma.ContactDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.industry`: Exposes CRUD operations for the **Industry** model.
@@ -867,9 +861,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Lead: 'Lead',
-    Staff: 'Staff',
-    BusinessStaff: 'BusinessStaff',
-    Position: 'Position',
+    Contact: 'Contact',
     Industry: 'Industry',
     BusinessType: 'BusinessType',
     Location: 'Location',
@@ -895,7 +887,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "lead" | "staff" | "businessStaff" | "position" | "industry" | "businessType" | "location" | "phoneNumber" | "note" | "touchPoint" | "reminder"
+      modelProps: "user" | "lead" | "contact" | "industry" | "businessType" | "location" | "phoneNumber" | "note" | "touchPoint" | "reminder"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1047,225 +1039,77 @@ export namespace Prisma {
           }
         }
       }
-      Staff: {
-        payload: Prisma.$StaffPayload<ExtArgs>
-        fields: Prisma.StaffFieldRefs
+      Contact: {
+        payload: Prisma.$ContactPayload<ExtArgs>
+        fields: Prisma.ContactFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.StaffFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload> | null
+            args: Prisma.ContactFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.StaffFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+            args: Prisma.ContactFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>
           }
           findFirst: {
-            args: Prisma.StaffFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload> | null
+            args: Prisma.ContactFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.StaffFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+            args: Prisma.ContactFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>
           }
           findMany: {
-            args: Prisma.StaffFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>[]
+            args: Prisma.ContactFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>[]
           }
           create: {
-            args: Prisma.StaffCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+            args: Prisma.ContactCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>
           }
           createMany: {
-            args: Prisma.StaffCreateManyArgs<ExtArgs>
+            args: Prisma.ContactCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.StaffCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>[]
+            args: Prisma.ContactCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>[]
           }
           delete: {
-            args: Prisma.StaffDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+            args: Prisma.ContactDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>
           }
           update: {
-            args: Prisma.StaffUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+            args: Prisma.ContactUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>
           }
           deleteMany: {
-            args: Prisma.StaffDeleteManyArgs<ExtArgs>
+            args: Prisma.ContactDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.StaffUpdateManyArgs<ExtArgs>
+            args: Prisma.ContactUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.StaffUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>[]
+            args: Prisma.ContactUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>[]
           }
           upsert: {
-            args: Prisma.StaffUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$StaffPayload>
+            args: Prisma.ContactUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ContactPayload>
           }
           aggregate: {
-            args: Prisma.StaffAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateStaff>
+            args: Prisma.ContactAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateContact>
           }
           groupBy: {
-            args: Prisma.StaffGroupByArgs<ExtArgs>
-            result: $Utils.Optional<StaffGroupByOutputType>[]
+            args: Prisma.ContactGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ContactGroupByOutputType>[]
           }
           count: {
-            args: Prisma.StaffCountArgs<ExtArgs>
-            result: $Utils.Optional<StaffCountAggregateOutputType> | number
-          }
-        }
-      }
-      BusinessStaff: {
-        payload: Prisma.$BusinessStaffPayload<ExtArgs>
-        fields: Prisma.BusinessStaffFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.BusinessStaffFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.BusinessStaffFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>
-          }
-          findFirst: {
-            args: Prisma.BusinessStaffFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.BusinessStaffFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>
-          }
-          findMany: {
-            args: Prisma.BusinessStaffFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>[]
-          }
-          create: {
-            args: Prisma.BusinessStaffCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>
-          }
-          createMany: {
-            args: Prisma.BusinessStaffCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.BusinessStaffCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>[]
-          }
-          delete: {
-            args: Prisma.BusinessStaffDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>
-          }
-          update: {
-            args: Prisma.BusinessStaffUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>
-          }
-          deleteMany: {
-            args: Prisma.BusinessStaffDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.BusinessStaffUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.BusinessStaffUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>[]
-          }
-          upsert: {
-            args: Prisma.BusinessStaffUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BusinessStaffPayload>
-          }
-          aggregate: {
-            args: Prisma.BusinessStaffAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateBusinessStaff>
-          }
-          groupBy: {
-            args: Prisma.BusinessStaffGroupByArgs<ExtArgs>
-            result: $Utils.Optional<BusinessStaffGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.BusinessStaffCountArgs<ExtArgs>
-            result: $Utils.Optional<BusinessStaffCountAggregateOutputType> | number
-          }
-        }
-      }
-      Position: {
-        payload: Prisma.$PositionPayload<ExtArgs>
-        fields: Prisma.PositionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PositionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PositionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
-          }
-          findFirst: {
-            args: Prisma.PositionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PositionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
-          }
-          findMany: {
-            args: Prisma.PositionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>[]
-          }
-          create: {
-            args: Prisma.PositionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
-          }
-          createMany: {
-            args: Prisma.PositionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.PositionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>[]
-          }
-          delete: {
-            args: Prisma.PositionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
-          }
-          update: {
-            args: Prisma.PositionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
-          }
-          deleteMany: {
-            args: Prisma.PositionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PositionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.PositionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>[]
-          }
-          upsert: {
-            args: Prisma.PositionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
-          }
-          aggregate: {
-            args: Prisma.PositionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePosition>
-          }
-          groupBy: {
-            args: Prisma.PositionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PositionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PositionCountArgs<ExtArgs>
-            result: $Utils.Optional<PositionCountAggregateOutputType> | number
+            args: Prisma.ContactCountArgs<ExtArgs>
+            result: $Utils.Optional<ContactCountAggregateOutputType> | number
           }
         }
       }
@@ -1881,9 +1725,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     lead?: LeadOmit
-    staff?: StaffOmit
-    businessStaff?: BusinessStaffOmit
-    position?: PositionOmit
+    contact?: ContactOmit
     industry?: IndustryOmit
     businessType?: BusinessTypeOmit
     location?: LocationOmit
@@ -2040,18 +1882,20 @@ export namespace Prisma {
 
   export type LeadCountOutputType = {
     locations: number
-    staff: number
+    contacts: number
     touchPoint: number
     notes: number
     reminders: number
+    referrals: number
   }
 
   export type LeadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     locations?: boolean | LeadCountOutputTypeCountLocationsArgs
-    staff?: boolean | LeadCountOutputTypeCountStaffArgs
+    contacts?: boolean | LeadCountOutputTypeCountContactsArgs
     touchPoint?: boolean | LeadCountOutputTypeCountTouchPointArgs
     notes?: boolean | LeadCountOutputTypeCountNotesArgs
     reminders?: boolean | LeadCountOutputTypeCountRemindersArgs
+    referrals?: boolean | LeadCountOutputTypeCountReferralsArgs
   }
 
   // Custom InputTypes
@@ -2075,8 +1919,8 @@ export namespace Prisma {
   /**
    * LeadCountOutputType without action
    */
-  export type LeadCountOutputTypeCountStaffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BusinessStaffWhereInput
+  export type LeadCountOutputTypeCountContactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactWhereInput
   }
 
   /**
@@ -2100,75 +1944,11 @@ export namespace Prisma {
     where?: ReminderWhereInput
   }
 
-
   /**
-   * Count Type StaffCountOutputType
+   * LeadCountOutputType without action
    */
-
-  export type StaffCountOutputType = {
-    phoneNumbers: number
-    businessLinks: number
-  }
-
-  export type StaffCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    phoneNumbers?: boolean | StaffCountOutputTypeCountPhoneNumbersArgs
-    businessLinks?: boolean | StaffCountOutputTypeCountBusinessLinksArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * StaffCountOutputType without action
-   */
-  export type StaffCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the StaffCountOutputType
-     */
-    select?: StaffCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * StaffCountOutputType without action
-   */
-  export type StaffCountOutputTypeCountPhoneNumbersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PhoneNumberWhereInput
-  }
-
-  /**
-   * StaffCountOutputType without action
-   */
-  export type StaffCountOutputTypeCountBusinessLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BusinessStaffWhereInput
-  }
-
-
-  /**
-   * Count Type PositionCountOutputType
-   */
-
-  export type PositionCountOutputType = {
-    businessStaff: number
-  }
-
-  export type PositionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    businessStaff?: boolean | PositionCountOutputTypeCountBusinessStaffArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * PositionCountOutputType without action
-   */
-  export type PositionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PositionCountOutputType
-     */
-    select?: PositionCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * PositionCountOutputType without action
-   */
-  export type PositionCountOutputTypeCountBusinessStaffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BusinessStaffWhereInput
+  export type LeadCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadWhereInput
   }
 
 
@@ -2262,6 +2042,37 @@ export namespace Prisma {
    */
   export type LocationCountOutputTypeCountPhoneNumbersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PhoneNumberWhereInput
+  }
+
+
+  /**
+   * Count Type TouchPointCountOutputType
+   */
+
+  export type TouchPointCountOutputType = {
+    reminders: number
+  }
+
+  export type TouchPointCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reminders?: boolean | TouchPointCountOutputTypeCountRemindersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TouchPointCountOutputType without action
+   */
+  export type TouchPointCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TouchPointCountOutputType
+     */
+    select?: TouchPointCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TouchPointCountOutputType without action
+   */
+  export type TouchPointCountOutputTypeCountRemindersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReminderWhereInput
   }
 
 
@@ -3449,11 +3260,19 @@ export namespace Prisma {
   export type LeadAvgAggregateOutputType = {
     igFollowerCount: number | null
     sequenceStep: number | null
+    instagramFollowers: number | null
+    tiktokFollowers: number | null
+    youtubeFollowers: number | null
+    facebookFollowers: number | null
   }
 
   export type LeadSumAggregateOutputType = {
     igFollowerCount: number | null
     sequenceStep: number | null
+    instagramFollowers: number | null
+    tiktokFollowers: number | null
+    youtubeFollowers: number | null
+    facebookFollowers: number | null
   }
 
   export type LeadMinAggregateOutputType = {
@@ -3480,7 +3299,18 @@ export namespace Prisma {
     priority: $Enums.Priority | null
     sequenceStep: number | null
     sequenceActive: boolean | null
+    isHot: boolean | null
     assignedToId: string | null
+    referredByLeadId: string | null
+    referredByName: string | null
+    instagramHandle: string | null
+    instagramFollowers: number | null
+    tiktokHandle: string | null
+    tiktokFollowers: number | null
+    youtubeHandle: string | null
+    youtubeFollowers: number | null
+    facebookHandle: string | null
+    facebookFollowers: number | null
   }
 
   export type LeadMaxAggregateOutputType = {
@@ -3507,7 +3337,18 @@ export namespace Prisma {
     priority: $Enums.Priority | null
     sequenceStep: number | null
     sequenceActive: boolean | null
+    isHot: boolean | null
     assignedToId: string | null
+    referredByLeadId: string | null
+    referredByName: string | null
+    instagramHandle: string | null
+    instagramFollowers: number | null
+    tiktokHandle: string | null
+    tiktokFollowers: number | null
+    youtubeHandle: string | null
+    youtubeFollowers: number | null
+    facebookHandle: string | null
+    facebookFollowers: number | null
   }
 
   export type LeadCountAggregateOutputType = {
@@ -3534,7 +3375,18 @@ export namespace Prisma {
     priority: number
     sequenceStep: number
     sequenceActive: number
+    isHot: number
     assignedToId: number
+    referredByLeadId: number
+    referredByName: number
+    instagramHandle: number
+    instagramFollowers: number
+    tiktokHandle: number
+    tiktokFollowers: number
+    youtubeHandle: number
+    youtubeFollowers: number
+    facebookHandle: number
+    facebookFollowers: number
     _all: number
   }
 
@@ -3542,11 +3394,19 @@ export namespace Prisma {
   export type LeadAvgAggregateInputType = {
     igFollowerCount?: true
     sequenceStep?: true
+    instagramFollowers?: true
+    tiktokFollowers?: true
+    youtubeFollowers?: true
+    facebookFollowers?: true
   }
 
   export type LeadSumAggregateInputType = {
     igFollowerCount?: true
     sequenceStep?: true
+    instagramFollowers?: true
+    tiktokFollowers?: true
+    youtubeFollowers?: true
+    facebookFollowers?: true
   }
 
   export type LeadMinAggregateInputType = {
@@ -3573,7 +3433,18 @@ export namespace Prisma {
     priority?: true
     sequenceStep?: true
     sequenceActive?: true
+    isHot?: true
     assignedToId?: true
+    referredByLeadId?: true
+    referredByName?: true
+    instagramHandle?: true
+    instagramFollowers?: true
+    tiktokHandle?: true
+    tiktokFollowers?: true
+    youtubeHandle?: true
+    youtubeFollowers?: true
+    facebookHandle?: true
+    facebookFollowers?: true
   }
 
   export type LeadMaxAggregateInputType = {
@@ -3600,7 +3471,18 @@ export namespace Prisma {
     priority?: true
     sequenceStep?: true
     sequenceActive?: true
+    isHot?: true
     assignedToId?: true
+    referredByLeadId?: true
+    referredByName?: true
+    instagramHandle?: true
+    instagramFollowers?: true
+    tiktokHandle?: true
+    tiktokFollowers?: true
+    youtubeHandle?: true
+    youtubeFollowers?: true
+    facebookHandle?: true
+    facebookFollowers?: true
   }
 
   export type LeadCountAggregateInputType = {
@@ -3627,7 +3509,18 @@ export namespace Prisma {
     priority?: true
     sequenceStep?: true
     sequenceActive?: true
+    isHot?: true
     assignedToId?: true
+    referredByLeadId?: true
+    referredByName?: true
+    instagramHandle?: true
+    instagramFollowers?: true
+    tiktokHandle?: true
+    tiktokFollowers?: true
+    youtubeHandle?: true
+    youtubeFollowers?: true
+    facebookHandle?: true
+    facebookFollowers?: true
     _all?: true
   }
 
@@ -3741,7 +3634,18 @@ export namespace Prisma {
     priority: $Enums.Priority | null
     sequenceStep: number
     sequenceActive: boolean
+    isHot: boolean
     assignedToId: string | null
+    referredByLeadId: string | null
+    referredByName: string | null
+    instagramHandle: string | null
+    instagramFollowers: number | null
+    tiktokHandle: string | null
+    tiktokFollowers: number | null
+    youtubeHandle: string | null
+    youtubeFollowers: number | null
+    facebookHandle: string | null
+    facebookFollowers: number | null
     _count: LeadCountAggregateOutputType | null
     _avg: LeadAvgAggregateOutputType | null
     _sum: LeadSumAggregateOutputType | null
@@ -3787,16 +3691,29 @@ export namespace Prisma {
     priority?: boolean
     sequenceStep?: boolean
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: boolean
+    referredByLeadId?: boolean
+    referredByName?: boolean
+    instagramHandle?: boolean
+    instagramFollowers?: boolean
+    tiktokHandle?: boolean
+    tiktokFollowers?: boolean
+    youtubeHandle?: boolean
+    youtubeFollowers?: boolean
+    facebookHandle?: boolean
+    facebookFollowers?: boolean
     locations?: boolean | Lead$locationsArgs<ExtArgs>
     primaryLocation?: boolean | Lead$primaryLocationArgs<ExtArgs>
-    staff?: boolean | Lead$staffArgs<ExtArgs>
+    contacts?: boolean | Lead$contactsArgs<ExtArgs>
     industry?: boolean | IndustryDefaultArgs<ExtArgs>
     businessType?: boolean | BusinessTypeDefaultArgs<ExtArgs>
     touchPoint?: boolean | Lead$touchPointArgs<ExtArgs>
     notes?: boolean | Lead$notesArgs<ExtArgs>
     reminders?: boolean | Lead$remindersArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
+    referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
+    referrals?: boolean | Lead$referralsArgs<ExtArgs>
     _count?: boolean | LeadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lead"]>
 
@@ -3824,11 +3741,23 @@ export namespace Prisma {
     priority?: boolean
     sequenceStep?: boolean
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: boolean
+    referredByLeadId?: boolean
+    referredByName?: boolean
+    instagramHandle?: boolean
+    instagramFollowers?: boolean
+    tiktokHandle?: boolean
+    tiktokFollowers?: boolean
+    youtubeHandle?: boolean
+    youtubeFollowers?: boolean
+    facebookHandle?: boolean
+    facebookFollowers?: boolean
     primaryLocation?: boolean | Lead$primaryLocationArgs<ExtArgs>
     industry?: boolean | IndustryDefaultArgs<ExtArgs>
     businessType?: boolean | BusinessTypeDefaultArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
+    referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
   }, ExtArgs["result"]["lead"]>
 
   export type LeadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3855,11 +3784,23 @@ export namespace Prisma {
     priority?: boolean
     sequenceStep?: boolean
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: boolean
+    referredByLeadId?: boolean
+    referredByName?: boolean
+    instagramHandle?: boolean
+    instagramFollowers?: boolean
+    tiktokHandle?: boolean
+    tiktokFollowers?: boolean
+    youtubeHandle?: boolean
+    youtubeFollowers?: boolean
+    facebookHandle?: boolean
+    facebookFollowers?: boolean
     primaryLocation?: boolean | Lead$primaryLocationArgs<ExtArgs>
     industry?: boolean | IndustryDefaultArgs<ExtArgs>
     businessType?: boolean | BusinessTypeDefaultArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
+    referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
   }, ExtArgs["result"]["lead"]>
 
   export type LeadSelectScalar = {
@@ -3886,20 +3827,33 @@ export namespace Prisma {
     priority?: boolean
     sequenceStep?: boolean
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: boolean
+    referredByLeadId?: boolean
+    referredByName?: boolean
+    instagramHandle?: boolean
+    instagramFollowers?: boolean
+    tiktokHandle?: boolean
+    tiktokFollowers?: boolean
+    youtubeHandle?: boolean
+    youtubeFollowers?: boolean
+    facebookHandle?: boolean
+    facebookFollowers?: boolean
   }
 
-  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "business" | "primaryLocationId" | "industryId" | "businessTypeId" | "igHandle" | "igFollowerCount" | "email" | "website" | "pipelineStage" | "source" | "discoveredVia" | "discoveredViaOther" | "convertedAt" | "isBlackOwned" | "isWomanOwned" | "isLatinoOwned" | "isImmigrantOwned" | "priority" | "sequenceStep" | "sequenceActive" | "assignedToId", ExtArgs["result"]["lead"]>
+  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "business" | "primaryLocationId" | "industryId" | "businessTypeId" | "igHandle" | "igFollowerCount" | "email" | "website" | "pipelineStage" | "source" | "discoveredVia" | "discoveredViaOther" | "convertedAt" | "isBlackOwned" | "isWomanOwned" | "isLatinoOwned" | "isImmigrantOwned" | "priority" | "sequenceStep" | "sequenceActive" | "isHot" | "assignedToId" | "referredByLeadId" | "referredByName" | "instagramHandle" | "instagramFollowers" | "tiktokHandle" | "tiktokFollowers" | "youtubeHandle" | "youtubeFollowers" | "facebookHandle" | "facebookFollowers", ExtArgs["result"]["lead"]>
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     locations?: boolean | Lead$locationsArgs<ExtArgs>
     primaryLocation?: boolean | Lead$primaryLocationArgs<ExtArgs>
-    staff?: boolean | Lead$staffArgs<ExtArgs>
+    contacts?: boolean | Lead$contactsArgs<ExtArgs>
     industry?: boolean | IndustryDefaultArgs<ExtArgs>
     businessType?: boolean | BusinessTypeDefaultArgs<ExtArgs>
     touchPoint?: boolean | Lead$touchPointArgs<ExtArgs>
     notes?: boolean | Lead$notesArgs<ExtArgs>
     reminders?: boolean | Lead$remindersArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
+    referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
+    referrals?: boolean | Lead$referralsArgs<ExtArgs>
     _count?: boolean | LeadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LeadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3907,12 +3861,14 @@ export namespace Prisma {
     industry?: boolean | IndustryDefaultArgs<ExtArgs>
     businessType?: boolean | BusinessTypeDefaultArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
+    referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
   }
   export type LeadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryLocation?: boolean | Lead$primaryLocationArgs<ExtArgs>
     industry?: boolean | IndustryDefaultArgs<ExtArgs>
     businessType?: boolean | BusinessTypeDefaultArgs<ExtArgs>
     assignedTo?: boolean | Lead$assignedToArgs<ExtArgs>
+    referredByLead?: boolean | Lead$referredByLeadArgs<ExtArgs>
   }
 
   export type $LeadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3920,13 +3876,15 @@ export namespace Prisma {
     objects: {
       locations: Prisma.$LocationPayload<ExtArgs>[]
       primaryLocation: Prisma.$LocationPayload<ExtArgs> | null
-      staff: Prisma.$BusinessStaffPayload<ExtArgs>[]
+      contacts: Prisma.$ContactPayload<ExtArgs>[]
       industry: Prisma.$IndustryPayload<ExtArgs>
       businessType: Prisma.$BusinessTypePayload<ExtArgs>
       touchPoint: Prisma.$TouchPointPayload<ExtArgs>[]
       notes: Prisma.$NotePayload<ExtArgs>[]
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
       assignedTo: Prisma.$UserPayload<ExtArgs> | null
+      referredByLead: Prisma.$LeadPayload<ExtArgs> | null
+      referrals: Prisma.$LeadPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3952,7 +3910,18 @@ export namespace Prisma {
       priority: $Enums.Priority | null
       sequenceStep: number
       sequenceActive: boolean
+      isHot: boolean
       assignedToId: string | null
+      referredByLeadId: string | null
+      referredByName: string | null
+      instagramHandle: string | null
+      instagramFollowers: number | null
+      tiktokHandle: string | null
+      tiktokFollowers: number | null
+      youtubeHandle: string | null
+      youtubeFollowers: number | null
+      facebookHandle: string | null
+      facebookFollowers: number | null
     }, ExtArgs["result"]["lead"]>
     composites: {}
   }
@@ -4349,13 +4318,15 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     locations<T extends Lead$locationsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     primaryLocation<T extends Lead$primaryLocationArgs<ExtArgs> = {}>(args?: Subset<T, Lead$primaryLocationArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    staff<T extends Lead$staffArgs<ExtArgs> = {}>(args?: Subset<T, Lead$staffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contacts<T extends Lead$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     industry<T extends IndustryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IndustryDefaultArgs<ExtArgs>>): Prisma__IndustryClient<$Result.GetResult<Prisma.$IndustryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     businessType<T extends BusinessTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessTypeDefaultArgs<ExtArgs>>): Prisma__BusinessTypeClient<$Result.GetResult<Prisma.$BusinessTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     touchPoint<T extends Lead$touchPointArgs<ExtArgs> = {}>(args?: Subset<T, Lead$touchPointArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TouchPointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notes<T extends Lead$notesArgs<ExtArgs> = {}>(args?: Subset<T, Lead$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reminders<T extends Lead$remindersArgs<ExtArgs> = {}>(args?: Subset<T, Lead$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assignedTo<T extends Lead$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Lead$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    referredByLead<T extends Lead$referredByLeadArgs<ExtArgs> = {}>(args?: Subset<T, Lead$referredByLeadArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    referrals<T extends Lead$referralsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4408,7 +4379,18 @@ export namespace Prisma {
     readonly priority: FieldRef<"Lead", 'Priority'>
     readonly sequenceStep: FieldRef<"Lead", 'Int'>
     readonly sequenceActive: FieldRef<"Lead", 'Boolean'>
+    readonly isHot: FieldRef<"Lead", 'Boolean'>
     readonly assignedToId: FieldRef<"Lead", 'String'>
+    readonly referredByLeadId: FieldRef<"Lead", 'String'>
+    readonly referredByName: FieldRef<"Lead", 'String'>
+    readonly instagramHandle: FieldRef<"Lead", 'String'>
+    readonly instagramFollowers: FieldRef<"Lead", 'Int'>
+    readonly tiktokHandle: FieldRef<"Lead", 'String'>
+    readonly tiktokFollowers: FieldRef<"Lead", 'Int'>
+    readonly youtubeHandle: FieldRef<"Lead", 'String'>
+    readonly youtubeFollowers: FieldRef<"Lead", 'Int'>
+    readonly facebookHandle: FieldRef<"Lead", 'String'>
+    readonly facebookFollowers: FieldRef<"Lead", 'Int'>
   }
     
 
@@ -4848,27 +4830,27 @@ export namespace Prisma {
   }
 
   /**
-   * Lead.staff
+   * Lead.contacts
    */
-  export type Lead$staffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lead$contactsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BusinessStaff
+     * Select specific fields to fetch from the Contact
      */
-    select?: BusinessStaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the BusinessStaff
+     * Omit specific fields from the Contact
      */
-    omit?: BusinessStaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    where?: BusinessStaffWhereInput
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    cursor?: BusinessStaffWhereUniqueInput
+    include?: ContactInclude<ExtArgs> | null
+    where?: ContactWhereInput
+    orderBy?: ContactOrderByWithRelationInput | ContactOrderByWithRelationInput[]
+    cursor?: ContactWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: BusinessStaffScalarFieldEnum | BusinessStaffScalarFieldEnum[]
+    distinct?: ContactScalarFieldEnum | ContactScalarFieldEnum[]
   }
 
   /**
@@ -4963,6 +4945,49 @@ export namespace Prisma {
   }
 
   /**
+   * Lead.referredByLead
+   */
+  export type Lead$referredByLeadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Lead
+     */
+    omit?: LeadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    where?: LeadWhereInput
+  }
+
+  /**
+   * Lead.referrals
+   */
+  export type Lead$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Lead
+     */
+    omit?: LeadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    where?: LeadWhereInput
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    cursor?: LeadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
    * Lead without action
    */
   export type LeadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4982,223 +5007,279 @@ export namespace Prisma {
 
 
   /**
-   * Model Staff
+   * Model Contact
    */
 
-  export type AggregateStaff = {
-    _count: StaffCountAggregateOutputType | null
-    _min: StaffMinAggregateOutputType | null
-    _max: StaffMaxAggregateOutputType | null
+  export type AggregateContact = {
+    _count: ContactCountAggregateOutputType | null
+    _min: ContactMinAggregateOutputType | null
+    _max: ContactMaxAggregateOutputType | null
   }
 
-  export type StaffMinAggregateOutputType = {
+  export type ContactMinAggregateOutputType = {
     id: string | null
     createdAt: Date | null
     updatedAt: Date | null
     firstName: string | null
     lastName: string | null
+    title: string | null
     email: string | null
+    phone: string | null
+    isDecisionMaker: boolean | null
+    notes: string | null
+    leadId: string | null
   }
 
-  export type StaffMaxAggregateOutputType = {
+  export type ContactMaxAggregateOutputType = {
     id: string | null
     createdAt: Date | null
     updatedAt: Date | null
     firstName: string | null
     lastName: string | null
+    title: string | null
     email: string | null
+    phone: string | null
+    isDecisionMaker: boolean | null
+    notes: string | null
+    leadId: string | null
   }
 
-  export type StaffCountAggregateOutputType = {
+  export type ContactCountAggregateOutputType = {
     id: number
     createdAt: number
     updatedAt: number
     firstName: number
     lastName: number
+    title: number
     email: number
+    phone: number
+    isDecisionMaker: number
+    notes: number
+    leadId: number
     _all: number
   }
 
 
-  export type StaffMinAggregateInputType = {
+  export type ContactMinAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
     firstName?: true
     lastName?: true
+    title?: true
     email?: true
+    phone?: true
+    isDecisionMaker?: true
+    notes?: true
+    leadId?: true
   }
 
-  export type StaffMaxAggregateInputType = {
+  export type ContactMaxAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
     firstName?: true
     lastName?: true
+    title?: true
     email?: true
+    phone?: true
+    isDecisionMaker?: true
+    notes?: true
+    leadId?: true
   }
 
-  export type StaffCountAggregateInputType = {
+  export type ContactCountAggregateInputType = {
     id?: true
     createdAt?: true
     updatedAt?: true
     firstName?: true
     lastName?: true
+    title?: true
     email?: true
+    phone?: true
+    isDecisionMaker?: true
+    notes?: true
+    leadId?: true
     _all?: true
   }
 
-  export type StaffAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Staff to aggregate.
+     * Filter which Contact to aggregate.
      */
-    where?: StaffWhereInput
+    where?: ContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Staff to fetch.
+     * Determine the order of Contacts to fetch.
      */
-    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    orderBy?: ContactOrderByWithRelationInput | ContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: StaffWhereUniqueInput
+    cursor?: ContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Staff from the position of the cursor.
+     * Take `±n` Contacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Staff.
+     * Skip the first `n` Contacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Staff
+     * Count returned Contacts
     **/
-    _count?: true | StaffCountAggregateInputType
+    _count?: true | ContactCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: StaffMinAggregateInputType
+    _min?: ContactMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: StaffMaxAggregateInputType
+    _max?: ContactMaxAggregateInputType
   }
 
-  export type GetStaffAggregateType<T extends StaffAggregateArgs> = {
-        [P in keyof T & keyof AggregateStaff]: P extends '_count' | 'count'
+  export type GetContactAggregateType<T extends ContactAggregateArgs> = {
+        [P in keyof T & keyof AggregateContact]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateStaff[P]>
-      : GetScalarType<T[P], AggregateStaff[P]>
+        : GetScalarType<T[P], AggregateContact[P]>
+      : GetScalarType<T[P], AggregateContact[P]>
   }
 
 
 
 
-  export type StaffGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: StaffWhereInput
-    orderBy?: StaffOrderByWithAggregationInput | StaffOrderByWithAggregationInput[]
-    by: StaffScalarFieldEnum[] | StaffScalarFieldEnum
-    having?: StaffScalarWhereWithAggregatesInput
+  export type ContactGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContactWhereInput
+    orderBy?: ContactOrderByWithAggregationInput | ContactOrderByWithAggregationInput[]
+    by: ContactScalarFieldEnum[] | ContactScalarFieldEnum
+    having?: ContactScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: StaffCountAggregateInputType | true
-    _min?: StaffMinAggregateInputType
-    _max?: StaffMaxAggregateInputType
+    _count?: ContactCountAggregateInputType | true
+    _min?: ContactMinAggregateInputType
+    _max?: ContactMaxAggregateInputType
   }
 
-  export type StaffGroupByOutputType = {
+  export type ContactGroupByOutputType = {
     id: string
     createdAt: Date
     updatedAt: Date
     firstName: string
     lastName: string
+    title: string | null
     email: string | null
-    _count: StaffCountAggregateOutputType | null
-    _min: StaffMinAggregateOutputType | null
-    _max: StaffMaxAggregateOutputType | null
+    phone: string | null
+    isDecisionMaker: boolean
+    notes: string | null
+    leadId: string
+    _count: ContactCountAggregateOutputType | null
+    _min: ContactMinAggregateOutputType | null
+    _max: ContactMaxAggregateOutputType | null
   }
 
-  type GetStaffGroupByPayload<T extends StaffGroupByArgs> = Prisma.PrismaPromise<
+  type GetContactGroupByPayload<T extends ContactGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<StaffGroupByOutputType, T['by']> &
+      PickEnumerable<ContactGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof StaffGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ContactGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], StaffGroupByOutputType[P]>
-            : GetScalarType<T[P], StaffGroupByOutputType[P]>
+              : GetScalarType<T[P], ContactGroupByOutputType[P]>
+            : GetScalarType<T[P], ContactGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type StaffSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ContactSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     firstName?: boolean
     lastName?: boolean
+    title?: boolean
     email?: boolean
-    phoneNumbers?: boolean | Staff$phoneNumbersArgs<ExtArgs>
-    businessLinks?: boolean | Staff$businessLinksArgs<ExtArgs>
-    _count?: boolean | StaffCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["staff"]>
+    phone?: boolean
+    isDecisionMaker?: boolean
+    notes?: boolean
+    leadId?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contact"]>
 
-  export type StaffSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ContactSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     firstName?: boolean
     lastName?: boolean
+    title?: boolean
     email?: boolean
-  }, ExtArgs["result"]["staff"]>
+    phone?: boolean
+    isDecisionMaker?: boolean
+    notes?: boolean
+    leadId?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contact"]>
 
-  export type StaffSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ContactSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     firstName?: boolean
     lastName?: boolean
+    title?: boolean
     email?: boolean
-  }, ExtArgs["result"]["staff"]>
+    phone?: boolean
+    isDecisionMaker?: boolean
+    notes?: boolean
+    leadId?: boolean
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["contact"]>
 
-  export type StaffSelectScalar = {
+  export type ContactSelectScalar = {
     id?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     firstName?: boolean
     lastName?: boolean
+    title?: boolean
     email?: boolean
+    phone?: boolean
+    isDecisionMaker?: boolean
+    notes?: boolean
+    leadId?: boolean
   }
 
-  export type StaffOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "firstName" | "lastName" | "email", ExtArgs["result"]["staff"]>
-  export type StaffInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    phoneNumbers?: boolean | Staff$phoneNumbersArgs<ExtArgs>
-    businessLinks?: boolean | Staff$businessLinksArgs<ExtArgs>
-    _count?: boolean | StaffCountOutputTypeDefaultArgs<ExtArgs>
+  export type ContactOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "firstName" | "lastName" | "title" | "email" | "phone" | "isDecisionMaker" | "notes" | "leadId", ExtArgs["result"]["contact"]>
+  export type ContactInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
   }
-  export type StaffIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type StaffIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ContactIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }
+  export type ContactIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lead?: boolean | LeadDefaultArgs<ExtArgs>
+  }
 
-  export type $StaffPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Staff"
+  export type $ContactPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Contact"
     objects: {
-      phoneNumbers: Prisma.$PhoneNumberPayload<ExtArgs>[]
-      businessLinks: Prisma.$BusinessStaffPayload<ExtArgs>[]
+      lead: Prisma.$LeadPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5206,137 +5287,142 @@ export namespace Prisma {
       updatedAt: Date
       firstName: string
       lastName: string
+      title: string | null
       email: string | null
-    }, ExtArgs["result"]["staff"]>
+      phone: string | null
+      isDecisionMaker: boolean
+      notes: string | null
+      leadId: string
+    }, ExtArgs["result"]["contact"]>
     composites: {}
   }
 
-  type StaffGetPayload<S extends boolean | null | undefined | StaffDefaultArgs> = $Result.GetResult<Prisma.$StaffPayload, S>
+  type ContactGetPayload<S extends boolean | null | undefined | ContactDefaultArgs> = $Result.GetResult<Prisma.$ContactPayload, S>
 
-  type StaffCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<StaffFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: StaffCountAggregateInputType | true
+  type ContactCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ContactFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ContactCountAggregateInputType | true
     }
 
-  export interface StaffDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Staff'], meta: { name: 'Staff' } }
+  export interface ContactDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Contact'], meta: { name: 'Contact' } }
     /**
-     * Find zero or one Staff that matches the filter.
-     * @param {StaffFindUniqueArgs} args - Arguments to find a Staff
+     * Find zero or one Contact that matches the filter.
+     * @param {ContactFindUniqueArgs} args - Arguments to find a Contact
      * @example
-     * // Get one Staff
-     * const staff = await prisma.staff.findUnique({
+     * // Get one Contact
+     * const contact = await prisma.contact.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends StaffFindUniqueArgs>(args: SelectSubset<T, StaffFindUniqueArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends ContactFindUniqueArgs>(args: SelectSubset<T, ContactFindUniqueArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Staff that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Contact that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {StaffFindUniqueOrThrowArgs} args - Arguments to find a Staff
+     * @param {ContactFindUniqueOrThrowArgs} args - Arguments to find a Contact
      * @example
-     * // Get one Staff
-     * const staff = await prisma.staff.findUniqueOrThrow({
+     * // Get one Contact
+     * const contact = await prisma.contact.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends StaffFindUniqueOrThrowArgs>(args: SelectSubset<T, StaffFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends ContactFindUniqueOrThrowArgs>(args: SelectSubset<T, ContactFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Staff that matches the filter.
+     * Find the first Contact that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffFindFirstArgs} args - Arguments to find a Staff
+     * @param {ContactFindFirstArgs} args - Arguments to find a Contact
      * @example
-     * // Get one Staff
-     * const staff = await prisma.staff.findFirst({
+     * // Get one Contact
+     * const contact = await prisma.contact.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends StaffFindFirstArgs>(args?: SelectSubset<T, StaffFindFirstArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends ContactFindFirstArgs>(args?: SelectSubset<T, ContactFindFirstArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Staff that matches the filter or
+     * Find the first Contact that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffFindFirstOrThrowArgs} args - Arguments to find a Staff
+     * @param {ContactFindFirstOrThrowArgs} args - Arguments to find a Contact
      * @example
-     * // Get one Staff
-     * const staff = await prisma.staff.findFirstOrThrow({
+     * // Get one Contact
+     * const contact = await prisma.contact.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends StaffFindFirstOrThrowArgs>(args?: SelectSubset<T, StaffFindFirstOrThrowArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends ContactFindFirstOrThrowArgs>(args?: SelectSubset<T, ContactFindFirstOrThrowArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Staff that matches the filter.
+     * Find zero or more Contacts that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {ContactFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Staff
-     * const staff = await prisma.staff.findMany()
+     * // Get all Contacts
+     * const contacts = await prisma.contact.findMany()
      * 
-     * // Get first 10 Staff
-     * const staff = await prisma.staff.findMany({ take: 10 })
+     * // Get first 10 Contacts
+     * const contacts = await prisma.contact.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const staffWithIdOnly = await prisma.staff.findMany({ select: { id: true } })
+     * const contactWithIdOnly = await prisma.contact.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends StaffFindManyArgs>(args?: SelectSubset<T, StaffFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends ContactFindManyArgs>(args?: SelectSubset<T, ContactFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Staff.
-     * @param {StaffCreateArgs} args - Arguments to create a Staff.
+     * Create a Contact.
+     * @param {ContactCreateArgs} args - Arguments to create a Contact.
      * @example
-     * // Create one Staff
-     * const Staff = await prisma.staff.create({
+     * // Create one Contact
+     * const Contact = await prisma.contact.create({
      *   data: {
-     *     // ... data to create a Staff
+     *     // ... data to create a Contact
      *   }
      * })
      * 
      */
-    create<T extends StaffCreateArgs>(args: SelectSubset<T, StaffCreateArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends ContactCreateArgs>(args: SelectSubset<T, ContactCreateArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Staff.
-     * @param {StaffCreateManyArgs} args - Arguments to create many Staff.
+     * Create many Contacts.
+     * @param {ContactCreateManyArgs} args - Arguments to create many Contacts.
      * @example
-     * // Create many Staff
-     * const staff = await prisma.staff.createMany({
+     * // Create many Contacts
+     * const contact = await prisma.contact.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends StaffCreateManyArgs>(args?: SelectSubset<T, StaffCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends ContactCreateManyArgs>(args?: SelectSubset<T, ContactCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Staff and returns the data saved in the database.
-     * @param {StaffCreateManyAndReturnArgs} args - Arguments to create many Staff.
+     * Create many Contacts and returns the data saved in the database.
+     * @param {ContactCreateManyAndReturnArgs} args - Arguments to create many Contacts.
      * @example
-     * // Create many Staff
-     * const staff = await prisma.staff.createManyAndReturn({
+     * // Create many Contacts
+     * const contact = await prisma.contact.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Staff and only return the `id`
-     * const staffWithIdOnly = await prisma.staff.createManyAndReturn({
+     * // Create many Contacts and only return the `id`
+     * const contactWithIdOnly = await prisma.contact.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -5346,28 +5432,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends StaffCreateManyAndReturnArgs>(args?: SelectSubset<T, StaffCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends ContactCreateManyAndReturnArgs>(args?: SelectSubset<T, ContactCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Staff.
-     * @param {StaffDeleteArgs} args - Arguments to delete one Staff.
+     * Delete a Contact.
+     * @param {ContactDeleteArgs} args - Arguments to delete one Contact.
      * @example
-     * // Delete one Staff
-     * const Staff = await prisma.staff.delete({
+     * // Delete one Contact
+     * const Contact = await prisma.contact.delete({
      *   where: {
-     *     // ... filter to delete one Staff
+     *     // ... filter to delete one Contact
      *   }
      * })
      * 
      */
-    delete<T extends StaffDeleteArgs>(args: SelectSubset<T, StaffDeleteArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends ContactDeleteArgs>(args: SelectSubset<T, ContactDeleteArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Staff.
-     * @param {StaffUpdateArgs} args - Arguments to update one Staff.
+     * Update one Contact.
+     * @param {ContactUpdateArgs} args - Arguments to update one Contact.
      * @example
-     * // Update one Staff
-     * const staff = await prisma.staff.update({
+     * // Update one Contact
+     * const contact = await prisma.contact.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5377,30 +5463,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends StaffUpdateArgs>(args: SelectSubset<T, StaffUpdateArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends ContactUpdateArgs>(args: SelectSubset<T, ContactUpdateArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Staff.
-     * @param {StaffDeleteManyArgs} args - Arguments to filter Staff to delete.
+     * Delete zero or more Contacts.
+     * @param {ContactDeleteManyArgs} args - Arguments to filter Contacts to delete.
      * @example
-     * // Delete a few Staff
-     * const { count } = await prisma.staff.deleteMany({
+     * // Delete a few Contacts
+     * const { count } = await prisma.contact.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends StaffDeleteManyArgs>(args?: SelectSubset<T, StaffDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends ContactDeleteManyArgs>(args?: SelectSubset<T, ContactDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Staff.
+     * Update zero or more Contacts.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ContactUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Staff
-     * const staff = await prisma.staff.updateMany({
+     * // Update many Contacts
+     * const contact = await prisma.contact.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5410,14 +5496,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends StaffUpdateManyArgs>(args: SelectSubset<T, StaffUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends ContactUpdateManyArgs>(args: SelectSubset<T, ContactUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Staff and returns the data updated in the database.
-     * @param {StaffUpdateManyAndReturnArgs} args - Arguments to update many Staff.
+     * Update zero or more Contacts and returns the data updated in the database.
+     * @param {ContactUpdateManyAndReturnArgs} args - Arguments to update many Contacts.
      * @example
-     * // Update many Staff
-     * const staff = await prisma.staff.updateManyAndReturn({
+     * // Update many Contacts
+     * const contact = await prisma.contact.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5426,8 +5512,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Staff and only return the `id`
-     * const staffWithIdOnly = await prisma.staff.updateManyAndReturn({
+     * // Update zero or more Contacts and only return the `id`
+     * const contactWithIdOnly = await prisma.contact.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -5440,56 +5526,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends StaffUpdateManyAndReturnArgs>(args: SelectSubset<T, StaffUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends ContactUpdateManyAndReturnArgs>(args: SelectSubset<T, ContactUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Staff.
-     * @param {StaffUpsertArgs} args - Arguments to update or create a Staff.
+     * Create or update one Contact.
+     * @param {ContactUpsertArgs} args - Arguments to update or create a Contact.
      * @example
-     * // Update or create a Staff
-     * const staff = await prisma.staff.upsert({
+     * // Update or create a Contact
+     * const contact = await prisma.contact.upsert({
      *   create: {
-     *     // ... data to create a Staff
+     *     // ... data to create a Contact
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Staff we want to update
+     *     // ... the filter for the Contact we want to update
      *   }
      * })
      */
-    upsert<T extends StaffUpsertArgs>(args: SelectSubset<T, StaffUpsertArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends ContactUpsertArgs>(args: SelectSubset<T, ContactUpsertArgs<ExtArgs>>): Prisma__ContactClient<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Staff.
+     * Count the number of Contacts.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffCountArgs} args - Arguments to filter Staff to count.
+     * @param {ContactCountArgs} args - Arguments to filter Contacts to count.
      * @example
-     * // Count the number of Staff
-     * const count = await prisma.staff.count({
+     * // Count the number of Contacts
+     * const count = await prisma.contact.count({
      *   where: {
-     *     // ... the filter for the Staff we want to count
+     *     // ... the filter for the Contacts we want to count
      *   }
      * })
     **/
-    count<T extends StaffCountArgs>(
-      args?: Subset<T, StaffCountArgs>,
+    count<T extends ContactCountArgs>(
+      args?: Subset<T, ContactCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], StaffCountAggregateOutputType>
+          : GetScalarType<T['select'], ContactCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Staff.
+     * Allows you to perform aggregations operations on a Contact.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ContactAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -5509,13 +5595,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends StaffAggregateArgs>(args: Subset<T, StaffAggregateArgs>): Prisma.PrismaPromise<GetStaffAggregateType<T>>
+    aggregate<T extends ContactAggregateArgs>(args: Subset<T, ContactAggregateArgs>): Prisma.PrismaPromise<GetContactAggregateType<T>>
 
     /**
-     * Group by Staff.
+     * Group by Contact.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {StaffGroupByArgs} args - Group by arguments.
+     * @param {ContactGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -5530,14 +5616,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends StaffGroupByArgs,
+      T extends ContactGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: StaffGroupByArgs['orderBy'] }
-        : { orderBy?: StaffGroupByArgs['orderBy'] },
+        ? { orderBy: ContactGroupByArgs['orderBy'] }
+        : { orderBy?: ContactGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -5586,23 +5672,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, StaffGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStaffGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ContactGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetContactGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Staff model
+   * Fields of the Contact model
    */
-  readonly fields: StaffFieldRefs;
+  readonly fields: ContactFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Staff.
+   * The delegate class that acts as a "Promise-like" for Contact.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__StaffClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__ContactClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    phoneNumbers<T extends Staff$phoneNumbersArgs<ExtArgs> = {}>(args?: Subset<T, Staff$phoneNumbersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PhoneNumberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    businessLinks<T extends Staff$businessLinksArgs<ExtArgs> = {}>(args?: Subset<T, Staff$businessLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    lead<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5629,2610 +5714,431 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Staff model
+   * Fields of the Contact model
    */
-  interface StaffFieldRefs {
-    readonly id: FieldRef<"Staff", 'String'>
-    readonly createdAt: FieldRef<"Staff", 'DateTime'>
-    readonly updatedAt: FieldRef<"Staff", 'DateTime'>
-    readonly firstName: FieldRef<"Staff", 'String'>
-    readonly lastName: FieldRef<"Staff", 'String'>
-    readonly email: FieldRef<"Staff", 'String'>
+  interface ContactFieldRefs {
+    readonly id: FieldRef<"Contact", 'String'>
+    readonly createdAt: FieldRef<"Contact", 'DateTime'>
+    readonly updatedAt: FieldRef<"Contact", 'DateTime'>
+    readonly firstName: FieldRef<"Contact", 'String'>
+    readonly lastName: FieldRef<"Contact", 'String'>
+    readonly title: FieldRef<"Contact", 'String'>
+    readonly email: FieldRef<"Contact", 'String'>
+    readonly phone: FieldRef<"Contact", 'String'>
+    readonly isDecisionMaker: FieldRef<"Contact", 'Boolean'>
+    readonly notes: FieldRef<"Contact", 'String'>
+    readonly leadId: FieldRef<"Contact", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * Staff findUnique
+   * Contact findUnique
    */
-  export type StaffFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: StaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * Filter, which Staff to fetch.
+     * Filter, which Contact to fetch.
      */
-    where: StaffWhereUniqueInput
+    where: ContactWhereUniqueInput
   }
 
   /**
-   * Staff findUniqueOrThrow
+   * Contact findUniqueOrThrow
    */
-  export type StaffFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: StaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * Filter, which Staff to fetch.
+     * Filter, which Contact to fetch.
      */
-    where: StaffWhereUniqueInput
+    where: ContactWhereUniqueInput
   }
 
   /**
-   * Staff findFirst
+   * Contact findFirst
    */
-  export type StaffFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: StaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * Filter, which Staff to fetch.
+     * Filter, which Contact to fetch.
      */
-    where?: StaffWhereInput
+    where?: ContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Staff to fetch.
+     * Determine the order of Contacts to fetch.
      */
-    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    orderBy?: ContactOrderByWithRelationInput | ContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Staff.
+     * Sets the position for searching for Contacts.
      */
-    cursor?: StaffWhereUniqueInput
+    cursor?: ContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Staff from the position of the cursor.
+     * Take `±n` Contacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Staff.
+     * Skip the first `n` Contacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Staff.
+     * Filter by unique combinations of Contacts.
      */
-    distinct?: StaffScalarFieldEnum | StaffScalarFieldEnum[]
+    distinct?: ContactScalarFieldEnum | ContactScalarFieldEnum[]
   }
 
   /**
-   * Staff findFirstOrThrow
+   * Contact findFirstOrThrow
    */
-  export type StaffFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: StaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * Filter, which Staff to fetch.
+     * Filter, which Contact to fetch.
      */
-    where?: StaffWhereInput
+    where?: ContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Staff to fetch.
+     * Determine the order of Contacts to fetch.
      */
-    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    orderBy?: ContactOrderByWithRelationInput | ContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Staff.
+     * Sets the position for searching for Contacts.
      */
-    cursor?: StaffWhereUniqueInput
+    cursor?: ContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Staff from the position of the cursor.
+     * Take `±n` Contacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Staff.
+     * Skip the first `n` Contacts.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Staff.
+     * Filter by unique combinations of Contacts.
      */
-    distinct?: StaffScalarFieldEnum | StaffScalarFieldEnum[]
+    distinct?: ContactScalarFieldEnum | ContactScalarFieldEnum[]
   }
 
   /**
-   * Staff findMany
+   * Contact findMany
    */
-  export type StaffFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: StaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * Filter, which Staff to fetch.
+     * Filter, which Contacts to fetch.
      */
-    where?: StaffWhereInput
+    where?: ContactWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Staff to fetch.
+     * Determine the order of Contacts to fetch.
      */
-    orderBy?: StaffOrderByWithRelationInput | StaffOrderByWithRelationInput[]
+    orderBy?: ContactOrderByWithRelationInput | ContactOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Staff.
+     * Sets the position for listing Contacts.
      */
-    cursor?: StaffWhereUniqueInput
+    cursor?: ContactWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Staff from the position of the cursor.
+     * Take `±n` Contacts from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Staff.
+     * Skip the first `n` Contacts.
      */
     skip?: number
-    distinct?: StaffScalarFieldEnum | StaffScalarFieldEnum[]
+    distinct?: ContactScalarFieldEnum | ContactScalarFieldEnum[]
   }
 
   /**
-   * Staff create
+   * Contact create
    */
-  export type StaffCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: StaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * The data needed to create a Staff.
+     * The data needed to create a Contact.
      */
-    data: XOR<StaffCreateInput, StaffUncheckedCreateInput>
+    data: XOR<ContactCreateInput, ContactUncheckedCreateInput>
   }
 
   /**
-   * Staff createMany
+   * Contact createMany
    */
-  export type StaffCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Staff.
+     * The data used to create many Contacts.
      */
-    data: StaffCreateManyInput | StaffCreateManyInput[]
+    data: ContactCreateManyInput | ContactCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Staff createManyAndReturn
+   * Contact createManyAndReturn
    */
-  export type StaffCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Staff
+     * Select specific fields to fetch from the Contact
      */
-    select?: StaffSelectCreateManyAndReturn<ExtArgs> | null
+    select?: ContactSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Staff
+     * Omit specific fields from the Contact
      */
-    omit?: StaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
-     * The data used to create many Staff.
+     * The data used to create many Contacts.
      */
-    data: StaffCreateManyInput | StaffCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Staff update
-   */
-  export type StaffUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Staff
-     */
-    select?: StaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Staff
-     */
-    omit?: StaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StaffInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Staff.
-     */
-    data: XOR<StaffUpdateInput, StaffUncheckedUpdateInput>
-    /**
-     * Choose, which Staff to update.
-     */
-    where: StaffWhereUniqueInput
-  }
-
-  /**
-   * Staff updateMany
-   */
-  export type StaffUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Staff.
-     */
-    data: XOR<StaffUpdateManyMutationInput, StaffUncheckedUpdateManyInput>
-    /**
-     * Filter which Staff to update
-     */
-    where?: StaffWhereInput
-    /**
-     * Limit how many Staff to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Staff updateManyAndReturn
-   */
-  export type StaffUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Staff
-     */
-    select?: StaffSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Staff
-     */
-    omit?: StaffOmit<ExtArgs> | null
-    /**
-     * The data used to update Staff.
-     */
-    data: XOR<StaffUpdateManyMutationInput, StaffUncheckedUpdateManyInput>
-    /**
-     * Filter which Staff to update
-     */
-    where?: StaffWhereInput
-    /**
-     * Limit how many Staff to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Staff upsert
-   */
-  export type StaffUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Staff
-     */
-    select?: StaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Staff
-     */
-    omit?: StaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StaffInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Staff to update in case it exists.
-     */
-    where: StaffWhereUniqueInput
-    /**
-     * In case the Staff found by the `where` argument doesn't exist, create a new Staff with this data.
-     */
-    create: XOR<StaffCreateInput, StaffUncheckedCreateInput>
-    /**
-     * In case the Staff was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<StaffUpdateInput, StaffUncheckedUpdateInput>
-  }
-
-  /**
-   * Staff delete
-   */
-  export type StaffDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Staff
-     */
-    select?: StaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Staff
-     */
-    omit?: StaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StaffInclude<ExtArgs> | null
-    /**
-     * Filter which Staff to delete.
-     */
-    where: StaffWhereUniqueInput
-  }
-
-  /**
-   * Staff deleteMany
-   */
-  export type StaffDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Staff to delete
-     */
-    where?: StaffWhereInput
-    /**
-     * Limit how many Staff to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Staff.phoneNumbers
-   */
-  export type Staff$phoneNumbersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PhoneNumber
-     */
-    select?: PhoneNumberSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PhoneNumber
-     */
-    omit?: PhoneNumberOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PhoneNumberInclude<ExtArgs> | null
-    where?: PhoneNumberWhereInput
-    orderBy?: PhoneNumberOrderByWithRelationInput | PhoneNumberOrderByWithRelationInput[]
-    cursor?: PhoneNumberWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PhoneNumberScalarFieldEnum | PhoneNumberScalarFieldEnum[]
-  }
-
-  /**
-   * Staff.businessLinks
-   */
-  export type Staff$businessLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    where?: BusinessStaffWhereInput
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    cursor?: BusinessStaffWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BusinessStaffScalarFieldEnum | BusinessStaffScalarFieldEnum[]
-  }
-
-  /**
-   * Staff without action
-   */
-  export type StaffDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Staff
-     */
-    select?: StaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Staff
-     */
-    omit?: StaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StaffInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model BusinessStaff
-   */
-
-  export type AggregateBusinessStaff = {
-    _count: BusinessStaffCountAggregateOutputType | null
-    _min: BusinessStaffMinAggregateOutputType | null
-    _max: BusinessStaffMaxAggregateOutputType | null
-  }
-
-  export type BusinessStaffMinAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    businessId: string | null
-    staffId: string | null
-    positionId: string | null
-  }
-
-  export type BusinessStaffMaxAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    businessId: string | null
-    staffId: string | null
-    positionId: string | null
-  }
-
-  export type BusinessStaffCountAggregateOutputType = {
-    id: number
-    createdAt: number
-    updatedAt: number
-    businessId: number
-    staffId: number
-    positionId: number
-    _all: number
-  }
-
-
-  export type BusinessStaffMinAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    businessId?: true
-    staffId?: true
-    positionId?: true
-  }
-
-  export type BusinessStaffMaxAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    businessId?: true
-    staffId?: true
-    positionId?: true
-  }
-
-  export type BusinessStaffCountAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    businessId?: true
-    staffId?: true
-    positionId?: true
-    _all?: true
-  }
-
-  export type BusinessStaffAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BusinessStaff to aggregate.
-     */
-    where?: BusinessStaffWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BusinessStaffs to fetch.
-     */
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: BusinessStaffWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BusinessStaffs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BusinessStaffs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned BusinessStaffs
-    **/
-    _count?: true | BusinessStaffCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: BusinessStaffMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: BusinessStaffMaxAggregateInputType
-  }
-
-  export type GetBusinessStaffAggregateType<T extends BusinessStaffAggregateArgs> = {
-        [P in keyof T & keyof AggregateBusinessStaff]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateBusinessStaff[P]>
-      : GetScalarType<T[P], AggregateBusinessStaff[P]>
-  }
-
-
-
-
-  export type BusinessStaffGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BusinessStaffWhereInput
-    orderBy?: BusinessStaffOrderByWithAggregationInput | BusinessStaffOrderByWithAggregationInput[]
-    by: BusinessStaffScalarFieldEnum[] | BusinessStaffScalarFieldEnum
-    having?: BusinessStaffScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: BusinessStaffCountAggregateInputType | true
-    _min?: BusinessStaffMinAggregateInputType
-    _max?: BusinessStaffMaxAggregateInputType
-  }
-
-  export type BusinessStaffGroupByOutputType = {
-    id: string
-    createdAt: Date
-    updatedAt: Date
-    businessId: string
-    staffId: string
-    positionId: string
-    _count: BusinessStaffCountAggregateOutputType | null
-    _min: BusinessStaffMinAggregateOutputType | null
-    _max: BusinessStaffMaxAggregateOutputType | null
-  }
-
-  type GetBusinessStaffGroupByPayload<T extends BusinessStaffGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<BusinessStaffGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof BusinessStaffGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], BusinessStaffGroupByOutputType[P]>
-            : GetScalarType<T[P], BusinessStaffGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type BusinessStaffSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    businessId?: boolean
-    staffId?: boolean
-    positionId?: boolean
-    business?: boolean | LeadDefaultArgs<ExtArgs>
-    staff?: boolean | StaffDefaultArgs<ExtArgs>
-    position?: boolean | PositionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["businessStaff"]>
-
-  export type BusinessStaffSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    businessId?: boolean
-    staffId?: boolean
-    positionId?: boolean
-    business?: boolean | LeadDefaultArgs<ExtArgs>
-    staff?: boolean | StaffDefaultArgs<ExtArgs>
-    position?: boolean | PositionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["businessStaff"]>
-
-  export type BusinessStaffSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    businessId?: boolean
-    staffId?: boolean
-    positionId?: boolean
-    business?: boolean | LeadDefaultArgs<ExtArgs>
-    staff?: boolean | StaffDefaultArgs<ExtArgs>
-    position?: boolean | PositionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["businessStaff"]>
-
-  export type BusinessStaffSelectScalar = {
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    businessId?: boolean
-    staffId?: boolean
-    positionId?: boolean
-  }
-
-  export type BusinessStaffOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "businessId" | "staffId" | "positionId", ExtArgs["result"]["businessStaff"]>
-  export type BusinessStaffInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    business?: boolean | LeadDefaultArgs<ExtArgs>
-    staff?: boolean | StaffDefaultArgs<ExtArgs>
-    position?: boolean | PositionDefaultArgs<ExtArgs>
-  }
-  export type BusinessStaffIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    business?: boolean | LeadDefaultArgs<ExtArgs>
-    staff?: boolean | StaffDefaultArgs<ExtArgs>
-    position?: boolean | PositionDefaultArgs<ExtArgs>
-  }
-  export type BusinessStaffIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    business?: boolean | LeadDefaultArgs<ExtArgs>
-    staff?: boolean | StaffDefaultArgs<ExtArgs>
-    position?: boolean | PositionDefaultArgs<ExtArgs>
-  }
-
-  export type $BusinessStaffPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "BusinessStaff"
-    objects: {
-      business: Prisma.$LeadPayload<ExtArgs>
-      staff: Prisma.$StaffPayload<ExtArgs>
-      position: Prisma.$PositionPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      createdAt: Date
-      updatedAt: Date
-      businessId: string
-      staffId: string
-      positionId: string
-    }, ExtArgs["result"]["businessStaff"]>
-    composites: {}
-  }
-
-  type BusinessStaffGetPayload<S extends boolean | null | undefined | BusinessStaffDefaultArgs> = $Result.GetResult<Prisma.$BusinessStaffPayload, S>
-
-  type BusinessStaffCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<BusinessStaffFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: BusinessStaffCountAggregateInputType | true
-    }
-
-  export interface BusinessStaffDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BusinessStaff'], meta: { name: 'BusinessStaff' } }
-    /**
-     * Find zero or one BusinessStaff that matches the filter.
-     * @param {BusinessStaffFindUniqueArgs} args - Arguments to find a BusinessStaff
-     * @example
-     * // Get one BusinessStaff
-     * const businessStaff = await prisma.businessStaff.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends BusinessStaffFindUniqueArgs>(args: SelectSubset<T, BusinessStaffFindUniqueArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one BusinessStaff that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {BusinessStaffFindUniqueOrThrowArgs} args - Arguments to find a BusinessStaff
-     * @example
-     * // Get one BusinessStaff
-     * const businessStaff = await prisma.businessStaff.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends BusinessStaffFindUniqueOrThrowArgs>(args: SelectSubset<T, BusinessStaffFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first BusinessStaff that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffFindFirstArgs} args - Arguments to find a BusinessStaff
-     * @example
-     * // Get one BusinessStaff
-     * const businessStaff = await prisma.businessStaff.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends BusinessStaffFindFirstArgs>(args?: SelectSubset<T, BusinessStaffFindFirstArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first BusinessStaff that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffFindFirstOrThrowArgs} args - Arguments to find a BusinessStaff
-     * @example
-     * // Get one BusinessStaff
-     * const businessStaff = await prisma.businessStaff.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends BusinessStaffFindFirstOrThrowArgs>(args?: SelectSubset<T, BusinessStaffFindFirstOrThrowArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more BusinessStaffs that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all BusinessStaffs
-     * const businessStaffs = await prisma.businessStaff.findMany()
-     * 
-     * // Get first 10 BusinessStaffs
-     * const businessStaffs = await prisma.businessStaff.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const businessStaffWithIdOnly = await prisma.businessStaff.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends BusinessStaffFindManyArgs>(args?: SelectSubset<T, BusinessStaffFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a BusinessStaff.
-     * @param {BusinessStaffCreateArgs} args - Arguments to create a BusinessStaff.
-     * @example
-     * // Create one BusinessStaff
-     * const BusinessStaff = await prisma.businessStaff.create({
-     *   data: {
-     *     // ... data to create a BusinessStaff
-     *   }
-     * })
-     * 
-     */
-    create<T extends BusinessStaffCreateArgs>(args: SelectSubset<T, BusinessStaffCreateArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many BusinessStaffs.
-     * @param {BusinessStaffCreateManyArgs} args - Arguments to create many BusinessStaffs.
-     * @example
-     * // Create many BusinessStaffs
-     * const businessStaff = await prisma.businessStaff.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends BusinessStaffCreateManyArgs>(args?: SelectSubset<T, BusinessStaffCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many BusinessStaffs and returns the data saved in the database.
-     * @param {BusinessStaffCreateManyAndReturnArgs} args - Arguments to create many BusinessStaffs.
-     * @example
-     * // Create many BusinessStaffs
-     * const businessStaff = await prisma.businessStaff.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many BusinessStaffs and only return the `id`
-     * const businessStaffWithIdOnly = await prisma.businessStaff.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends BusinessStaffCreateManyAndReturnArgs>(args?: SelectSubset<T, BusinessStaffCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a BusinessStaff.
-     * @param {BusinessStaffDeleteArgs} args - Arguments to delete one BusinessStaff.
-     * @example
-     * // Delete one BusinessStaff
-     * const BusinessStaff = await prisma.businessStaff.delete({
-     *   where: {
-     *     // ... filter to delete one BusinessStaff
-     *   }
-     * })
-     * 
-     */
-    delete<T extends BusinessStaffDeleteArgs>(args: SelectSubset<T, BusinessStaffDeleteArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one BusinessStaff.
-     * @param {BusinessStaffUpdateArgs} args - Arguments to update one BusinessStaff.
-     * @example
-     * // Update one BusinessStaff
-     * const businessStaff = await prisma.businessStaff.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends BusinessStaffUpdateArgs>(args: SelectSubset<T, BusinessStaffUpdateArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more BusinessStaffs.
-     * @param {BusinessStaffDeleteManyArgs} args - Arguments to filter BusinessStaffs to delete.
-     * @example
-     * // Delete a few BusinessStaffs
-     * const { count } = await prisma.businessStaff.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends BusinessStaffDeleteManyArgs>(args?: SelectSubset<T, BusinessStaffDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BusinessStaffs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many BusinessStaffs
-     * const businessStaff = await prisma.businessStaff.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends BusinessStaffUpdateManyArgs>(args: SelectSubset<T, BusinessStaffUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BusinessStaffs and returns the data updated in the database.
-     * @param {BusinessStaffUpdateManyAndReturnArgs} args - Arguments to update many BusinessStaffs.
-     * @example
-     * // Update many BusinessStaffs
-     * const businessStaff = await prisma.businessStaff.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more BusinessStaffs and only return the `id`
-     * const businessStaffWithIdOnly = await prisma.businessStaff.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends BusinessStaffUpdateManyAndReturnArgs>(args: SelectSubset<T, BusinessStaffUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one BusinessStaff.
-     * @param {BusinessStaffUpsertArgs} args - Arguments to update or create a BusinessStaff.
-     * @example
-     * // Update or create a BusinessStaff
-     * const businessStaff = await prisma.businessStaff.upsert({
-     *   create: {
-     *     // ... data to create a BusinessStaff
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the BusinessStaff we want to update
-     *   }
-     * })
-     */
-    upsert<T extends BusinessStaffUpsertArgs>(args: SelectSubset<T, BusinessStaffUpsertArgs<ExtArgs>>): Prisma__BusinessStaffClient<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of BusinessStaffs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffCountArgs} args - Arguments to filter BusinessStaffs to count.
-     * @example
-     * // Count the number of BusinessStaffs
-     * const count = await prisma.businessStaff.count({
-     *   where: {
-     *     // ... the filter for the BusinessStaffs we want to count
-     *   }
-     * })
-    **/
-    count<T extends BusinessStaffCountArgs>(
-      args?: Subset<T, BusinessStaffCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], BusinessStaffCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a BusinessStaff.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends BusinessStaffAggregateArgs>(args: Subset<T, BusinessStaffAggregateArgs>): Prisma.PrismaPromise<GetBusinessStaffAggregateType<T>>
-
-    /**
-     * Group by BusinessStaff.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BusinessStaffGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends BusinessStaffGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: BusinessStaffGroupByArgs['orderBy'] }
-        : { orderBy?: BusinessStaffGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, BusinessStaffGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBusinessStaffGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the BusinessStaff model
-   */
-  readonly fields: BusinessStaffFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for BusinessStaff.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__BusinessStaffClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    business<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    staff<T extends StaffDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StaffDefaultArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    position<T extends PositionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PositionDefaultArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the BusinessStaff model
-   */
-  interface BusinessStaffFieldRefs {
-    readonly id: FieldRef<"BusinessStaff", 'String'>
-    readonly createdAt: FieldRef<"BusinessStaff", 'DateTime'>
-    readonly updatedAt: FieldRef<"BusinessStaff", 'DateTime'>
-    readonly businessId: FieldRef<"BusinessStaff", 'String'>
-    readonly staffId: FieldRef<"BusinessStaff", 'String'>
-    readonly positionId: FieldRef<"BusinessStaff", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * BusinessStaff findUnique
-   */
-  export type BusinessStaffFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    /**
-     * Filter, which BusinessStaff to fetch.
-     */
-    where: BusinessStaffWhereUniqueInput
-  }
-
-  /**
-   * BusinessStaff findUniqueOrThrow
-   */
-  export type BusinessStaffFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    /**
-     * Filter, which BusinessStaff to fetch.
-     */
-    where: BusinessStaffWhereUniqueInput
-  }
-
-  /**
-   * BusinessStaff findFirst
-   */
-  export type BusinessStaffFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    /**
-     * Filter, which BusinessStaff to fetch.
-     */
-    where?: BusinessStaffWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BusinessStaffs to fetch.
-     */
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BusinessStaffs.
-     */
-    cursor?: BusinessStaffWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BusinessStaffs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BusinessStaffs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BusinessStaffs.
-     */
-    distinct?: BusinessStaffScalarFieldEnum | BusinessStaffScalarFieldEnum[]
-  }
-
-  /**
-   * BusinessStaff findFirstOrThrow
-   */
-  export type BusinessStaffFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    /**
-     * Filter, which BusinessStaff to fetch.
-     */
-    where?: BusinessStaffWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BusinessStaffs to fetch.
-     */
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BusinessStaffs.
-     */
-    cursor?: BusinessStaffWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BusinessStaffs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BusinessStaffs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BusinessStaffs.
-     */
-    distinct?: BusinessStaffScalarFieldEnum | BusinessStaffScalarFieldEnum[]
-  }
-
-  /**
-   * BusinessStaff findMany
-   */
-  export type BusinessStaffFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    /**
-     * Filter, which BusinessStaffs to fetch.
-     */
-    where?: BusinessStaffWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BusinessStaffs to fetch.
-     */
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing BusinessStaffs.
-     */
-    cursor?: BusinessStaffWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BusinessStaffs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BusinessStaffs.
-     */
-    skip?: number
-    distinct?: BusinessStaffScalarFieldEnum | BusinessStaffScalarFieldEnum[]
-  }
-
-  /**
-   * BusinessStaff create
-   */
-  export type BusinessStaffCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    /**
-     * The data needed to create a BusinessStaff.
-     */
-    data: XOR<BusinessStaffCreateInput, BusinessStaffUncheckedCreateInput>
-  }
-
-  /**
-   * BusinessStaff createMany
-   */
-  export type BusinessStaffCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many BusinessStaffs.
-     */
-    data: BusinessStaffCreateManyInput | BusinessStaffCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * BusinessStaff createManyAndReturn
-   */
-  export type BusinessStaffCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * The data used to create many BusinessStaffs.
-     */
-    data: BusinessStaffCreateManyInput | BusinessStaffCreateManyInput[]
+    data: ContactCreateManyInput | ContactCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: ContactIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * BusinessStaff update
+   * Contact update
    */
-  export type BusinessStaffUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BusinessStaff
+     * Select specific fields to fetch from the Contact
      */
-    select?: BusinessStaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the BusinessStaff
+     * Omit specific fields from the Contact
      */
-    omit?: BusinessStaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * The data needed to update a BusinessStaff.
+     * The data needed to update a Contact.
      */
-    data: XOR<BusinessStaffUpdateInput, BusinessStaffUncheckedUpdateInput>
+    data: XOR<ContactUpdateInput, ContactUncheckedUpdateInput>
     /**
-     * Choose, which BusinessStaff to update.
+     * Choose, which Contact to update.
      */
-    where: BusinessStaffWhereUniqueInput
+    where: ContactWhereUniqueInput
   }
 
   /**
-   * BusinessStaff updateMany
+   * Contact updateMany
    */
-  export type BusinessStaffUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update BusinessStaffs.
+     * The data used to update Contacts.
      */
-    data: XOR<BusinessStaffUpdateManyMutationInput, BusinessStaffUncheckedUpdateManyInput>
+    data: XOR<ContactUpdateManyMutationInput, ContactUncheckedUpdateManyInput>
     /**
-     * Filter which BusinessStaffs to update
+     * Filter which Contacts to update
      */
-    where?: BusinessStaffWhereInput
+    where?: ContactWhereInput
     /**
-     * Limit how many BusinessStaffs to update.
+     * Limit how many Contacts to update.
      */
     limit?: number
   }
 
   /**
-   * BusinessStaff updateManyAndReturn
+   * Contact updateManyAndReturn
    */
-  export type BusinessStaffUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BusinessStaff
+     * Select specific fields to fetch from the Contact
      */
-    select?: BusinessStaffSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: ContactSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the BusinessStaff
+     * Omit specific fields from the Contact
      */
-    omit?: BusinessStaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
-     * The data used to update BusinessStaffs.
+     * The data used to update Contacts.
      */
-    data: XOR<BusinessStaffUpdateManyMutationInput, BusinessStaffUncheckedUpdateManyInput>
+    data: XOR<ContactUpdateManyMutationInput, ContactUncheckedUpdateManyInput>
     /**
-     * Filter which BusinessStaffs to update
+     * Filter which Contacts to update
      */
-    where?: BusinessStaffWhereInput
+    where?: ContactWhereInput
     /**
-     * Limit how many BusinessStaffs to update.
+     * Limit how many Contacts to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: ContactIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * BusinessStaff upsert
+   * Contact upsert
    */
-  export type BusinessStaffUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BusinessStaff
+     * Select specific fields to fetch from the Contact
      */
-    select?: BusinessStaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the BusinessStaff
+     * Omit specific fields from the Contact
      */
-    omit?: BusinessStaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * The filter to search for the BusinessStaff to update in case it exists.
+     * The filter to search for the Contact to update in case it exists.
      */
-    where: BusinessStaffWhereUniqueInput
+    where: ContactWhereUniqueInput
     /**
-     * In case the BusinessStaff found by the `where` argument doesn't exist, create a new BusinessStaff with this data.
+     * In case the Contact found by the `where` argument doesn't exist, create a new Contact with this data.
      */
-    create: XOR<BusinessStaffCreateInput, BusinessStaffUncheckedCreateInput>
+    create: XOR<ContactCreateInput, ContactUncheckedCreateInput>
     /**
-     * In case the BusinessStaff was found with the provided `where` argument, update it with this data.
+     * In case the Contact was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<BusinessStaffUpdateInput, BusinessStaffUncheckedUpdateInput>
+    update: XOR<ContactUpdateInput, ContactUncheckedUpdateInput>
   }
 
   /**
-   * BusinessStaff delete
+   * Contact delete
    */
-  export type BusinessStaffDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BusinessStaff
+     * Select specific fields to fetch from the Contact
      */
-    select?: BusinessStaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the BusinessStaff
+     * Omit specific fields from the Contact
      */
-    omit?: BusinessStaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
     /**
-     * Filter which BusinessStaff to delete.
+     * Filter which Contact to delete.
      */
-    where: BusinessStaffWhereUniqueInput
+    where: ContactWhereUniqueInput
   }
 
   /**
-   * BusinessStaff deleteMany
+   * Contact deleteMany
    */
-  export type BusinessStaffDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which BusinessStaffs to delete
+     * Filter which Contacts to delete
      */
-    where?: BusinessStaffWhereInput
+    where?: ContactWhereInput
     /**
-     * Limit how many BusinessStaffs to delete.
+     * Limit how many Contacts to delete.
      */
     limit?: number
   }
 
   /**
-   * BusinessStaff without action
+   * Contact without action
    */
-  export type BusinessStaffDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ContactDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BusinessStaff
+     * Select specific fields to fetch from the Contact
      */
-    select?: BusinessStaffSelect<ExtArgs> | null
+    select?: ContactSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the BusinessStaff
+     * Omit specific fields from the Contact
      */
-    omit?: BusinessStaffOmit<ExtArgs> | null
+    omit?: ContactOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BusinessStaffInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Position
-   */
-
-  export type AggregatePosition = {
-    _count: PositionCountAggregateOutputType | null
-    _min: PositionMinAggregateOutputType | null
-    _max: PositionMaxAggregateOutputType | null
-  }
-
-  export type PositionMinAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    name: string | null
-  }
-
-  export type PositionMaxAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    name: string | null
-  }
-
-  export type PositionCountAggregateOutputType = {
-    id: number
-    createdAt: number
-    updatedAt: number
-    name: number
-    _all: number
-  }
-
-
-  export type PositionMinAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    name?: true
-  }
-
-  export type PositionMaxAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    name?: true
-  }
-
-  export type PositionCountAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    name?: true
-    _all?: true
-  }
-
-  export type PositionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Position to aggregate.
-     */
-    where?: PositionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Positions to fetch.
-     */
-    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PositionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Positions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Positions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Positions
-    **/
-    _count?: true | PositionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PositionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PositionMaxAggregateInputType
-  }
-
-  export type GetPositionAggregateType<T extends PositionAggregateArgs> = {
-        [P in keyof T & keyof AggregatePosition]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePosition[P]>
-      : GetScalarType<T[P], AggregatePosition[P]>
-  }
-
-
-
-
-  export type PositionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PositionWhereInput
-    orderBy?: PositionOrderByWithAggregationInput | PositionOrderByWithAggregationInput[]
-    by: PositionScalarFieldEnum[] | PositionScalarFieldEnum
-    having?: PositionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PositionCountAggregateInputType | true
-    _min?: PositionMinAggregateInputType
-    _max?: PositionMaxAggregateInputType
-  }
-
-  export type PositionGroupByOutputType = {
-    id: string
-    createdAt: Date
-    updatedAt: Date
-    name: string
-    _count: PositionCountAggregateOutputType | null
-    _min: PositionMinAggregateOutputType | null
-    _max: PositionMaxAggregateOutputType | null
-  }
-
-  type GetPositionGroupByPayload<T extends PositionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PositionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PositionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PositionGroupByOutputType[P]>
-            : GetScalarType<T[P], PositionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PositionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    name?: boolean
-    businessStaff?: boolean | Position$businessStaffArgs<ExtArgs>
-    _count?: boolean | PositionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["position"]>
-
-  export type PositionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    name?: boolean
-  }, ExtArgs["result"]["position"]>
-
-  export type PositionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    name?: boolean
-  }, ExtArgs["result"]["position"]>
-
-  export type PositionSelectScalar = {
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    name?: boolean
-  }
-
-  export type PositionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name", ExtArgs["result"]["position"]>
-  export type PositionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    businessStaff?: boolean | Position$businessStaffArgs<ExtArgs>
-    _count?: boolean | PositionCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type PositionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type PositionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $PositionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Position"
-    objects: {
-      businessStaff: Prisma.$BusinessStaffPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      createdAt: Date
-      updatedAt: Date
-      name: string
-    }, ExtArgs["result"]["position"]>
-    composites: {}
-  }
-
-  type PositionGetPayload<S extends boolean | null | undefined | PositionDefaultArgs> = $Result.GetResult<Prisma.$PositionPayload, S>
-
-  type PositionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PositionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PositionCountAggregateInputType | true
-    }
-
-  export interface PositionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Position'], meta: { name: 'Position' } }
-    /**
-     * Find zero or one Position that matches the filter.
-     * @param {PositionFindUniqueArgs} args - Arguments to find a Position
-     * @example
-     * // Get one Position
-     * const position = await prisma.position.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends PositionFindUniqueArgs>(args: SelectSubset<T, PositionFindUniqueArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Position that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {PositionFindUniqueOrThrowArgs} args - Arguments to find a Position
-     * @example
-     * // Get one Position
-     * const position = await prisma.position.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends PositionFindUniqueOrThrowArgs>(args: SelectSubset<T, PositionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Position that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionFindFirstArgs} args - Arguments to find a Position
-     * @example
-     * // Get one Position
-     * const position = await prisma.position.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends PositionFindFirstArgs>(args?: SelectSubset<T, PositionFindFirstArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Position that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionFindFirstOrThrowArgs} args - Arguments to find a Position
-     * @example
-     * // Get one Position
-     * const position = await prisma.position.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends PositionFindFirstOrThrowArgs>(args?: SelectSubset<T, PositionFindFirstOrThrowArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Positions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Positions
-     * const positions = await prisma.position.findMany()
-     * 
-     * // Get first 10 Positions
-     * const positions = await prisma.position.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const positionWithIdOnly = await prisma.position.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends PositionFindManyArgs>(args?: SelectSubset<T, PositionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Position.
-     * @param {PositionCreateArgs} args - Arguments to create a Position.
-     * @example
-     * // Create one Position
-     * const Position = await prisma.position.create({
-     *   data: {
-     *     // ... data to create a Position
-     *   }
-     * })
-     * 
-     */
-    create<T extends PositionCreateArgs>(args: SelectSubset<T, PositionCreateArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Positions.
-     * @param {PositionCreateManyArgs} args - Arguments to create many Positions.
-     * @example
-     * // Create many Positions
-     * const position = await prisma.position.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends PositionCreateManyArgs>(args?: SelectSubset<T, PositionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Positions and returns the data saved in the database.
-     * @param {PositionCreateManyAndReturnArgs} args - Arguments to create many Positions.
-     * @example
-     * // Create many Positions
-     * const position = await prisma.position.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Positions and only return the `id`
-     * const positionWithIdOnly = await prisma.position.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends PositionCreateManyAndReturnArgs>(args?: SelectSubset<T, PositionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Position.
-     * @param {PositionDeleteArgs} args - Arguments to delete one Position.
-     * @example
-     * // Delete one Position
-     * const Position = await prisma.position.delete({
-     *   where: {
-     *     // ... filter to delete one Position
-     *   }
-     * })
-     * 
-     */
-    delete<T extends PositionDeleteArgs>(args: SelectSubset<T, PositionDeleteArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Position.
-     * @param {PositionUpdateArgs} args - Arguments to update one Position.
-     * @example
-     * // Update one Position
-     * const position = await prisma.position.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends PositionUpdateArgs>(args: SelectSubset<T, PositionUpdateArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Positions.
-     * @param {PositionDeleteManyArgs} args - Arguments to filter Positions to delete.
-     * @example
-     * // Delete a few Positions
-     * const { count } = await prisma.position.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends PositionDeleteManyArgs>(args?: SelectSubset<T, PositionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Positions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Positions
-     * const position = await prisma.position.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends PositionUpdateManyArgs>(args: SelectSubset<T, PositionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Positions and returns the data updated in the database.
-     * @param {PositionUpdateManyAndReturnArgs} args - Arguments to update many Positions.
-     * @example
-     * // Update many Positions
-     * const position = await prisma.position.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Positions and only return the `id`
-     * const positionWithIdOnly = await prisma.position.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends PositionUpdateManyAndReturnArgs>(args: SelectSubset<T, PositionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Position.
-     * @param {PositionUpsertArgs} args - Arguments to update or create a Position.
-     * @example
-     * // Update or create a Position
-     * const position = await prisma.position.upsert({
-     *   create: {
-     *     // ... data to create a Position
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Position we want to update
-     *   }
-     * })
-     */
-    upsert<T extends PositionUpsertArgs>(args: SelectSubset<T, PositionUpsertArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Positions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionCountArgs} args - Arguments to filter Positions to count.
-     * @example
-     * // Count the number of Positions
-     * const count = await prisma.position.count({
-     *   where: {
-     *     // ... the filter for the Positions we want to count
-     *   }
-     * })
-    **/
-    count<T extends PositionCountArgs>(
-      args?: Subset<T, PositionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PositionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Position.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PositionAggregateArgs>(args: Subset<T, PositionAggregateArgs>): Prisma.PrismaPromise<GetPositionAggregateType<T>>
-
-    /**
-     * Group by Position.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PositionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PositionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PositionGroupByArgs['orderBy'] }
-        : { orderBy?: PositionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PositionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPositionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Position model
-   */
-  readonly fields: PositionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Position.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PositionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    businessStaff<T extends Position$businessStaffArgs<ExtArgs> = {}>(args?: Subset<T, Position$businessStaffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Position model
-   */
-  interface PositionFieldRefs {
-    readonly id: FieldRef<"Position", 'String'>
-    readonly createdAt: FieldRef<"Position", 'DateTime'>
-    readonly updatedAt: FieldRef<"Position", 'DateTime'>
-    readonly name: FieldRef<"Position", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Position findUnique
-   */
-  export type PositionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * Filter, which Position to fetch.
-     */
-    where: PositionWhereUniqueInput
-  }
-
-  /**
-   * Position findUniqueOrThrow
-   */
-  export type PositionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * Filter, which Position to fetch.
-     */
-    where: PositionWhereUniqueInput
-  }
-
-  /**
-   * Position findFirst
-   */
-  export type PositionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * Filter, which Position to fetch.
-     */
-    where?: PositionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Positions to fetch.
-     */
-    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Positions.
-     */
-    cursor?: PositionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Positions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Positions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Positions.
-     */
-    distinct?: PositionScalarFieldEnum | PositionScalarFieldEnum[]
-  }
-
-  /**
-   * Position findFirstOrThrow
-   */
-  export type PositionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * Filter, which Position to fetch.
-     */
-    where?: PositionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Positions to fetch.
-     */
-    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Positions.
-     */
-    cursor?: PositionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Positions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Positions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Positions.
-     */
-    distinct?: PositionScalarFieldEnum | PositionScalarFieldEnum[]
-  }
-
-  /**
-   * Position findMany
-   */
-  export type PositionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * Filter, which Positions to fetch.
-     */
-    where?: PositionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Positions to fetch.
-     */
-    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Positions.
-     */
-    cursor?: PositionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Positions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Positions.
-     */
-    skip?: number
-    distinct?: PositionScalarFieldEnum | PositionScalarFieldEnum[]
-  }
-
-  /**
-   * Position create
-   */
-  export type PositionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Position.
-     */
-    data: XOR<PositionCreateInput, PositionUncheckedCreateInput>
-  }
-
-  /**
-   * Position createMany
-   */
-  export type PositionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Positions.
-     */
-    data: PositionCreateManyInput | PositionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Position createManyAndReturn
-   */
-  export type PositionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * The data used to create many Positions.
-     */
-    data: PositionCreateManyInput | PositionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Position update
-   */
-  export type PositionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Position.
-     */
-    data: XOR<PositionUpdateInput, PositionUncheckedUpdateInput>
-    /**
-     * Choose, which Position to update.
-     */
-    where: PositionWhereUniqueInput
-  }
-
-  /**
-   * Position updateMany
-   */
-  export type PositionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Positions.
-     */
-    data: XOR<PositionUpdateManyMutationInput, PositionUncheckedUpdateManyInput>
-    /**
-     * Filter which Positions to update
-     */
-    where?: PositionWhereInput
-    /**
-     * Limit how many Positions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Position updateManyAndReturn
-   */
-  export type PositionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * The data used to update Positions.
-     */
-    data: XOR<PositionUpdateManyMutationInput, PositionUncheckedUpdateManyInput>
-    /**
-     * Filter which Positions to update
-     */
-    where?: PositionWhereInput
-    /**
-     * Limit how many Positions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Position upsert
-   */
-  export type PositionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Position to update in case it exists.
-     */
-    where: PositionWhereUniqueInput
-    /**
-     * In case the Position found by the `where` argument doesn't exist, create a new Position with this data.
-     */
-    create: XOR<PositionCreateInput, PositionUncheckedCreateInput>
-    /**
-     * In case the Position was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PositionUpdateInput, PositionUncheckedUpdateInput>
-  }
-
-  /**
-   * Position delete
-   */
-  export type PositionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
-    /**
-     * Filter which Position to delete.
-     */
-    where: PositionWhereUniqueInput
-  }
-
-  /**
-   * Position deleteMany
-   */
-  export type PositionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Positions to delete
-     */
-    where?: PositionWhereInput
-    /**
-     * Limit how many Positions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Position.businessStaff
-   */
-  export type Position$businessStaffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BusinessStaff
-     */
-    select?: BusinessStaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BusinessStaff
-     */
-    omit?: BusinessStaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BusinessStaffInclude<ExtArgs> | null
-    where?: BusinessStaffWhereInput
-    orderBy?: BusinessStaffOrderByWithRelationInput | BusinessStaffOrderByWithRelationInput[]
-    cursor?: BusinessStaffWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BusinessStaffScalarFieldEnum | BusinessStaffScalarFieldEnum[]
-  }
-
-  /**
-   * Position without action
-   */
-  export type PositionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Position
-     */
-    select?: PositionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Position
-     */
-    omit?: PositionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PositionInclude<ExtArgs> | null
+    include?: ContactInclude<ExtArgs> | null
   }
 
 
@@ -11530,7 +9436,6 @@ export namespace Prisma {
     number: string | null
     label: $Enums.PhoneType | null
     locationId: string | null
-    staffId: string | null
   }
 
   export type PhoneNumberMaxAggregateOutputType = {
@@ -11540,7 +9445,6 @@ export namespace Prisma {
     number: string | null
     label: $Enums.PhoneType | null
     locationId: string | null
-    staffId: string | null
   }
 
   export type PhoneNumberCountAggregateOutputType = {
@@ -11550,7 +9454,6 @@ export namespace Prisma {
     number: number
     label: number
     locationId: number
-    staffId: number
     _all: number
   }
 
@@ -11562,7 +9465,6 @@ export namespace Prisma {
     number?: true
     label?: true
     locationId?: true
-    staffId?: true
   }
 
   export type PhoneNumberMaxAggregateInputType = {
@@ -11572,7 +9474,6 @@ export namespace Prisma {
     number?: true
     label?: true
     locationId?: true
-    staffId?: true
   }
 
   export type PhoneNumberCountAggregateInputType = {
@@ -11582,7 +9483,6 @@ export namespace Prisma {
     number?: true
     label?: true
     locationId?: true
-    staffId?: true
     _all?: true
   }
 
@@ -11665,7 +9565,6 @@ export namespace Prisma {
     number: string
     label: $Enums.PhoneType | null
     locationId: string | null
-    staffId: string | null
     _count: PhoneNumberCountAggregateOutputType | null
     _min: PhoneNumberMinAggregateOutputType | null
     _max: PhoneNumberMaxAggregateOutputType | null
@@ -11692,9 +9591,7 @@ export namespace Prisma {
     number?: boolean
     label?: boolean
     locationId?: boolean
-    staffId?: boolean
     location?: boolean | PhoneNumber$locationArgs<ExtArgs>
-    staff?: boolean | PhoneNumber$staffArgs<ExtArgs>
   }, ExtArgs["result"]["phoneNumber"]>
 
   export type PhoneNumberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11704,9 +9601,7 @@ export namespace Prisma {
     number?: boolean
     label?: boolean
     locationId?: boolean
-    staffId?: boolean
     location?: boolean | PhoneNumber$locationArgs<ExtArgs>
-    staff?: boolean | PhoneNumber$staffArgs<ExtArgs>
   }, ExtArgs["result"]["phoneNumber"]>
 
   export type PhoneNumberSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11716,9 +9611,7 @@ export namespace Prisma {
     number?: boolean
     label?: boolean
     locationId?: boolean
-    staffId?: boolean
     location?: boolean | PhoneNumber$locationArgs<ExtArgs>
-    staff?: boolean | PhoneNumber$staffArgs<ExtArgs>
   }, ExtArgs["result"]["phoneNumber"]>
 
   export type PhoneNumberSelectScalar = {
@@ -11728,28 +9621,23 @@ export namespace Prisma {
     number?: boolean
     label?: boolean
     locationId?: boolean
-    staffId?: boolean
   }
 
-  export type PhoneNumberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "number" | "label" | "locationId" | "staffId", ExtArgs["result"]["phoneNumber"]>
+  export type PhoneNumberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "number" | "label" | "locationId", ExtArgs["result"]["phoneNumber"]>
   export type PhoneNumberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     location?: boolean | PhoneNumber$locationArgs<ExtArgs>
-    staff?: boolean | PhoneNumber$staffArgs<ExtArgs>
   }
   export type PhoneNumberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     location?: boolean | PhoneNumber$locationArgs<ExtArgs>
-    staff?: boolean | PhoneNumber$staffArgs<ExtArgs>
   }
   export type PhoneNumberIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     location?: boolean | PhoneNumber$locationArgs<ExtArgs>
-    staff?: boolean | PhoneNumber$staffArgs<ExtArgs>
   }
 
   export type $PhoneNumberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PhoneNumber"
     objects: {
       location: Prisma.$LocationPayload<ExtArgs> | null
-      staff: Prisma.$StaffPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11758,7 +9646,6 @@ export namespace Prisma {
       number: string
       label: $Enums.PhoneType | null
       locationId: string | null
-      staffId: string | null
     }, ExtArgs["result"]["phoneNumber"]>
     composites: {}
   }
@@ -12154,7 +10041,6 @@ export namespace Prisma {
   export interface Prisma__PhoneNumberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     location<T extends PhoneNumber$locationArgs<ExtArgs> = {}>(args?: Subset<T, PhoneNumber$locationArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    staff<T extends PhoneNumber$staffArgs<ExtArgs> = {}>(args?: Subset<T, PhoneNumber$staffArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12190,7 +10076,6 @@ export namespace Prisma {
     readonly number: FieldRef<"PhoneNumber", 'String'>
     readonly label: FieldRef<"PhoneNumber", 'PhoneType'>
     readonly locationId: FieldRef<"PhoneNumber", 'String'>
-    readonly staffId: FieldRef<"PhoneNumber", 'String'>
   }
     
 
@@ -12603,25 +10488,6 @@ export namespace Prisma {
      */
     include?: LocationInclude<ExtArgs> | null
     where?: LocationWhereInput
-  }
-
-  /**
-   * PhoneNumber.staff
-   */
-  export type PhoneNumber$staffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Staff
-     */
-    select?: StaffSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Staff
-     */
-    omit?: StaffOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: StaffInclude<ExtArgs> | null
-    where?: StaffWhereInput
   }
 
   /**
@@ -13742,6 +11608,7 @@ export namespace Prisma {
     contactedById: string | null
     receivedResponse: boolean | null
     summary: string | null
+    sequencePosition: $Enums.SequencePosition | null
   }
 
   export type TouchPointMaxAggregateOutputType = {
@@ -13754,6 +11621,7 @@ export namespace Prisma {
     contactedById: string | null
     receivedResponse: boolean | null
     summary: string | null
+    sequencePosition: $Enums.SequencePosition | null
   }
 
   export type TouchPointCountAggregateOutputType = {
@@ -13766,6 +11634,7 @@ export namespace Prisma {
     contactedById: number
     receivedResponse: number
     summary: number
+    sequencePosition: number
     _all: number
   }
 
@@ -13780,6 +11649,7 @@ export namespace Prisma {
     contactedById?: true
     receivedResponse?: true
     summary?: true
+    sequencePosition?: true
   }
 
   export type TouchPointMaxAggregateInputType = {
@@ -13792,6 +11662,7 @@ export namespace Prisma {
     contactedById?: true
     receivedResponse?: true
     summary?: true
+    sequencePosition?: true
   }
 
   export type TouchPointCountAggregateInputType = {
@@ -13804,6 +11675,7 @@ export namespace Prisma {
     contactedById?: true
     receivedResponse?: true
     summary?: true
+    sequencePosition?: true
     _all?: true
   }
 
@@ -13889,6 +11761,7 @@ export namespace Prisma {
     contactedById: string
     receivedResponse: boolean
     summary: string | null
+    sequencePosition: $Enums.SequencePosition | null
     _count: TouchPointCountAggregateOutputType | null
     _min: TouchPointMinAggregateOutputType | null
     _max: TouchPointMaxAggregateOutputType | null
@@ -13918,8 +11791,11 @@ export namespace Prisma {
     contactedById?: boolean
     receivedResponse?: boolean
     summary?: boolean
+    sequencePosition?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     contactedBy?: boolean | UserDefaultArgs<ExtArgs>
+    reminders?: boolean | TouchPoint$remindersArgs<ExtArgs>
+    _count?: boolean | TouchPointCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["touchPoint"]>
 
   export type TouchPointSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13932,6 +11808,7 @@ export namespace Prisma {
     contactedById?: boolean
     receivedResponse?: boolean
     summary?: boolean
+    sequencePosition?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     contactedBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["touchPoint"]>
@@ -13946,6 +11823,7 @@ export namespace Prisma {
     contactedById?: boolean
     receivedResponse?: boolean
     summary?: boolean
+    sequencePosition?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     contactedBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["touchPoint"]>
@@ -13960,12 +11838,15 @@ export namespace Prisma {
     contactedById?: boolean
     receivedResponse?: boolean
     summary?: boolean
+    sequencePosition?: boolean
   }
 
-  export type TouchPointOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "date" | "type" | "leadId" | "contactedById" | "receivedResponse" | "summary", ExtArgs["result"]["touchPoint"]>
+  export type TouchPointOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "date" | "type" | "leadId" | "contactedById" | "receivedResponse" | "summary" | "sequencePosition", ExtArgs["result"]["touchPoint"]>
   export type TouchPointInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     contactedBy?: boolean | UserDefaultArgs<ExtArgs>
+    reminders?: boolean | TouchPoint$remindersArgs<ExtArgs>
+    _count?: boolean | TouchPointCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TouchPointIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -13981,6 +11862,7 @@ export namespace Prisma {
     objects: {
       lead: Prisma.$LeadPayload<ExtArgs>
       contactedBy: Prisma.$UserPayload<ExtArgs>
+      reminders: Prisma.$ReminderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13992,6 +11874,7 @@ export namespace Prisma {
       contactedById: string
       receivedResponse: boolean
       summary: string | null
+      sequencePosition: $Enums.SequencePosition | null
     }, ExtArgs["result"]["touchPoint"]>
     composites: {}
   }
@@ -14388,6 +12271,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     lead<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     contactedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reminders<T extends TouchPoint$remindersArgs<ExtArgs> = {}>(args?: Subset<T, TouchPoint$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14426,6 +12310,7 @@ export namespace Prisma {
     readonly contactedById: FieldRef<"TouchPoint", 'String'>
     readonly receivedResponse: FieldRef<"TouchPoint", 'Boolean'>
     readonly summary: FieldRef<"TouchPoint", 'String'>
+    readonly sequencePosition: FieldRef<"TouchPoint", 'SequencePosition'>
   }
     
 
@@ -14822,6 +12707,30 @@ export namespace Prisma {
   }
 
   /**
+   * TouchPoint.reminders
+   */
+  export type TouchPoint$remindersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Reminder
+     */
+    select?: ReminderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Reminder
+     */
+    omit?: ReminderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReminderInclude<ExtArgs> | null
+    where?: ReminderWhereInput
+    orderBy?: ReminderOrderByWithRelationInput | ReminderOrderByWithRelationInput[]
+    cursor?: ReminderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReminderScalarFieldEnum | ReminderScalarFieldEnum[]
+  }
+
+  /**
    * TouchPoint without action
    */
   export type TouchPointDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14855,6 +12764,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     leadId: string | null
+    touchPointId: string | null
     type: $Enums.TouchPointType | null
     dueDate: Date | null
     note: string | null
@@ -14870,6 +12780,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     leadId: string | null
+    touchPointId: string | null
     type: $Enums.TouchPointType | null
     dueDate: Date | null
     note: string | null
@@ -14885,6 +12796,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     leadId: number
+    touchPointId: number
     type: number
     dueDate: number
     note: number
@@ -14902,6 +12814,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     leadId?: true
+    touchPointId?: true
     type?: true
     dueDate?: true
     note?: true
@@ -14917,6 +12830,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     leadId?: true
+    touchPointId?: true
     type?: true
     dueDate?: true
     note?: true
@@ -14932,6 +12846,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     leadId?: true
+    touchPointId?: true
     type?: true
     dueDate?: true
     note?: true
@@ -15020,6 +12935,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     leadId: string
+    touchPointId: string | null
     type: $Enums.TouchPointType
     dueDate: Date
     note: string | null
@@ -15052,6 +12968,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     leadId?: boolean
+    touchPointId?: boolean
     type?: boolean
     dueDate?: boolean
     note?: boolean
@@ -15061,6 +12978,7 @@ export namespace Prisma {
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchPoint?: boolean | Reminder$touchPointArgs<ExtArgs>
   }, ExtArgs["result"]["reminder"]>
 
   export type ReminderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15068,6 +12986,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     leadId?: boolean
+    touchPointId?: boolean
     type?: boolean
     dueDate?: boolean
     note?: boolean
@@ -15077,6 +12996,7 @@ export namespace Prisma {
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchPoint?: boolean | Reminder$touchPointArgs<ExtArgs>
   }, ExtArgs["result"]["reminder"]>
 
   export type ReminderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15084,6 +13004,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     leadId?: boolean
+    touchPointId?: boolean
     type?: boolean
     dueDate?: boolean
     note?: boolean
@@ -15093,6 +13014,7 @@ export namespace Prisma {
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchPoint?: boolean | Reminder$touchPointArgs<ExtArgs>
   }, ExtArgs["result"]["reminder"]>
 
   export type ReminderSelectScalar = {
@@ -15100,6 +13022,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     leadId?: boolean
+    touchPointId?: boolean
     type?: boolean
     dueDate?: boolean
     note?: boolean
@@ -15110,27 +13033,32 @@ export namespace Prisma {
     isEmailSentCheck?: boolean
   }
 
-  export type ReminderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "leadId" | "type" | "dueDate" | "note" | "completed" | "completedAt" | "isCheckIn" | "isResponseCheck" | "isEmailSentCheck", ExtArgs["result"]["reminder"]>
+  export type ReminderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "leadId" | "touchPointId" | "type" | "dueDate" | "note" | "completed" | "completedAt" | "isCheckIn" | "isResponseCheck" | "isEmailSentCheck", ExtArgs["result"]["reminder"]>
   export type ReminderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchPoint?: boolean | Reminder$touchPointArgs<ExtArgs>
   }
   export type ReminderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchPoint?: boolean | Reminder$touchPointArgs<ExtArgs>
   }
   export type ReminderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lead?: boolean | LeadDefaultArgs<ExtArgs>
+    touchPoint?: boolean | Reminder$touchPointArgs<ExtArgs>
   }
 
   export type $ReminderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Reminder"
     objects: {
       lead: Prisma.$LeadPayload<ExtArgs>
+      touchPoint: Prisma.$TouchPointPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       createdAt: Date
       updatedAt: Date
       leadId: string
+      touchPointId: string | null
       type: $Enums.TouchPointType
       dueDate: Date
       note: string | null
@@ -15534,6 +13462,7 @@ export namespace Prisma {
   export interface Prisma__ReminderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     lead<T extends LeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeadDefaultArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    touchPoint<T extends Reminder$touchPointArgs<ExtArgs> = {}>(args?: Subset<T, Reminder$touchPointArgs<ExtArgs>>): Prisma__TouchPointClient<$Result.GetResult<Prisma.$TouchPointPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15567,6 +13496,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Reminder", 'DateTime'>
     readonly updatedAt: FieldRef<"Reminder", 'DateTime'>
     readonly leadId: FieldRef<"Reminder", 'String'>
+    readonly touchPointId: FieldRef<"Reminder", 'String'>
     readonly type: FieldRef<"Reminder", 'TouchPointType'>
     readonly dueDate: FieldRef<"Reminder", 'DateTime'>
     readonly note: FieldRef<"Reminder", 'String'>
@@ -15971,6 +13901,25 @@ export namespace Prisma {
   }
 
   /**
+   * Reminder.touchPoint
+   */
+  export type Reminder$touchPointArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TouchPoint
+     */
+    select?: TouchPointSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TouchPoint
+     */
+    omit?: TouchPointOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TouchPointInclude<ExtArgs> | null
+    where?: TouchPointWhereInput
+  }
+
+  /**
    * Reminder without action
    */
   export type ReminderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16041,44 +13990,38 @@ export namespace Prisma {
     priority: 'priority',
     sequenceStep: 'sequenceStep',
     sequenceActive: 'sequenceActive',
-    assignedToId: 'assignedToId'
+    isHot: 'isHot',
+    assignedToId: 'assignedToId',
+    referredByLeadId: 'referredByLeadId',
+    referredByName: 'referredByName',
+    instagramHandle: 'instagramHandle',
+    instagramFollowers: 'instagramFollowers',
+    tiktokHandle: 'tiktokHandle',
+    tiktokFollowers: 'tiktokFollowers',
+    youtubeHandle: 'youtubeHandle',
+    youtubeFollowers: 'youtubeFollowers',
+    facebookHandle: 'facebookHandle',
+    facebookFollowers: 'facebookFollowers'
   };
 
   export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
 
 
-  export const StaffScalarFieldEnum: {
+  export const ContactScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     firstName: 'firstName',
     lastName: 'lastName',
-    email: 'email'
+    title: 'title',
+    email: 'email',
+    phone: 'phone',
+    isDecisionMaker: 'isDecisionMaker',
+    notes: 'notes',
+    leadId: 'leadId'
   };
 
-  export type StaffScalarFieldEnum = (typeof StaffScalarFieldEnum)[keyof typeof StaffScalarFieldEnum]
-
-
-  export const BusinessStaffScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    businessId: 'businessId',
-    staffId: 'staffId',
-    positionId: 'positionId'
-  };
-
-  export type BusinessStaffScalarFieldEnum = (typeof BusinessStaffScalarFieldEnum)[keyof typeof BusinessStaffScalarFieldEnum]
-
-
-  export const PositionScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    name: 'name'
-  };
-
-  export type PositionScalarFieldEnum = (typeof PositionScalarFieldEnum)[keyof typeof PositionScalarFieldEnum]
+  export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
 
 
   export const IndustryScalarFieldEnum: {
@@ -16122,8 +14065,7 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     number: 'number',
     label: 'label',
-    locationId: 'locationId',
-    staffId: 'staffId'
+    locationId: 'locationId'
   };
 
   export type PhoneNumberScalarFieldEnum = (typeof PhoneNumberScalarFieldEnum)[keyof typeof PhoneNumberScalarFieldEnum]
@@ -16150,7 +14092,8 @@ export namespace Prisma {
     leadId: 'leadId',
     contactedById: 'contactedById',
     receivedResponse: 'receivedResponse',
-    summary: 'summary'
+    summary: 'summary',
+    sequencePosition: 'sequencePosition'
   };
 
   export type TouchPointScalarFieldEnum = (typeof TouchPointScalarFieldEnum)[keyof typeof TouchPointScalarFieldEnum]
@@ -16161,6 +14104,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     leadId: 'leadId',
+    touchPointId: 'touchPointId',
     type: 'type',
     dueDate: 'dueDate',
     note: 'note',
@@ -16351,6 +14295,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'SequencePosition'
+   */
+  export type EnumSequencePositionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SequencePosition'>
+    
+
+
+  /**
+   * Reference to a field of type 'SequencePosition[]'
+   */
+  export type ListEnumSequencePositionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SequencePosition[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -16470,16 +14428,29 @@ export namespace Prisma {
     priority?: EnumPriorityNullableFilter<"Lead"> | $Enums.Priority | null
     sequenceStep?: IntFilter<"Lead"> | number
     sequenceActive?: BoolFilter<"Lead"> | boolean
+    isHot?: BoolFilter<"Lead"> | boolean
     assignedToId?: StringNullableFilter<"Lead"> | string | null
+    referredByLeadId?: StringNullableFilter<"Lead"> | string | null
+    referredByName?: StringNullableFilter<"Lead"> | string | null
+    instagramHandle?: StringNullableFilter<"Lead"> | string | null
+    instagramFollowers?: IntNullableFilter<"Lead"> | number | null
+    tiktokHandle?: StringNullableFilter<"Lead"> | string | null
+    tiktokFollowers?: IntNullableFilter<"Lead"> | number | null
+    youtubeHandle?: StringNullableFilter<"Lead"> | string | null
+    youtubeFollowers?: IntNullableFilter<"Lead"> | number | null
+    facebookHandle?: StringNullableFilter<"Lead"> | string | null
+    facebookFollowers?: IntNullableFilter<"Lead"> | number | null
     locations?: LocationListRelationFilter
     primaryLocation?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
-    staff?: BusinessStaffListRelationFilter
+    contacts?: ContactListRelationFilter
     industry?: XOR<IndustryScalarRelationFilter, IndustryWhereInput>
     businessType?: XOR<BusinessTypeScalarRelationFilter, BusinessTypeWhereInput>
     touchPoint?: TouchPointListRelationFilter
     notes?: NoteListRelationFilter
     reminders?: ReminderListRelationFilter
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    referredByLead?: XOR<LeadNullableScalarRelationFilter, LeadWhereInput> | null
+    referrals?: LeadListRelationFilter
   }
 
   export type LeadOrderByWithRelationInput = {
@@ -16506,16 +14477,29 @@ export namespace Prisma {
     priority?: SortOrderInput | SortOrder
     sequenceStep?: SortOrder
     sequenceActive?: SortOrder
+    isHot?: SortOrder
     assignedToId?: SortOrderInput | SortOrder
+    referredByLeadId?: SortOrderInput | SortOrder
+    referredByName?: SortOrderInput | SortOrder
+    instagramHandle?: SortOrderInput | SortOrder
+    instagramFollowers?: SortOrderInput | SortOrder
+    tiktokHandle?: SortOrderInput | SortOrder
+    tiktokFollowers?: SortOrderInput | SortOrder
+    youtubeHandle?: SortOrderInput | SortOrder
+    youtubeFollowers?: SortOrderInput | SortOrder
+    facebookHandle?: SortOrderInput | SortOrder
+    facebookFollowers?: SortOrderInput | SortOrder
     locations?: LocationOrderByRelationAggregateInput
     primaryLocation?: LocationOrderByWithRelationInput
-    staff?: BusinessStaffOrderByRelationAggregateInput
+    contacts?: ContactOrderByRelationAggregateInput
     industry?: IndustryOrderByWithRelationInput
     businessType?: BusinessTypeOrderByWithRelationInput
     touchPoint?: TouchPointOrderByRelationAggregateInput
     notes?: NoteOrderByRelationAggregateInput
     reminders?: ReminderOrderByRelationAggregateInput
     assignedTo?: UserOrderByWithRelationInput
+    referredByLead?: LeadOrderByWithRelationInput
+    referrals?: LeadOrderByRelationAggregateInput
   }
 
   export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -16545,16 +14529,29 @@ export namespace Prisma {
     priority?: EnumPriorityNullableFilter<"Lead"> | $Enums.Priority | null
     sequenceStep?: IntFilter<"Lead"> | number
     sequenceActive?: BoolFilter<"Lead"> | boolean
+    isHot?: BoolFilter<"Lead"> | boolean
     assignedToId?: StringNullableFilter<"Lead"> | string | null
+    referredByLeadId?: StringNullableFilter<"Lead"> | string | null
+    referredByName?: StringNullableFilter<"Lead"> | string | null
+    instagramHandle?: StringNullableFilter<"Lead"> | string | null
+    instagramFollowers?: IntNullableFilter<"Lead"> | number | null
+    tiktokHandle?: StringNullableFilter<"Lead"> | string | null
+    tiktokFollowers?: IntNullableFilter<"Lead"> | number | null
+    youtubeHandle?: StringNullableFilter<"Lead"> | string | null
+    youtubeFollowers?: IntNullableFilter<"Lead"> | number | null
+    facebookHandle?: StringNullableFilter<"Lead"> | string | null
+    facebookFollowers?: IntNullableFilter<"Lead"> | number | null
     locations?: LocationListRelationFilter
     primaryLocation?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
-    staff?: BusinessStaffListRelationFilter
+    contacts?: ContactListRelationFilter
     industry?: XOR<IndustryScalarRelationFilter, IndustryWhereInput>
     businessType?: XOR<BusinessTypeScalarRelationFilter, BusinessTypeWhereInput>
     touchPoint?: TouchPointListRelationFilter
     notes?: NoteListRelationFilter
     reminders?: ReminderListRelationFilter
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    referredByLead?: XOR<LeadNullableScalarRelationFilter, LeadWhereInput> | null
+    referrals?: LeadListRelationFilter
   }, "id" | "primaryLocationId">
 
   export type LeadOrderByWithAggregationInput = {
@@ -16581,7 +14578,18 @@ export namespace Prisma {
     priority?: SortOrderInput | SortOrder
     sequenceStep?: SortOrder
     sequenceActive?: SortOrder
+    isHot?: SortOrder
     assignedToId?: SortOrderInput | SortOrder
+    referredByLeadId?: SortOrderInput | SortOrder
+    referredByName?: SortOrderInput | SortOrder
+    instagramHandle?: SortOrderInput | SortOrder
+    instagramFollowers?: SortOrderInput | SortOrder
+    tiktokHandle?: SortOrderInput | SortOrder
+    tiktokFollowers?: SortOrderInput | SortOrder
+    youtubeHandle?: SortOrderInput | SortOrder
+    youtubeFollowers?: SortOrderInput | SortOrder
+    facebookHandle?: SortOrderInput | SortOrder
+    facebookFollowers?: SortOrderInput | SortOrder
     _count?: LeadCountOrderByAggregateInput
     _avg?: LeadAvgOrderByAggregateInput
     _max?: LeadMaxOrderByAggregateInput
@@ -16616,187 +14624,103 @@ export namespace Prisma {
     priority?: EnumPriorityNullableWithAggregatesFilter<"Lead"> | $Enums.Priority | null
     sequenceStep?: IntWithAggregatesFilter<"Lead"> | number
     sequenceActive?: BoolWithAggregatesFilter<"Lead"> | boolean
+    isHot?: BoolWithAggregatesFilter<"Lead"> | boolean
     assignedToId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    referredByLeadId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    referredByName?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    instagramHandle?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    instagramFollowers?: IntNullableWithAggregatesFilter<"Lead"> | number | null
+    tiktokHandle?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    tiktokFollowers?: IntNullableWithAggregatesFilter<"Lead"> | number | null
+    youtubeHandle?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    youtubeFollowers?: IntNullableWithAggregatesFilter<"Lead"> | number | null
+    facebookHandle?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    facebookFollowers?: IntNullableWithAggregatesFilter<"Lead"> | number | null
   }
 
-  export type StaffWhereInput = {
-    AND?: StaffWhereInput | StaffWhereInput[]
-    OR?: StaffWhereInput[]
-    NOT?: StaffWhereInput | StaffWhereInput[]
-    id?: StringFilter<"Staff"> | string
-    createdAt?: DateTimeFilter<"Staff"> | Date | string
-    updatedAt?: DateTimeFilter<"Staff"> | Date | string
-    firstName?: StringFilter<"Staff"> | string
-    lastName?: StringFilter<"Staff"> | string
-    email?: StringNullableFilter<"Staff"> | string | null
-    phoneNumbers?: PhoneNumberListRelationFilter
-    businessLinks?: BusinessStaffListRelationFilter
+  export type ContactWhereInput = {
+    AND?: ContactWhereInput | ContactWhereInput[]
+    OR?: ContactWhereInput[]
+    NOT?: ContactWhereInput | ContactWhereInput[]
+    id?: StringFilter<"Contact"> | string
+    createdAt?: DateTimeFilter<"Contact"> | Date | string
+    updatedAt?: DateTimeFilter<"Contact"> | Date | string
+    firstName?: StringFilter<"Contact"> | string
+    lastName?: StringFilter<"Contact"> | string
+    title?: StringNullableFilter<"Contact"> | string | null
+    email?: StringNullableFilter<"Contact"> | string | null
+    phone?: StringNullableFilter<"Contact"> | string | null
+    isDecisionMaker?: BoolFilter<"Contact"> | boolean
+    notes?: StringNullableFilter<"Contact"> | string | null
+    leadId?: StringFilter<"Contact"> | string
+    lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
   }
 
-  export type StaffOrderByWithRelationInput = {
+  export type ContactOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
+    title?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
-    phoneNumbers?: PhoneNumberOrderByRelationAggregateInput
-    businessLinks?: BusinessStaffOrderByRelationAggregateInput
+    phone?: SortOrderInput | SortOrder
+    isDecisionMaker?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    leadId?: SortOrder
+    lead?: LeadOrderByWithRelationInput
   }
 
-  export type StaffWhereUniqueInput = Prisma.AtLeast<{
+  export type ContactWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: StaffWhereInput | StaffWhereInput[]
-    OR?: StaffWhereInput[]
-    NOT?: StaffWhereInput | StaffWhereInput[]
-    createdAt?: DateTimeFilter<"Staff"> | Date | string
-    updatedAt?: DateTimeFilter<"Staff"> | Date | string
-    firstName?: StringFilter<"Staff"> | string
-    lastName?: StringFilter<"Staff"> | string
-    email?: StringNullableFilter<"Staff"> | string | null
-    phoneNumbers?: PhoneNumberListRelationFilter
-    businessLinks?: BusinessStaffListRelationFilter
+    AND?: ContactWhereInput | ContactWhereInput[]
+    OR?: ContactWhereInput[]
+    NOT?: ContactWhereInput | ContactWhereInput[]
+    createdAt?: DateTimeFilter<"Contact"> | Date | string
+    updatedAt?: DateTimeFilter<"Contact"> | Date | string
+    firstName?: StringFilter<"Contact"> | string
+    lastName?: StringFilter<"Contact"> | string
+    title?: StringNullableFilter<"Contact"> | string | null
+    email?: StringNullableFilter<"Contact"> | string | null
+    phone?: StringNullableFilter<"Contact"> | string | null
+    isDecisionMaker?: BoolFilter<"Contact"> | boolean
+    notes?: StringNullableFilter<"Contact"> | string | null
+    leadId?: StringFilter<"Contact"> | string
+    lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
   }, "id">
 
-  export type StaffOrderByWithAggregationInput = {
+  export type ContactOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
+    title?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
-    _count?: StaffCountOrderByAggregateInput
-    _max?: StaffMaxOrderByAggregateInput
-    _min?: StaffMinOrderByAggregateInput
+    phone?: SortOrderInput | SortOrder
+    isDecisionMaker?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    leadId?: SortOrder
+    _count?: ContactCountOrderByAggregateInput
+    _max?: ContactMaxOrderByAggregateInput
+    _min?: ContactMinOrderByAggregateInput
   }
 
-  export type StaffScalarWhereWithAggregatesInput = {
-    AND?: StaffScalarWhereWithAggregatesInput | StaffScalarWhereWithAggregatesInput[]
-    OR?: StaffScalarWhereWithAggregatesInput[]
-    NOT?: StaffScalarWhereWithAggregatesInput | StaffScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Staff"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Staff"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Staff"> | Date | string
-    firstName?: StringWithAggregatesFilter<"Staff"> | string
-    lastName?: StringWithAggregatesFilter<"Staff"> | string
-    email?: StringNullableWithAggregatesFilter<"Staff"> | string | null
-  }
-
-  export type BusinessStaffWhereInput = {
-    AND?: BusinessStaffWhereInput | BusinessStaffWhereInput[]
-    OR?: BusinessStaffWhereInput[]
-    NOT?: BusinessStaffWhereInput | BusinessStaffWhereInput[]
-    id?: StringFilter<"BusinessStaff"> | string
-    createdAt?: DateTimeFilter<"BusinessStaff"> | Date | string
-    updatedAt?: DateTimeFilter<"BusinessStaff"> | Date | string
-    businessId?: StringFilter<"BusinessStaff"> | string
-    staffId?: StringFilter<"BusinessStaff"> | string
-    positionId?: StringFilter<"BusinessStaff"> | string
-    business?: XOR<LeadScalarRelationFilter, LeadWhereInput>
-    staff?: XOR<StaffScalarRelationFilter, StaffWhereInput>
-    position?: XOR<PositionScalarRelationFilter, PositionWhereInput>
-  }
-
-  export type BusinessStaffOrderByWithRelationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    businessId?: SortOrder
-    staffId?: SortOrder
-    positionId?: SortOrder
-    business?: LeadOrderByWithRelationInput
-    staff?: StaffOrderByWithRelationInput
-    position?: PositionOrderByWithRelationInput
-  }
-
-  export type BusinessStaffWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    businessId_staffId_positionId?: BusinessStaffBusinessIdStaffIdPositionIdCompoundUniqueInput
-    AND?: BusinessStaffWhereInput | BusinessStaffWhereInput[]
-    OR?: BusinessStaffWhereInput[]
-    NOT?: BusinessStaffWhereInput | BusinessStaffWhereInput[]
-    createdAt?: DateTimeFilter<"BusinessStaff"> | Date | string
-    updatedAt?: DateTimeFilter<"BusinessStaff"> | Date | string
-    businessId?: StringFilter<"BusinessStaff"> | string
-    staffId?: StringFilter<"BusinessStaff"> | string
-    positionId?: StringFilter<"BusinessStaff"> | string
-    business?: XOR<LeadScalarRelationFilter, LeadWhereInput>
-    staff?: XOR<StaffScalarRelationFilter, StaffWhereInput>
-    position?: XOR<PositionScalarRelationFilter, PositionWhereInput>
-  }, "id" | "businessId_staffId_positionId">
-
-  export type BusinessStaffOrderByWithAggregationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    businessId?: SortOrder
-    staffId?: SortOrder
-    positionId?: SortOrder
-    _count?: BusinessStaffCountOrderByAggregateInput
-    _max?: BusinessStaffMaxOrderByAggregateInput
-    _min?: BusinessStaffMinOrderByAggregateInput
-  }
-
-  export type BusinessStaffScalarWhereWithAggregatesInput = {
-    AND?: BusinessStaffScalarWhereWithAggregatesInput | BusinessStaffScalarWhereWithAggregatesInput[]
-    OR?: BusinessStaffScalarWhereWithAggregatesInput[]
-    NOT?: BusinessStaffScalarWhereWithAggregatesInput | BusinessStaffScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"BusinessStaff"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"BusinessStaff"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"BusinessStaff"> | Date | string
-    businessId?: StringWithAggregatesFilter<"BusinessStaff"> | string
-    staffId?: StringWithAggregatesFilter<"BusinessStaff"> | string
-    positionId?: StringWithAggregatesFilter<"BusinessStaff"> | string
-  }
-
-  export type PositionWhereInput = {
-    AND?: PositionWhereInput | PositionWhereInput[]
-    OR?: PositionWhereInput[]
-    NOT?: PositionWhereInput | PositionWhereInput[]
-    id?: StringFilter<"Position"> | string
-    createdAt?: DateTimeFilter<"Position"> | Date | string
-    updatedAt?: DateTimeFilter<"Position"> | Date | string
-    name?: StringFilter<"Position"> | string
-    businessStaff?: BusinessStaffListRelationFilter
-  }
-
-  export type PositionOrderByWithRelationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    name?: SortOrder
-    businessStaff?: BusinessStaffOrderByRelationAggregateInput
-  }
-
-  export type PositionWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    name?: string
-    AND?: PositionWhereInput | PositionWhereInput[]
-    OR?: PositionWhereInput[]
-    NOT?: PositionWhereInput | PositionWhereInput[]
-    createdAt?: DateTimeFilter<"Position"> | Date | string
-    updatedAt?: DateTimeFilter<"Position"> | Date | string
-    businessStaff?: BusinessStaffListRelationFilter
-  }, "id" | "name">
-
-  export type PositionOrderByWithAggregationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    name?: SortOrder
-    _count?: PositionCountOrderByAggregateInput
-    _max?: PositionMaxOrderByAggregateInput
-    _min?: PositionMinOrderByAggregateInput
-  }
-
-  export type PositionScalarWhereWithAggregatesInput = {
-    AND?: PositionScalarWhereWithAggregatesInput | PositionScalarWhereWithAggregatesInput[]
-    OR?: PositionScalarWhereWithAggregatesInput[]
-    NOT?: PositionScalarWhereWithAggregatesInput | PositionScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Position"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Position"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Position"> | Date | string
-    name?: StringWithAggregatesFilter<"Position"> | string
+  export type ContactScalarWhereWithAggregatesInput = {
+    AND?: ContactScalarWhereWithAggregatesInput | ContactScalarWhereWithAggregatesInput[]
+    OR?: ContactScalarWhereWithAggregatesInput[]
+    NOT?: ContactScalarWhereWithAggregatesInput | ContactScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Contact"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Contact"> | Date | string
+    firstName?: StringWithAggregatesFilter<"Contact"> | string
+    lastName?: StringWithAggregatesFilter<"Contact"> | string
+    title?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    email?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    isDecisionMaker?: BoolWithAggregatesFilter<"Contact"> | boolean
+    notes?: StringNullableWithAggregatesFilter<"Contact"> | string | null
+    leadId?: StringWithAggregatesFilter<"Contact"> | string
   }
 
   export type IndustryWhereInput = {
@@ -16990,9 +14914,7 @@ export namespace Prisma {
     number?: StringFilter<"PhoneNumber"> | string
     label?: EnumPhoneTypeNullableFilter<"PhoneNumber"> | $Enums.PhoneType | null
     locationId?: StringNullableFilter<"PhoneNumber"> | string | null
-    staffId?: StringNullableFilter<"PhoneNumber"> | string | null
     location?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
-    staff?: XOR<StaffNullableScalarRelationFilter, StaffWhereInput> | null
   }
 
   export type PhoneNumberOrderByWithRelationInput = {
@@ -17002,9 +14924,7 @@ export namespace Prisma {
     number?: SortOrder
     label?: SortOrderInput | SortOrder
     locationId?: SortOrderInput | SortOrder
-    staffId?: SortOrderInput | SortOrder
     location?: LocationOrderByWithRelationInput
-    staff?: StaffOrderByWithRelationInput
   }
 
   export type PhoneNumberWhereUniqueInput = Prisma.AtLeast<{
@@ -17017,9 +14937,7 @@ export namespace Prisma {
     number?: StringFilter<"PhoneNumber"> | string
     label?: EnumPhoneTypeNullableFilter<"PhoneNumber"> | $Enums.PhoneType | null
     locationId?: StringNullableFilter<"PhoneNumber"> | string | null
-    staffId?: StringNullableFilter<"PhoneNumber"> | string | null
     location?: XOR<LocationNullableScalarRelationFilter, LocationWhereInput> | null
-    staff?: XOR<StaffNullableScalarRelationFilter, StaffWhereInput> | null
   }, "id">
 
   export type PhoneNumberOrderByWithAggregationInput = {
@@ -17029,7 +14947,6 @@ export namespace Prisma {
     number?: SortOrder
     label?: SortOrderInput | SortOrder
     locationId?: SortOrderInput | SortOrder
-    staffId?: SortOrderInput | SortOrder
     _count?: PhoneNumberCountOrderByAggregateInput
     _max?: PhoneNumberMaxOrderByAggregateInput
     _min?: PhoneNumberMinOrderByAggregateInput
@@ -17045,7 +14962,6 @@ export namespace Prisma {
     number?: StringWithAggregatesFilter<"PhoneNumber"> | string
     label?: EnumPhoneTypeNullableWithAggregatesFilter<"PhoneNumber"> | $Enums.PhoneType | null
     locationId?: StringNullableWithAggregatesFilter<"PhoneNumber"> | string | null
-    staffId?: StringNullableWithAggregatesFilter<"PhoneNumber"> | string | null
   }
 
   export type NoteWhereInput = {
@@ -17124,8 +15040,10 @@ export namespace Prisma {
     contactedById?: StringFilter<"TouchPoint"> | string
     receivedResponse?: BoolFilter<"TouchPoint"> | boolean
     summary?: StringNullableFilter<"TouchPoint"> | string | null
+    sequencePosition?: EnumSequencePositionNullableFilter<"TouchPoint"> | $Enums.SequencePosition | null
     lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
     contactedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reminders?: ReminderListRelationFilter
   }
 
   export type TouchPointOrderByWithRelationInput = {
@@ -17138,8 +15056,10 @@ export namespace Prisma {
     contactedById?: SortOrder
     receivedResponse?: SortOrder
     summary?: SortOrderInput | SortOrder
+    sequencePosition?: SortOrderInput | SortOrder
     lead?: LeadOrderByWithRelationInput
     contactedBy?: UserOrderByWithRelationInput
+    reminders?: ReminderOrderByRelationAggregateInput
   }
 
   export type TouchPointWhereUniqueInput = Prisma.AtLeast<{
@@ -17155,8 +15075,10 @@ export namespace Prisma {
     contactedById?: StringFilter<"TouchPoint"> | string
     receivedResponse?: BoolFilter<"TouchPoint"> | boolean
     summary?: StringNullableFilter<"TouchPoint"> | string | null
+    sequencePosition?: EnumSequencePositionNullableFilter<"TouchPoint"> | $Enums.SequencePosition | null
     lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
     contactedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reminders?: ReminderListRelationFilter
   }, "id">
 
   export type TouchPointOrderByWithAggregationInput = {
@@ -17169,6 +15091,7 @@ export namespace Prisma {
     contactedById?: SortOrder
     receivedResponse?: SortOrder
     summary?: SortOrderInput | SortOrder
+    sequencePosition?: SortOrderInput | SortOrder
     _count?: TouchPointCountOrderByAggregateInput
     _max?: TouchPointMaxOrderByAggregateInput
     _min?: TouchPointMinOrderByAggregateInput
@@ -17187,6 +15110,7 @@ export namespace Prisma {
     contactedById?: StringWithAggregatesFilter<"TouchPoint"> | string
     receivedResponse?: BoolWithAggregatesFilter<"TouchPoint"> | boolean
     summary?: StringNullableWithAggregatesFilter<"TouchPoint"> | string | null
+    sequencePosition?: EnumSequencePositionNullableWithAggregatesFilter<"TouchPoint"> | $Enums.SequencePosition | null
   }
 
   export type ReminderWhereInput = {
@@ -17197,6 +15121,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Reminder"> | Date | string
     updatedAt?: DateTimeFilter<"Reminder"> | Date | string
     leadId?: StringFilter<"Reminder"> | string
+    touchPointId?: StringNullableFilter<"Reminder"> | string | null
     type?: EnumTouchPointTypeFilter<"Reminder"> | $Enums.TouchPointType
     dueDate?: DateTimeFilter<"Reminder"> | Date | string
     note?: StringNullableFilter<"Reminder"> | string | null
@@ -17206,6 +15131,7 @@ export namespace Prisma {
     isResponseCheck?: BoolFilter<"Reminder"> | boolean
     isEmailSentCheck?: BoolFilter<"Reminder"> | boolean
     lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
+    touchPoint?: XOR<TouchPointNullableScalarRelationFilter, TouchPointWhereInput> | null
   }
 
   export type ReminderOrderByWithRelationInput = {
@@ -17213,6 +15139,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     leadId?: SortOrder
+    touchPointId?: SortOrderInput | SortOrder
     type?: SortOrder
     dueDate?: SortOrder
     note?: SortOrderInput | SortOrder
@@ -17222,6 +15149,7 @@ export namespace Prisma {
     isResponseCheck?: SortOrder
     isEmailSentCheck?: SortOrder
     lead?: LeadOrderByWithRelationInput
+    touchPoint?: TouchPointOrderByWithRelationInput
   }
 
   export type ReminderWhereUniqueInput = Prisma.AtLeast<{
@@ -17232,6 +15160,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Reminder"> | Date | string
     updatedAt?: DateTimeFilter<"Reminder"> | Date | string
     leadId?: StringFilter<"Reminder"> | string
+    touchPointId?: StringNullableFilter<"Reminder"> | string | null
     type?: EnumTouchPointTypeFilter<"Reminder"> | $Enums.TouchPointType
     dueDate?: DateTimeFilter<"Reminder"> | Date | string
     note?: StringNullableFilter<"Reminder"> | string | null
@@ -17241,6 +15170,7 @@ export namespace Prisma {
     isResponseCheck?: BoolFilter<"Reminder"> | boolean
     isEmailSentCheck?: BoolFilter<"Reminder"> | boolean
     lead?: XOR<LeadScalarRelationFilter, LeadWhereInput>
+    touchPoint?: XOR<TouchPointNullableScalarRelationFilter, TouchPointWhereInput> | null
   }, "id">
 
   export type ReminderOrderByWithAggregationInput = {
@@ -17248,6 +15178,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     leadId?: SortOrder
+    touchPointId?: SortOrderInput | SortOrder
     type?: SortOrder
     dueDate?: SortOrder
     note?: SortOrderInput | SortOrder
@@ -17269,6 +15200,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Reminder"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Reminder"> | Date | string
     leadId?: StringWithAggregatesFilter<"Reminder"> | string
+    touchPointId?: StringNullableWithAggregatesFilter<"Reminder"> | string | null
     type?: EnumTouchPointTypeWithAggregatesFilter<"Reminder"> | $Enums.TouchPointType
     dueDate?: DateTimeWithAggregatesFilter<"Reminder"> | Date | string
     note?: StringNullableWithAggregatesFilter<"Reminder"> | string | null
@@ -17389,15 +15321,27 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateInput = {
@@ -17424,12 +15368,24 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUpdateInput = {
@@ -17453,15 +15409,27 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateInput = {
@@ -17488,12 +15456,24 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadCreateManyInput = {
@@ -17520,7 +15500,18 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
   }
 
   export type LeadUpdateManyMutationInput = {
@@ -17544,6 +15535,16 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type LeadUncheckedUpdateManyInput = {
@@ -17570,191 +15571,115 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type StaffCreateInput = {
+  export type ContactCreateInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     firstName: string
     lastName: string
+    title?: string | null
     email?: string | null
-    phoneNumbers?: PhoneNumberCreateNestedManyWithoutStaffInput
-    businessLinks?: BusinessStaffCreateNestedManyWithoutStaffInput
+    phone?: string | null
+    isDecisionMaker?: boolean
+    notes?: string | null
+    lead: LeadCreateNestedOneWithoutContactsInput
   }
 
-  export type StaffUncheckedCreateInput = {
+  export type ContactUncheckedCreateInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     firstName: string
     lastName: string
+    title?: string | null
     email?: string | null
-    phoneNumbers?: PhoneNumberUncheckedCreateNestedManyWithoutStaffInput
-    businessLinks?: BusinessStaffUncheckedCreateNestedManyWithoutStaffInput
+    phone?: string | null
+    isDecisionMaker?: boolean
+    notes?: string | null
+    leadId: string
   }
 
-  export type StaffUpdateInput = {
+  export type ContactUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    phoneNumbers?: PhoneNumberUpdateManyWithoutStaffNestedInput
-    businessLinks?: BusinessStaffUpdateManyWithoutStaffNestedInput
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lead?: LeadUpdateOneRequiredWithoutContactsNestedInput
   }
 
-  export type StaffUncheckedUpdateInput = {
+  export type ContactUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    phoneNumbers?: PhoneNumberUncheckedUpdateManyWithoutStaffNestedInput
-    businessLinks?: BusinessStaffUncheckedUpdateManyWithoutStaffNestedInput
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    leadId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type StaffCreateManyInput = {
+  export type ContactCreateManyInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     firstName: string
     lastName: string
+    title?: string | null
     email?: string | null
+    phone?: string | null
+    isDecisionMaker?: boolean
+    notes?: string | null
+    leadId: string
   }
 
-  export type StaffUpdateManyMutationInput = {
+  export type ContactUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type StaffUncheckedUpdateManyInput = {
+  export type ContactUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type BusinessStaffCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    business: LeadCreateNestedOneWithoutStaffInput
-    staff: StaffCreateNestedOneWithoutBusinessLinksInput
-    position: PositionCreateNestedOneWithoutBusinessStaffInput
-  }
-
-  export type BusinessStaffUncheckedCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    businessId: string
-    staffId: string
-    positionId: string
-  }
-
-  export type BusinessStaffUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    business?: LeadUpdateOneRequiredWithoutStaffNestedInput
-    staff?: StaffUpdateOneRequiredWithoutBusinessLinksNestedInput
-    position?: PositionUpdateOneRequiredWithoutBusinessStaffNestedInput
-  }
-
-  export type BusinessStaffUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    staffId?: StringFieldUpdateOperationsInput | string
-    positionId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BusinessStaffCreateManyInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    businessId: string
-    staffId: string
-    positionId: string
-  }
-
-  export type BusinessStaffUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type BusinessStaffUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    staffId?: StringFieldUpdateOperationsInput | string
-    positionId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PositionCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-    businessStaff?: BusinessStaffCreateNestedManyWithoutPositionInput
-  }
-
-  export type PositionUncheckedCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-    businessStaff?: BusinessStaffUncheckedCreateNestedManyWithoutPositionInput
-  }
-
-  export type PositionUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    businessStaff?: BusinessStaffUpdateManyWithoutPositionNestedInput
-  }
-
-  export type PositionUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    businessStaff?: BusinessStaffUncheckedUpdateManyWithoutPositionNestedInput
-  }
-
-  export type PositionCreateManyInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-  }
-
-  export type PositionUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PositionUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    leadId?: StringFieldUpdateOperationsInput | string
   }
 
   export type IndustryCreateInput = {
@@ -17961,7 +15886,6 @@ export namespace Prisma {
     number: string
     label?: $Enums.PhoneType | null
     location?: LocationCreateNestedOneWithoutPhoneNumbersInput
-    staff?: StaffCreateNestedOneWithoutPhoneNumbersInput
   }
 
   export type PhoneNumberUncheckedCreateInput = {
@@ -17971,7 +15895,6 @@ export namespace Prisma {
     number: string
     label?: $Enums.PhoneType | null
     locationId?: string | null
-    staffId?: string | null
   }
 
   export type PhoneNumberUpdateInput = {
@@ -17981,7 +15904,6 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
     location?: LocationUpdateOneWithoutPhoneNumbersNestedInput
-    staff?: StaffUpdateOneWithoutPhoneNumbersNestedInput
   }
 
   export type PhoneNumberUncheckedUpdateInput = {
@@ -17991,7 +15913,6 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PhoneNumberCreateManyInput = {
@@ -18001,7 +15922,6 @@ export namespace Prisma {
     number: string
     label?: $Enums.PhoneType | null
     locationId?: string | null
-    staffId?: string | null
   }
 
   export type PhoneNumberUpdateManyMutationInput = {
@@ -18019,7 +15939,6 @@ export namespace Prisma {
     number?: StringFieldUpdateOperationsInput | string
     label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
     locationId?: NullableStringFieldUpdateOperationsInput | string | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type NoteCreateInput = {
@@ -18091,8 +16010,10 @@ export namespace Prisma {
     type: $Enums.TouchPointType
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
     lead: LeadCreateNestedOneWithoutTouchPointInput
     contactedBy: UserCreateNestedOneWithoutTouchPointsInput
+    reminders?: ReminderCreateNestedManyWithoutTouchPointInput
   }
 
   export type TouchPointUncheckedCreateInput = {
@@ -18105,6 +16026,8 @@ export namespace Prisma {
     contactedById: string
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
   }
 
   export type TouchPointUpdateInput = {
@@ -18115,8 +16038,10 @@ export namespace Prisma {
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
     contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
+    reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
   }
 
   export type TouchPointUncheckedUpdateInput = {
@@ -18129,6 +16054,8 @@ export namespace Prisma {
     contactedById?: StringFieldUpdateOperationsInput | string
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
   }
 
   export type TouchPointCreateManyInput = {
@@ -18141,6 +16068,7 @@ export namespace Prisma {
     contactedById: string
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
   }
 
   export type TouchPointUpdateManyMutationInput = {
@@ -18151,6 +16079,7 @@ export namespace Prisma {
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
   }
 
   export type TouchPointUncheckedUpdateManyInput = {
@@ -18163,6 +16092,7 @@ export namespace Prisma {
     contactedById?: StringFieldUpdateOperationsInput | string
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
   }
 
   export type ReminderCreateInput = {
@@ -18178,6 +16108,7 @@ export namespace Prisma {
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
     lead: LeadCreateNestedOneWithoutRemindersInput
+    touchPoint?: TouchPointCreateNestedOneWithoutRemindersInput
   }
 
   export type ReminderUncheckedCreateInput = {
@@ -18185,6 +16116,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leadId: string
+    touchPointId?: string | null
     type: $Enums.TouchPointType
     dueDate: Date | string
     note?: string | null
@@ -18208,6 +16140,7 @@ export namespace Prisma {
     isResponseCheck?: BoolFieldUpdateOperationsInput | boolean
     isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
     lead?: LeadUpdateOneRequiredWithoutRemindersNestedInput
+    touchPoint?: TouchPointUpdateOneWithoutRemindersNestedInput
   }
 
   export type ReminderUncheckedUpdateInput = {
@@ -18215,6 +16148,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadId?: StringFieldUpdateOperationsInput | string
+    touchPointId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18230,6 +16164,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     leadId: string
+    touchPointId?: string | null
     type: $Enums.TouchPointType
     dueDate: Date | string
     note?: string | null
@@ -18259,6 +16194,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leadId?: StringFieldUpdateOperationsInput | string
+    touchPointId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18499,10 +16435,10 @@ export namespace Prisma {
     isNot?: LocationWhereInput | null
   }
 
-  export type BusinessStaffListRelationFilter = {
-    every?: BusinessStaffWhereInput
-    some?: BusinessStaffWhereInput
-    none?: BusinessStaffWhereInput
+  export type ContactListRelationFilter = {
+    every?: ContactWhereInput
+    some?: ContactWhereInput
+    none?: ContactWhereInput
   }
 
   export type IndustryScalarRelationFilter = {
@@ -18526,6 +16462,11 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type LeadNullableScalarRelationFilter = {
+    is?: LeadWhereInput | null
+    isNot?: LeadWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18535,7 +16476,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type BusinessStaffOrderByRelationAggregateInput = {
+  export type ContactOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18567,12 +16508,27 @@ export namespace Prisma {
     priority?: SortOrder
     sequenceStep?: SortOrder
     sequenceActive?: SortOrder
+    isHot?: SortOrder
     assignedToId?: SortOrder
+    referredByLeadId?: SortOrder
+    referredByName?: SortOrder
+    instagramHandle?: SortOrder
+    instagramFollowers?: SortOrder
+    tiktokHandle?: SortOrder
+    tiktokFollowers?: SortOrder
+    youtubeHandle?: SortOrder
+    youtubeFollowers?: SortOrder
+    facebookHandle?: SortOrder
+    facebookFollowers?: SortOrder
   }
 
   export type LeadAvgOrderByAggregateInput = {
     igFollowerCount?: SortOrder
     sequenceStep?: SortOrder
+    instagramFollowers?: SortOrder
+    tiktokFollowers?: SortOrder
+    youtubeFollowers?: SortOrder
+    facebookFollowers?: SortOrder
   }
 
   export type LeadMaxOrderByAggregateInput = {
@@ -18599,7 +16555,18 @@ export namespace Prisma {
     priority?: SortOrder
     sequenceStep?: SortOrder
     sequenceActive?: SortOrder
+    isHot?: SortOrder
     assignedToId?: SortOrder
+    referredByLeadId?: SortOrder
+    referredByName?: SortOrder
+    instagramHandle?: SortOrder
+    instagramFollowers?: SortOrder
+    tiktokHandle?: SortOrder
+    tiktokFollowers?: SortOrder
+    youtubeHandle?: SortOrder
+    youtubeFollowers?: SortOrder
+    facebookHandle?: SortOrder
+    facebookFollowers?: SortOrder
   }
 
   export type LeadMinOrderByAggregateInput = {
@@ -18626,12 +16593,27 @@ export namespace Prisma {
     priority?: SortOrder
     sequenceStep?: SortOrder
     sequenceActive?: SortOrder
+    isHot?: SortOrder
     assignedToId?: SortOrder
+    referredByLeadId?: SortOrder
+    referredByName?: SortOrder
+    instagramHandle?: SortOrder
+    instagramFollowers?: SortOrder
+    tiktokHandle?: SortOrder
+    tiktokFollowers?: SortOrder
+    youtubeHandle?: SortOrder
+    youtubeFollowers?: SortOrder
+    facebookHandle?: SortOrder
+    facebookFollowers?: SortOrder
   }
 
   export type LeadSumOrderByAggregateInput = {
     igFollowerCount?: SortOrder
     sequenceStep?: SortOrder
+    instagramFollowers?: SortOrder
+    tiktokFollowers?: SortOrder
+    youtubeFollowers?: SortOrder
+    facebookFollowers?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -18746,110 +16728,51 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type PhoneNumberListRelationFilter = {
-    every?: PhoneNumberWhereInput
-    some?: PhoneNumberWhereInput
-    none?: PhoneNumberWhereInput
-  }
-
-  export type PhoneNumberOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type StaffCountOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    email?: SortOrder
-  }
-
-  export type StaffMaxOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    email?: SortOrder
-  }
-
-  export type StaffMinOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    email?: SortOrder
-  }
-
   export type LeadScalarRelationFilter = {
     is?: LeadWhereInput
     isNot?: LeadWhereInput
   }
 
-  export type StaffScalarRelationFilter = {
-    is?: StaffWhereInput
-    isNot?: StaffWhereInput
-  }
-
-  export type PositionScalarRelationFilter = {
-    is?: PositionWhereInput
-    isNot?: PositionWhereInput
-  }
-
-  export type BusinessStaffBusinessIdStaffIdPositionIdCompoundUniqueInput = {
-    businessId: string
-    staffId: string
-    positionId: string
-  }
-
-  export type BusinessStaffCountOrderByAggregateInput = {
+  export type ContactCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    businessId?: SortOrder
-    staffId?: SortOrder
-    positionId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    title?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    isDecisionMaker?: SortOrder
+    notes?: SortOrder
+    leadId?: SortOrder
   }
 
-  export type BusinessStaffMaxOrderByAggregateInput = {
+  export type ContactMaxOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    businessId?: SortOrder
-    staffId?: SortOrder
-    positionId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    title?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    isDecisionMaker?: SortOrder
+    notes?: SortOrder
+    leadId?: SortOrder
   }
 
-  export type BusinessStaffMinOrderByAggregateInput = {
+  export type ContactMinOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    businessId?: SortOrder
-    staffId?: SortOrder
-    positionId?: SortOrder
-  }
-
-  export type PositionCountOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    name?: SortOrder
-  }
-
-  export type PositionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    name?: SortOrder
-  }
-
-  export type PositionMinOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    name?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    title?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    isDecisionMaker?: SortOrder
+    notes?: SortOrder
+    leadId?: SortOrder
   }
 
   export type IndustryCountOrderByAggregateInput = {
@@ -18894,9 +16817,14 @@ export namespace Prisma {
     name?: SortOrder
   }
 
-  export type LeadNullableScalarRelationFilter = {
-    is?: LeadWhereInput | null
-    isNot?: LeadWhereInput | null
+  export type PhoneNumberListRelationFilter = {
+    every?: PhoneNumberWhereInput
+    some?: PhoneNumberWhereInput
+    none?: PhoneNumberWhereInput
+  }
+
+  export type PhoneNumberOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type LocationCountOrderByAggregateInput = {
@@ -18942,11 +16870,6 @@ export namespace Prisma {
     not?: NestedEnumPhoneTypeNullableFilter<$PrismaModel> | $Enums.PhoneType | null
   }
 
-  export type StaffNullableScalarRelationFilter = {
-    is?: StaffWhereInput | null
-    isNot?: StaffWhereInput | null
-  }
-
   export type PhoneNumberCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -18954,7 +16877,6 @@ export namespace Prisma {
     number?: SortOrder
     label?: SortOrder
     locationId?: SortOrder
-    staffId?: SortOrder
   }
 
   export type PhoneNumberMaxOrderByAggregateInput = {
@@ -18964,7 +16886,6 @@ export namespace Prisma {
     number?: SortOrder
     label?: SortOrder
     locationId?: SortOrder
-    staffId?: SortOrder
   }
 
   export type PhoneNumberMinOrderByAggregateInput = {
@@ -18974,7 +16895,6 @@ export namespace Prisma {
     number?: SortOrder
     label?: SortOrder
     locationId?: SortOrder
-    staffId?: SortOrder
   }
 
   export type EnumPhoneTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -19026,6 +16946,13 @@ export namespace Prisma {
     not?: NestedEnumTouchPointTypeFilter<$PrismaModel> | $Enums.TouchPointType
   }
 
+  export type EnumSequencePositionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SequencePosition | EnumSequencePositionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSequencePositionNullableFilter<$PrismaModel> | $Enums.SequencePosition | null
+  }
+
   export type TouchPointCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -19036,6 +16963,7 @@ export namespace Prisma {
     contactedById?: SortOrder
     receivedResponse?: SortOrder
     summary?: SortOrder
+    sequencePosition?: SortOrder
   }
 
   export type TouchPointMaxOrderByAggregateInput = {
@@ -19048,6 +16976,7 @@ export namespace Prisma {
     contactedById?: SortOrder
     receivedResponse?: SortOrder
     summary?: SortOrder
+    sequencePosition?: SortOrder
   }
 
   export type TouchPointMinOrderByAggregateInput = {
@@ -19060,6 +16989,7 @@ export namespace Prisma {
     contactedById?: SortOrder
     receivedResponse?: SortOrder
     summary?: SortOrder
+    sequencePosition?: SortOrder
   }
 
   export type EnumTouchPointTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -19072,11 +17002,27 @@ export namespace Prisma {
     _max?: NestedEnumTouchPointTypeFilter<$PrismaModel>
   }
 
+  export type EnumSequencePositionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SequencePosition | EnumSequencePositionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSequencePositionNullableWithAggregatesFilter<$PrismaModel> | $Enums.SequencePosition | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSequencePositionNullableFilter<$PrismaModel>
+    _max?: NestedEnumSequencePositionNullableFilter<$PrismaModel>
+  }
+
+  export type TouchPointNullableScalarRelationFilter = {
+    is?: TouchPointWhereInput | null
+    isNot?: TouchPointWhereInput | null
+  }
+
   export type ReminderCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     leadId?: SortOrder
+    touchPointId?: SortOrder
     type?: SortOrder
     dueDate?: SortOrder
     note?: SortOrder
@@ -19092,6 +17038,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     leadId?: SortOrder
+    touchPointId?: SortOrder
     type?: SortOrder
     dueDate?: SortOrder
     note?: SortOrder
@@ -19107,6 +17054,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     leadId?: SortOrder
+    touchPointId?: SortOrder
     type?: SortOrder
     dueDate?: SortOrder
     note?: SortOrder
@@ -19268,11 +17216,11 @@ export namespace Prisma {
     connect?: LocationWhereUniqueInput
   }
 
-  export type BusinessStaffCreateNestedManyWithoutBusinessInput = {
-    create?: XOR<BusinessStaffCreateWithoutBusinessInput, BusinessStaffUncheckedCreateWithoutBusinessInput> | BusinessStaffCreateWithoutBusinessInput[] | BusinessStaffUncheckedCreateWithoutBusinessInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutBusinessInput | BusinessStaffCreateOrConnectWithoutBusinessInput[]
-    createMany?: BusinessStaffCreateManyBusinessInputEnvelope
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
+  export type ContactCreateNestedManyWithoutLeadInput = {
+    create?: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput> | ContactCreateWithoutLeadInput[] | ContactUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: ContactCreateOrConnectWithoutLeadInput | ContactCreateOrConnectWithoutLeadInput[]
+    createMany?: ContactCreateManyLeadInputEnvelope
+    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
   }
 
   export type IndustryCreateNestedOneWithoutLeadsInput = {
@@ -19314,6 +17262,19 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type LeadCreateNestedOneWithoutReferralsInput = {
+    create?: XOR<LeadCreateWithoutReferralsInput, LeadUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutReferralsInput
+    connect?: LeadWhereUniqueInput
+  }
+
+  export type LeadCreateNestedManyWithoutReferredByLeadInput = {
+    create?: XOR<LeadCreateWithoutReferredByLeadInput, LeadUncheckedCreateWithoutReferredByLeadInput> | LeadCreateWithoutReferredByLeadInput[] | LeadUncheckedCreateWithoutReferredByLeadInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutReferredByLeadInput | LeadCreateOrConnectWithoutReferredByLeadInput[]
+    createMany?: LeadCreateManyReferredByLeadInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
   export type LocationUncheckedCreateNestedManyWithoutBusinessInput = {
     create?: XOR<LocationCreateWithoutBusinessInput, LocationUncheckedCreateWithoutBusinessInput> | LocationCreateWithoutBusinessInput[] | LocationUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: LocationCreateOrConnectWithoutBusinessInput | LocationCreateOrConnectWithoutBusinessInput[]
@@ -19321,11 +17282,11 @@ export namespace Prisma {
     connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
   }
 
-  export type BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput = {
-    create?: XOR<BusinessStaffCreateWithoutBusinessInput, BusinessStaffUncheckedCreateWithoutBusinessInput> | BusinessStaffCreateWithoutBusinessInput[] | BusinessStaffUncheckedCreateWithoutBusinessInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutBusinessInput | BusinessStaffCreateOrConnectWithoutBusinessInput[]
-    createMany?: BusinessStaffCreateManyBusinessInputEnvelope
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
+  export type ContactUncheckedCreateNestedManyWithoutLeadInput = {
+    create?: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput> | ContactCreateWithoutLeadInput[] | ContactUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: ContactCreateOrConnectWithoutLeadInput | ContactCreateOrConnectWithoutLeadInput[]
+    createMany?: ContactCreateManyLeadInputEnvelope
+    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
   }
 
   export type TouchPointUncheckedCreateNestedManyWithoutLeadInput = {
@@ -19347,6 +17308,13 @@ export namespace Prisma {
     connectOrCreate?: ReminderCreateOrConnectWithoutLeadInput | ReminderCreateOrConnectWithoutLeadInput[]
     createMany?: ReminderCreateManyLeadInputEnvelope
     connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
+  export type LeadUncheckedCreateNestedManyWithoutReferredByLeadInput = {
+    create?: XOR<LeadCreateWithoutReferredByLeadInput, LeadUncheckedCreateWithoutReferredByLeadInput> | LeadCreateWithoutReferredByLeadInput[] | LeadUncheckedCreateWithoutReferredByLeadInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutReferredByLeadInput | LeadCreateOrConnectWithoutReferredByLeadInput[]
+    createMany?: LeadCreateManyReferredByLeadInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -19417,18 +17385,18 @@ export namespace Prisma {
     update?: XOR<XOR<LocationUpdateToOneWithWhereWithoutPrimaryForBusinessInput, LocationUpdateWithoutPrimaryForBusinessInput>, LocationUncheckedUpdateWithoutPrimaryForBusinessInput>
   }
 
-  export type BusinessStaffUpdateManyWithoutBusinessNestedInput = {
-    create?: XOR<BusinessStaffCreateWithoutBusinessInput, BusinessStaffUncheckedCreateWithoutBusinessInput> | BusinessStaffCreateWithoutBusinessInput[] | BusinessStaffUncheckedCreateWithoutBusinessInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutBusinessInput | BusinessStaffCreateOrConnectWithoutBusinessInput[]
-    upsert?: BusinessStaffUpsertWithWhereUniqueWithoutBusinessInput | BusinessStaffUpsertWithWhereUniqueWithoutBusinessInput[]
-    createMany?: BusinessStaffCreateManyBusinessInputEnvelope
-    set?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    disconnect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    delete?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    update?: BusinessStaffUpdateWithWhereUniqueWithoutBusinessInput | BusinessStaffUpdateWithWhereUniqueWithoutBusinessInput[]
-    updateMany?: BusinessStaffUpdateManyWithWhereWithoutBusinessInput | BusinessStaffUpdateManyWithWhereWithoutBusinessInput[]
-    deleteMany?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
+  export type ContactUpdateManyWithoutLeadNestedInput = {
+    create?: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput> | ContactCreateWithoutLeadInput[] | ContactUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: ContactCreateOrConnectWithoutLeadInput | ContactCreateOrConnectWithoutLeadInput[]
+    upsert?: ContactUpsertWithWhereUniqueWithoutLeadInput | ContactUpsertWithWhereUniqueWithoutLeadInput[]
+    createMany?: ContactCreateManyLeadInputEnvelope
+    set?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    disconnect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    delete?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    update?: ContactUpdateWithWhereUniqueWithoutLeadInput | ContactUpdateWithWhereUniqueWithoutLeadInput[]
+    updateMany?: ContactUpdateManyWithWhereWithoutLeadInput | ContactUpdateManyWithWhereWithoutLeadInput[]
+    deleteMany?: ContactScalarWhereInput | ContactScalarWhereInput[]
   }
 
   export type IndustryUpdateOneRequiredWithoutLeadsNestedInput = {
@@ -19499,6 +17467,30 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedLeadsInput, UserUpdateWithoutAssignedLeadsInput>, UserUncheckedUpdateWithoutAssignedLeadsInput>
   }
 
+  export type LeadUpdateOneWithoutReferralsNestedInput = {
+    create?: XOR<LeadCreateWithoutReferralsInput, LeadUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutReferralsInput
+    upsert?: LeadUpsertWithoutReferralsInput
+    disconnect?: LeadWhereInput | boolean
+    delete?: LeadWhereInput | boolean
+    connect?: LeadWhereUniqueInput
+    update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutReferralsInput, LeadUpdateWithoutReferralsInput>, LeadUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type LeadUpdateManyWithoutReferredByLeadNestedInput = {
+    create?: XOR<LeadCreateWithoutReferredByLeadInput, LeadUncheckedCreateWithoutReferredByLeadInput> | LeadCreateWithoutReferredByLeadInput[] | LeadUncheckedCreateWithoutReferredByLeadInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutReferredByLeadInput | LeadCreateOrConnectWithoutReferredByLeadInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutReferredByLeadInput | LeadUpsertWithWhereUniqueWithoutReferredByLeadInput[]
+    createMany?: LeadCreateManyReferredByLeadInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutReferredByLeadInput | LeadUpdateWithWhereUniqueWithoutReferredByLeadInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutReferredByLeadInput | LeadUpdateManyWithWhereWithoutReferredByLeadInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
   export type LocationUncheckedUpdateManyWithoutBusinessNestedInput = {
     create?: XOR<LocationCreateWithoutBusinessInput, LocationUncheckedCreateWithoutBusinessInput> | LocationCreateWithoutBusinessInput[] | LocationUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: LocationCreateOrConnectWithoutBusinessInput | LocationCreateOrConnectWithoutBusinessInput[]
@@ -19513,18 +17505,18 @@ export namespace Prisma {
     deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
   }
 
-  export type BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput = {
-    create?: XOR<BusinessStaffCreateWithoutBusinessInput, BusinessStaffUncheckedCreateWithoutBusinessInput> | BusinessStaffCreateWithoutBusinessInput[] | BusinessStaffUncheckedCreateWithoutBusinessInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutBusinessInput | BusinessStaffCreateOrConnectWithoutBusinessInput[]
-    upsert?: BusinessStaffUpsertWithWhereUniqueWithoutBusinessInput | BusinessStaffUpsertWithWhereUniqueWithoutBusinessInput[]
-    createMany?: BusinessStaffCreateManyBusinessInputEnvelope
-    set?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    disconnect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    delete?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    update?: BusinessStaffUpdateWithWhereUniqueWithoutBusinessInput | BusinessStaffUpdateWithWhereUniqueWithoutBusinessInput[]
-    updateMany?: BusinessStaffUpdateManyWithWhereWithoutBusinessInput | BusinessStaffUpdateManyWithWhereWithoutBusinessInput[]
-    deleteMany?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
+  export type ContactUncheckedUpdateManyWithoutLeadNestedInput = {
+    create?: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput> | ContactCreateWithoutLeadInput[] | ContactUncheckedCreateWithoutLeadInput[]
+    connectOrCreate?: ContactCreateOrConnectWithoutLeadInput | ContactCreateOrConnectWithoutLeadInput[]
+    upsert?: ContactUpsertWithWhereUniqueWithoutLeadInput | ContactUpsertWithWhereUniqueWithoutLeadInput[]
+    createMany?: ContactCreateManyLeadInputEnvelope
+    set?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    disconnect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    delete?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    connect?: ContactWhereUniqueInput | ContactWhereUniqueInput[]
+    update?: ContactUpdateWithWhereUniqueWithoutLeadInput | ContactUpdateWithWhereUniqueWithoutLeadInput[]
+    updateMany?: ContactUpdateManyWithWhereWithoutLeadInput | ContactUpdateManyWithWhereWithoutLeadInput[]
+    deleteMany?: ContactScalarWhereInput | ContactScalarWhereInput[]
   }
 
   export type TouchPointUncheckedUpdateManyWithoutLeadNestedInput = {
@@ -19569,172 +17561,32 @@ export namespace Prisma {
     deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
   }
 
-  export type PhoneNumberCreateNestedManyWithoutStaffInput = {
-    create?: XOR<PhoneNumberCreateWithoutStaffInput, PhoneNumberUncheckedCreateWithoutStaffInput> | PhoneNumberCreateWithoutStaffInput[] | PhoneNumberUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: PhoneNumberCreateOrConnectWithoutStaffInput | PhoneNumberCreateOrConnectWithoutStaffInput[]
-    createMany?: PhoneNumberCreateManyStaffInputEnvelope
-    connect?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
+  export type LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput = {
+    create?: XOR<LeadCreateWithoutReferredByLeadInput, LeadUncheckedCreateWithoutReferredByLeadInput> | LeadCreateWithoutReferredByLeadInput[] | LeadUncheckedCreateWithoutReferredByLeadInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutReferredByLeadInput | LeadCreateOrConnectWithoutReferredByLeadInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutReferredByLeadInput | LeadUpsertWithWhereUniqueWithoutReferredByLeadInput[]
+    createMany?: LeadCreateManyReferredByLeadInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutReferredByLeadInput | LeadUpdateWithWhereUniqueWithoutReferredByLeadInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutReferredByLeadInput | LeadUpdateManyWithWhereWithoutReferredByLeadInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
   }
 
-  export type BusinessStaffCreateNestedManyWithoutStaffInput = {
-    create?: XOR<BusinessStaffCreateWithoutStaffInput, BusinessStaffUncheckedCreateWithoutStaffInput> | BusinessStaffCreateWithoutStaffInput[] | BusinessStaffUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutStaffInput | BusinessStaffCreateOrConnectWithoutStaffInput[]
-    createMany?: BusinessStaffCreateManyStaffInputEnvelope
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-  }
-
-  export type PhoneNumberUncheckedCreateNestedManyWithoutStaffInput = {
-    create?: XOR<PhoneNumberCreateWithoutStaffInput, PhoneNumberUncheckedCreateWithoutStaffInput> | PhoneNumberCreateWithoutStaffInput[] | PhoneNumberUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: PhoneNumberCreateOrConnectWithoutStaffInput | PhoneNumberCreateOrConnectWithoutStaffInput[]
-    createMany?: PhoneNumberCreateManyStaffInputEnvelope
-    connect?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-  }
-
-  export type BusinessStaffUncheckedCreateNestedManyWithoutStaffInput = {
-    create?: XOR<BusinessStaffCreateWithoutStaffInput, BusinessStaffUncheckedCreateWithoutStaffInput> | BusinessStaffCreateWithoutStaffInput[] | BusinessStaffUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutStaffInput | BusinessStaffCreateOrConnectWithoutStaffInput[]
-    createMany?: BusinessStaffCreateManyStaffInputEnvelope
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-  }
-
-  export type PhoneNumberUpdateManyWithoutStaffNestedInput = {
-    create?: XOR<PhoneNumberCreateWithoutStaffInput, PhoneNumberUncheckedCreateWithoutStaffInput> | PhoneNumberCreateWithoutStaffInput[] | PhoneNumberUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: PhoneNumberCreateOrConnectWithoutStaffInput | PhoneNumberCreateOrConnectWithoutStaffInput[]
-    upsert?: PhoneNumberUpsertWithWhereUniqueWithoutStaffInput | PhoneNumberUpsertWithWhereUniqueWithoutStaffInput[]
-    createMany?: PhoneNumberCreateManyStaffInputEnvelope
-    set?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    disconnect?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    delete?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    connect?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    update?: PhoneNumberUpdateWithWhereUniqueWithoutStaffInput | PhoneNumberUpdateWithWhereUniqueWithoutStaffInput[]
-    updateMany?: PhoneNumberUpdateManyWithWhereWithoutStaffInput | PhoneNumberUpdateManyWithWhereWithoutStaffInput[]
-    deleteMany?: PhoneNumberScalarWhereInput | PhoneNumberScalarWhereInput[]
-  }
-
-  export type BusinessStaffUpdateManyWithoutStaffNestedInput = {
-    create?: XOR<BusinessStaffCreateWithoutStaffInput, BusinessStaffUncheckedCreateWithoutStaffInput> | BusinessStaffCreateWithoutStaffInput[] | BusinessStaffUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutStaffInput | BusinessStaffCreateOrConnectWithoutStaffInput[]
-    upsert?: BusinessStaffUpsertWithWhereUniqueWithoutStaffInput | BusinessStaffUpsertWithWhereUniqueWithoutStaffInput[]
-    createMany?: BusinessStaffCreateManyStaffInputEnvelope
-    set?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    disconnect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    delete?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    update?: BusinessStaffUpdateWithWhereUniqueWithoutStaffInput | BusinessStaffUpdateWithWhereUniqueWithoutStaffInput[]
-    updateMany?: BusinessStaffUpdateManyWithWhereWithoutStaffInput | BusinessStaffUpdateManyWithWhereWithoutStaffInput[]
-    deleteMany?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
-  }
-
-  export type PhoneNumberUncheckedUpdateManyWithoutStaffNestedInput = {
-    create?: XOR<PhoneNumberCreateWithoutStaffInput, PhoneNumberUncheckedCreateWithoutStaffInput> | PhoneNumberCreateWithoutStaffInput[] | PhoneNumberUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: PhoneNumberCreateOrConnectWithoutStaffInput | PhoneNumberCreateOrConnectWithoutStaffInput[]
-    upsert?: PhoneNumberUpsertWithWhereUniqueWithoutStaffInput | PhoneNumberUpsertWithWhereUniqueWithoutStaffInput[]
-    createMany?: PhoneNumberCreateManyStaffInputEnvelope
-    set?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    disconnect?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    delete?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    connect?: PhoneNumberWhereUniqueInput | PhoneNumberWhereUniqueInput[]
-    update?: PhoneNumberUpdateWithWhereUniqueWithoutStaffInput | PhoneNumberUpdateWithWhereUniqueWithoutStaffInput[]
-    updateMany?: PhoneNumberUpdateManyWithWhereWithoutStaffInput | PhoneNumberUpdateManyWithWhereWithoutStaffInput[]
-    deleteMany?: PhoneNumberScalarWhereInput | PhoneNumberScalarWhereInput[]
-  }
-
-  export type BusinessStaffUncheckedUpdateManyWithoutStaffNestedInput = {
-    create?: XOR<BusinessStaffCreateWithoutStaffInput, BusinessStaffUncheckedCreateWithoutStaffInput> | BusinessStaffCreateWithoutStaffInput[] | BusinessStaffUncheckedCreateWithoutStaffInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutStaffInput | BusinessStaffCreateOrConnectWithoutStaffInput[]
-    upsert?: BusinessStaffUpsertWithWhereUniqueWithoutStaffInput | BusinessStaffUpsertWithWhereUniqueWithoutStaffInput[]
-    createMany?: BusinessStaffCreateManyStaffInputEnvelope
-    set?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    disconnect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    delete?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    update?: BusinessStaffUpdateWithWhereUniqueWithoutStaffInput | BusinessStaffUpdateWithWhereUniqueWithoutStaffInput[]
-    updateMany?: BusinessStaffUpdateManyWithWhereWithoutStaffInput | BusinessStaffUpdateManyWithWhereWithoutStaffInput[]
-    deleteMany?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
-  }
-
-  export type LeadCreateNestedOneWithoutStaffInput = {
-    create?: XOR<LeadCreateWithoutStaffInput, LeadUncheckedCreateWithoutStaffInput>
-    connectOrCreate?: LeadCreateOrConnectWithoutStaffInput
+  export type LeadCreateNestedOneWithoutContactsInput = {
+    create?: XOR<LeadCreateWithoutContactsInput, LeadUncheckedCreateWithoutContactsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutContactsInput
     connect?: LeadWhereUniqueInput
   }
 
-  export type StaffCreateNestedOneWithoutBusinessLinksInput = {
-    create?: XOR<StaffCreateWithoutBusinessLinksInput, StaffUncheckedCreateWithoutBusinessLinksInput>
-    connectOrCreate?: StaffCreateOrConnectWithoutBusinessLinksInput
-    connect?: StaffWhereUniqueInput
-  }
-
-  export type PositionCreateNestedOneWithoutBusinessStaffInput = {
-    create?: XOR<PositionCreateWithoutBusinessStaffInput, PositionUncheckedCreateWithoutBusinessStaffInput>
-    connectOrCreate?: PositionCreateOrConnectWithoutBusinessStaffInput
-    connect?: PositionWhereUniqueInput
-  }
-
-  export type LeadUpdateOneRequiredWithoutStaffNestedInput = {
-    create?: XOR<LeadCreateWithoutStaffInput, LeadUncheckedCreateWithoutStaffInput>
-    connectOrCreate?: LeadCreateOrConnectWithoutStaffInput
-    upsert?: LeadUpsertWithoutStaffInput
+  export type LeadUpdateOneRequiredWithoutContactsNestedInput = {
+    create?: XOR<LeadCreateWithoutContactsInput, LeadUncheckedCreateWithoutContactsInput>
+    connectOrCreate?: LeadCreateOrConnectWithoutContactsInput
+    upsert?: LeadUpsertWithoutContactsInput
     connect?: LeadWhereUniqueInput
-    update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutStaffInput, LeadUpdateWithoutStaffInput>, LeadUncheckedUpdateWithoutStaffInput>
-  }
-
-  export type StaffUpdateOneRequiredWithoutBusinessLinksNestedInput = {
-    create?: XOR<StaffCreateWithoutBusinessLinksInput, StaffUncheckedCreateWithoutBusinessLinksInput>
-    connectOrCreate?: StaffCreateOrConnectWithoutBusinessLinksInput
-    upsert?: StaffUpsertWithoutBusinessLinksInput
-    connect?: StaffWhereUniqueInput
-    update?: XOR<XOR<StaffUpdateToOneWithWhereWithoutBusinessLinksInput, StaffUpdateWithoutBusinessLinksInput>, StaffUncheckedUpdateWithoutBusinessLinksInput>
-  }
-
-  export type PositionUpdateOneRequiredWithoutBusinessStaffNestedInput = {
-    create?: XOR<PositionCreateWithoutBusinessStaffInput, PositionUncheckedCreateWithoutBusinessStaffInput>
-    connectOrCreate?: PositionCreateOrConnectWithoutBusinessStaffInput
-    upsert?: PositionUpsertWithoutBusinessStaffInput
-    connect?: PositionWhereUniqueInput
-    update?: XOR<XOR<PositionUpdateToOneWithWhereWithoutBusinessStaffInput, PositionUpdateWithoutBusinessStaffInput>, PositionUncheckedUpdateWithoutBusinessStaffInput>
-  }
-
-  export type BusinessStaffCreateNestedManyWithoutPositionInput = {
-    create?: XOR<BusinessStaffCreateWithoutPositionInput, BusinessStaffUncheckedCreateWithoutPositionInput> | BusinessStaffCreateWithoutPositionInput[] | BusinessStaffUncheckedCreateWithoutPositionInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutPositionInput | BusinessStaffCreateOrConnectWithoutPositionInput[]
-    createMany?: BusinessStaffCreateManyPositionInputEnvelope
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-  }
-
-  export type BusinessStaffUncheckedCreateNestedManyWithoutPositionInput = {
-    create?: XOR<BusinessStaffCreateWithoutPositionInput, BusinessStaffUncheckedCreateWithoutPositionInput> | BusinessStaffCreateWithoutPositionInput[] | BusinessStaffUncheckedCreateWithoutPositionInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutPositionInput | BusinessStaffCreateOrConnectWithoutPositionInput[]
-    createMany?: BusinessStaffCreateManyPositionInputEnvelope
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-  }
-
-  export type BusinessStaffUpdateManyWithoutPositionNestedInput = {
-    create?: XOR<BusinessStaffCreateWithoutPositionInput, BusinessStaffUncheckedCreateWithoutPositionInput> | BusinessStaffCreateWithoutPositionInput[] | BusinessStaffUncheckedCreateWithoutPositionInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutPositionInput | BusinessStaffCreateOrConnectWithoutPositionInput[]
-    upsert?: BusinessStaffUpsertWithWhereUniqueWithoutPositionInput | BusinessStaffUpsertWithWhereUniqueWithoutPositionInput[]
-    createMany?: BusinessStaffCreateManyPositionInputEnvelope
-    set?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    disconnect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    delete?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    update?: BusinessStaffUpdateWithWhereUniqueWithoutPositionInput | BusinessStaffUpdateWithWhereUniqueWithoutPositionInput[]
-    updateMany?: BusinessStaffUpdateManyWithWhereWithoutPositionInput | BusinessStaffUpdateManyWithWhereWithoutPositionInput[]
-    deleteMany?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
-  }
-
-  export type BusinessStaffUncheckedUpdateManyWithoutPositionNestedInput = {
-    create?: XOR<BusinessStaffCreateWithoutPositionInput, BusinessStaffUncheckedCreateWithoutPositionInput> | BusinessStaffCreateWithoutPositionInput[] | BusinessStaffUncheckedCreateWithoutPositionInput[]
-    connectOrCreate?: BusinessStaffCreateOrConnectWithoutPositionInput | BusinessStaffCreateOrConnectWithoutPositionInput[]
-    upsert?: BusinessStaffUpsertWithWhereUniqueWithoutPositionInput | BusinessStaffUpsertWithWhereUniqueWithoutPositionInput[]
-    createMany?: BusinessStaffCreateManyPositionInputEnvelope
-    set?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    disconnect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    delete?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    connect?: BusinessStaffWhereUniqueInput | BusinessStaffWhereUniqueInput[]
-    update?: BusinessStaffUpdateWithWhereUniqueWithoutPositionInput | BusinessStaffUpdateWithWhereUniqueWithoutPositionInput[]
-    updateMany?: BusinessStaffUpdateManyWithWhereWithoutPositionInput | BusinessStaffUpdateManyWithWhereWithoutPositionInput[]
-    deleteMany?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
+    update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutContactsInput, LeadUpdateWithoutContactsInput>, LeadUncheckedUpdateWithoutContactsInput>
   }
 
   export type LeadCreateNestedManyWithoutIndustryInput = {
@@ -19915,12 +17767,6 @@ export namespace Prisma {
     connect?: LocationWhereUniqueInput
   }
 
-  export type StaffCreateNestedOneWithoutPhoneNumbersInput = {
-    create?: XOR<StaffCreateWithoutPhoneNumbersInput, StaffUncheckedCreateWithoutPhoneNumbersInput>
-    connectOrCreate?: StaffCreateOrConnectWithoutPhoneNumbersInput
-    connect?: StaffWhereUniqueInput
-  }
-
   export type NullableEnumPhoneTypeFieldUpdateOperationsInput = {
     set?: $Enums.PhoneType | null
   }
@@ -19933,16 +17779,6 @@ export namespace Prisma {
     delete?: LocationWhereInput | boolean
     connect?: LocationWhereUniqueInput
     update?: XOR<XOR<LocationUpdateToOneWithWhereWithoutPhoneNumbersInput, LocationUpdateWithoutPhoneNumbersInput>, LocationUncheckedUpdateWithoutPhoneNumbersInput>
-  }
-
-  export type StaffUpdateOneWithoutPhoneNumbersNestedInput = {
-    create?: XOR<StaffCreateWithoutPhoneNumbersInput, StaffUncheckedCreateWithoutPhoneNumbersInput>
-    connectOrCreate?: StaffCreateOrConnectWithoutPhoneNumbersInput
-    upsert?: StaffUpsertWithoutPhoneNumbersInput
-    disconnect?: StaffWhereInput | boolean
-    delete?: StaffWhereInput | boolean
-    connect?: StaffWhereUniqueInput
-    update?: XOR<XOR<StaffUpdateToOneWithWhereWithoutPhoneNumbersInput, StaffUpdateWithoutPhoneNumbersInput>, StaffUncheckedUpdateWithoutPhoneNumbersInput>
   }
 
   export type LeadCreateNestedOneWithoutNotesInput = {
@@ -19985,8 +17821,26 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type ReminderCreateNestedManyWithoutTouchPointInput = {
+    create?: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput> | ReminderCreateWithoutTouchPointInput[] | ReminderUncheckedCreateWithoutTouchPointInput[]
+    connectOrCreate?: ReminderCreateOrConnectWithoutTouchPointInput | ReminderCreateOrConnectWithoutTouchPointInput[]
+    createMany?: ReminderCreateManyTouchPointInputEnvelope
+    connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
+  export type ReminderUncheckedCreateNestedManyWithoutTouchPointInput = {
+    create?: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput> | ReminderCreateWithoutTouchPointInput[] | ReminderUncheckedCreateWithoutTouchPointInput[]
+    connectOrCreate?: ReminderCreateOrConnectWithoutTouchPointInput | ReminderCreateOrConnectWithoutTouchPointInput[]
+    createMany?: ReminderCreateManyTouchPointInputEnvelope
+    connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+  }
+
   export type EnumTouchPointTypeFieldUpdateOperationsInput = {
     set?: $Enums.TouchPointType
+  }
+
+  export type NullableEnumSequencePositionFieldUpdateOperationsInput = {
+    set?: $Enums.SequencePosition | null
   }
 
   export type LeadUpdateOneRequiredWithoutTouchPointNestedInput = {
@@ -20005,10 +17859,44 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTouchPointsInput, UserUpdateWithoutTouchPointsInput>, UserUncheckedUpdateWithoutTouchPointsInput>
   }
 
+  export type ReminderUpdateManyWithoutTouchPointNestedInput = {
+    create?: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput> | ReminderCreateWithoutTouchPointInput[] | ReminderUncheckedCreateWithoutTouchPointInput[]
+    connectOrCreate?: ReminderCreateOrConnectWithoutTouchPointInput | ReminderCreateOrConnectWithoutTouchPointInput[]
+    upsert?: ReminderUpsertWithWhereUniqueWithoutTouchPointInput | ReminderUpsertWithWhereUniqueWithoutTouchPointInput[]
+    createMany?: ReminderCreateManyTouchPointInputEnvelope
+    set?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    disconnect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    delete?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    update?: ReminderUpdateWithWhereUniqueWithoutTouchPointInput | ReminderUpdateWithWhereUniqueWithoutTouchPointInput[]
+    updateMany?: ReminderUpdateManyWithWhereWithoutTouchPointInput | ReminderUpdateManyWithWhereWithoutTouchPointInput[]
+    deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
+  }
+
+  export type ReminderUncheckedUpdateManyWithoutTouchPointNestedInput = {
+    create?: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput> | ReminderCreateWithoutTouchPointInput[] | ReminderUncheckedCreateWithoutTouchPointInput[]
+    connectOrCreate?: ReminderCreateOrConnectWithoutTouchPointInput | ReminderCreateOrConnectWithoutTouchPointInput[]
+    upsert?: ReminderUpsertWithWhereUniqueWithoutTouchPointInput | ReminderUpsertWithWhereUniqueWithoutTouchPointInput[]
+    createMany?: ReminderCreateManyTouchPointInputEnvelope
+    set?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    disconnect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    delete?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    connect?: ReminderWhereUniqueInput | ReminderWhereUniqueInput[]
+    update?: ReminderUpdateWithWhereUniqueWithoutTouchPointInput | ReminderUpdateWithWhereUniqueWithoutTouchPointInput[]
+    updateMany?: ReminderUpdateManyWithWhereWithoutTouchPointInput | ReminderUpdateManyWithWhereWithoutTouchPointInput[]
+    deleteMany?: ReminderScalarWhereInput | ReminderScalarWhereInput[]
+  }
+
   export type LeadCreateNestedOneWithoutRemindersInput = {
     create?: XOR<LeadCreateWithoutRemindersInput, LeadUncheckedCreateWithoutRemindersInput>
     connectOrCreate?: LeadCreateOrConnectWithoutRemindersInput
     connect?: LeadWhereUniqueInput
+  }
+
+  export type TouchPointCreateNestedOneWithoutRemindersInput = {
+    create?: XOR<TouchPointCreateWithoutRemindersInput, TouchPointUncheckedCreateWithoutRemindersInput>
+    connectOrCreate?: TouchPointCreateOrConnectWithoutRemindersInput
+    connect?: TouchPointWhereUniqueInput
   }
 
   export type LeadUpdateOneRequiredWithoutRemindersNestedInput = {
@@ -20017,6 +17905,16 @@ export namespace Prisma {
     upsert?: LeadUpsertWithoutRemindersInput
     connect?: LeadWhereUniqueInput
     update?: XOR<XOR<LeadUpdateToOneWithWhereWithoutRemindersInput, LeadUpdateWithoutRemindersInput>, LeadUncheckedUpdateWithoutRemindersInput>
+  }
+
+  export type TouchPointUpdateOneWithoutRemindersNestedInput = {
+    create?: XOR<TouchPointCreateWithoutRemindersInput, TouchPointUncheckedCreateWithoutRemindersInput>
+    connectOrCreate?: TouchPointCreateOrConnectWithoutRemindersInput
+    upsert?: TouchPointUpsertWithoutRemindersInput
+    disconnect?: TouchPointWhereInput | boolean
+    delete?: TouchPointWhereInput | boolean
+    connect?: TouchPointWhereUniqueInput
+    update?: XOR<XOR<TouchPointUpdateToOneWithWhereWithoutRemindersInput, TouchPointUpdateWithoutRemindersInput>, TouchPointUncheckedUpdateWithoutRemindersInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -20329,6 +18227,13 @@ export namespace Prisma {
     not?: NestedEnumTouchPointTypeFilter<$PrismaModel> | $Enums.TouchPointType
   }
 
+  export type NestedEnumSequencePositionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SequencePosition | EnumSequencePositionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSequencePositionNullableFilter<$PrismaModel> | $Enums.SequencePosition | null
+  }
+
   export type NestedEnumTouchPointTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.TouchPointType | EnumTouchPointTypeFieldRefInput<$PrismaModel>
     in?: $Enums.TouchPointType[] | ListEnumTouchPointTypeFieldRefInput<$PrismaModel>
@@ -20339,6 +18244,16 @@ export namespace Prisma {
     _max?: NestedEnumTouchPointTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumSequencePositionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SequencePosition | EnumSequencePositionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SequencePosition[] | ListEnumSequencePositionFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSequencePositionNullableWithAggregatesFilter<$PrismaModel> | $Enums.SequencePosition | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSequencePositionNullableFilter<$PrismaModel>
+    _max?: NestedEnumSequencePositionNullableFilter<$PrismaModel>
+  }
+
   export type TouchPointCreateWithoutContactedByInput = {
     id?: string
     createdAt?: Date | string
@@ -20347,7 +18262,9 @@ export namespace Prisma {
     type: $Enums.TouchPointType
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
     lead: LeadCreateNestedOneWithoutTouchPointInput
+    reminders?: ReminderCreateNestedManyWithoutTouchPointInput
   }
 
   export type TouchPointUncheckedCreateWithoutContactedByInput = {
@@ -20359,6 +18276,8 @@ export namespace Prisma {
     leadId: string
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
   }
 
   export type TouchPointCreateOrConnectWithoutContactedByInput = {
@@ -20418,14 +18337,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutAssignedToInput = {
@@ -20452,11 +18383,23 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutAssignedToInput = {
@@ -20498,6 +18441,7 @@ export namespace Prisma {
     contactedById?: StringFilter<"TouchPoint"> | string
     receivedResponse?: BoolFilter<"TouchPoint"> | boolean
     summary?: StringNullableFilter<"TouchPoint"> | string | null
+    sequencePosition?: EnumSequencePositionNullableFilter<"TouchPoint"> | $Enums.SequencePosition | null
   }
 
   export type NoteUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -20571,7 +18515,18 @@ export namespace Prisma {
     priority?: EnumPriorityNullableFilter<"Lead"> | $Enums.Priority | null
     sequenceStep?: IntFilter<"Lead"> | number
     sequenceActive?: BoolFilter<"Lead"> | boolean
+    isHot?: BoolFilter<"Lead"> | boolean
     assignedToId?: StringNullableFilter<"Lead"> | string | null
+    referredByLeadId?: StringNullableFilter<"Lead"> | string | null
+    referredByName?: StringNullableFilter<"Lead"> | string | null
+    instagramHandle?: StringNullableFilter<"Lead"> | string | null
+    instagramFollowers?: IntNullableFilter<"Lead"> | number | null
+    tiktokHandle?: StringNullableFilter<"Lead"> | string | null
+    tiktokFollowers?: IntNullableFilter<"Lead"> | number | null
+    youtubeHandle?: StringNullableFilter<"Lead"> | string | null
+    youtubeFollowers?: IntNullableFilter<"Lead"> | number | null
+    facebookHandle?: StringNullableFilter<"Lead"> | string | null
+    facebookFollowers?: IntNullableFilter<"Lead"> | number | null
   }
 
   export type LocationCreateWithoutBusinessInput = {
@@ -20641,29 +18596,39 @@ export namespace Prisma {
     create: XOR<LocationCreateWithoutPrimaryForBusinessInput, LocationUncheckedCreateWithoutPrimaryForBusinessInput>
   }
 
-  export type BusinessStaffCreateWithoutBusinessInput = {
+  export type ContactCreateWithoutLeadInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    staff: StaffCreateNestedOneWithoutBusinessLinksInput
-    position: PositionCreateNestedOneWithoutBusinessStaffInput
+    firstName: string
+    lastName: string
+    title?: string | null
+    email?: string | null
+    phone?: string | null
+    isDecisionMaker?: boolean
+    notes?: string | null
   }
 
-  export type BusinessStaffUncheckedCreateWithoutBusinessInput = {
+  export type ContactUncheckedCreateWithoutLeadInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    staffId: string
-    positionId: string
+    firstName: string
+    lastName: string
+    title?: string | null
+    email?: string | null
+    phone?: string | null
+    isDecisionMaker?: boolean
+    notes?: string | null
   }
 
-  export type BusinessStaffCreateOrConnectWithoutBusinessInput = {
-    where: BusinessStaffWhereUniqueInput
-    create: XOR<BusinessStaffCreateWithoutBusinessInput, BusinessStaffUncheckedCreateWithoutBusinessInput>
+  export type ContactCreateOrConnectWithoutLeadInput = {
+    where: ContactWhereUniqueInput
+    create: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput>
   }
 
-  export type BusinessStaffCreateManyBusinessInputEnvelope = {
-    data: BusinessStaffCreateManyBusinessInput | BusinessStaffCreateManyBusinessInput[]
+  export type ContactCreateManyLeadInputEnvelope = {
+    data: ContactCreateManyLeadInput | ContactCreateManyLeadInput[]
     skipDuplicates?: boolean
   }
 
@@ -20713,7 +18678,9 @@ export namespace Prisma {
     type: $Enums.TouchPointType
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
     contactedBy: UserCreateNestedOneWithoutTouchPointsInput
+    reminders?: ReminderCreateNestedManyWithoutTouchPointInput
   }
 
   export type TouchPointUncheckedCreateWithoutLeadInput = {
@@ -20725,6 +18692,8 @@ export namespace Prisma {
     contactedById: string
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedCreateNestedManyWithoutTouchPointInput
   }
 
   export type TouchPointCreateOrConnectWithoutLeadInput = {
@@ -20775,12 +18744,14 @@ export namespace Prisma {
     isCheckIn?: boolean
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
+    touchPoint?: TouchPointCreateNestedOneWithoutRemindersInput
   }
 
   export type ReminderUncheckedCreateWithoutLeadInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    touchPointId?: string | null
     type: $Enums.TouchPointType
     dueDate: Date | string
     note?: string | null
@@ -20830,6 +18801,193 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutAssignedLeadsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutAssignedLeadsInput, UserUncheckedCreateWithoutAssignedLeadsInput>
+  }
+
+  export type LeadCreateWithoutReferralsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationCreateNestedManyWithoutBusinessInput
+    primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
+    industry: IndustryCreateNestedOneWithoutLeadsInput
+    businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
+    touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
+    notes?: NoteCreateNestedManyWithoutLeadInput
+    reminders?: ReminderCreateNestedManyWithoutLeadInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+  }
+
+  export type LeadUncheckedCreateWithoutReferralsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    primaryLocationId?: string | null
+    industryId: string
+    businessTypeId: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
+    touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
+    notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadCreateOrConnectWithoutReferralsInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutReferralsInput, LeadUncheckedCreateWithoutReferralsInput>
+  }
+
+  export type LeadCreateWithoutReferredByLeadInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationCreateNestedManyWithoutBusinessInput
+    primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
+    industry: IndustryCreateNestedOneWithoutLeadsInput
+    businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
+    touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
+    notes?: NoteCreateNestedManyWithoutLeadInput
+    reminders?: ReminderCreateNestedManyWithoutLeadInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
+  }
+
+  export type LeadUncheckedCreateWithoutReferredByLeadInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    primaryLocationId?: string | null
+    industryId: string
+    businessTypeId: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    assignedToId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
+    touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
+    notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
+  }
+
+  export type LeadCreateOrConnectWithoutReferredByLeadInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutReferredByLeadInput, LeadUncheckedCreateWithoutReferredByLeadInput>
+  }
+
+  export type LeadCreateManyReferredByLeadInputEnvelope = {
+    data: LeadCreateManyReferredByLeadInput | LeadCreateManyReferredByLeadInput[]
+    skipDuplicates?: boolean
   }
 
   export type LocationUpsertWithWhereUniqueWithoutBusinessInput = {
@@ -20900,32 +19058,37 @@ export namespace Prisma {
     phoneNumbers?: PhoneNumberUncheckedUpdateManyWithoutLocationNestedInput
   }
 
-  export type BusinessStaffUpsertWithWhereUniqueWithoutBusinessInput = {
-    where: BusinessStaffWhereUniqueInput
-    update: XOR<BusinessStaffUpdateWithoutBusinessInput, BusinessStaffUncheckedUpdateWithoutBusinessInput>
-    create: XOR<BusinessStaffCreateWithoutBusinessInput, BusinessStaffUncheckedCreateWithoutBusinessInput>
+  export type ContactUpsertWithWhereUniqueWithoutLeadInput = {
+    where: ContactWhereUniqueInput
+    update: XOR<ContactUpdateWithoutLeadInput, ContactUncheckedUpdateWithoutLeadInput>
+    create: XOR<ContactCreateWithoutLeadInput, ContactUncheckedCreateWithoutLeadInput>
   }
 
-  export type BusinessStaffUpdateWithWhereUniqueWithoutBusinessInput = {
-    where: BusinessStaffWhereUniqueInput
-    data: XOR<BusinessStaffUpdateWithoutBusinessInput, BusinessStaffUncheckedUpdateWithoutBusinessInput>
+  export type ContactUpdateWithWhereUniqueWithoutLeadInput = {
+    where: ContactWhereUniqueInput
+    data: XOR<ContactUpdateWithoutLeadInput, ContactUncheckedUpdateWithoutLeadInput>
   }
 
-  export type BusinessStaffUpdateManyWithWhereWithoutBusinessInput = {
-    where: BusinessStaffScalarWhereInput
-    data: XOR<BusinessStaffUpdateManyMutationInput, BusinessStaffUncheckedUpdateManyWithoutBusinessInput>
+  export type ContactUpdateManyWithWhereWithoutLeadInput = {
+    where: ContactScalarWhereInput
+    data: XOR<ContactUpdateManyMutationInput, ContactUncheckedUpdateManyWithoutLeadInput>
   }
 
-  export type BusinessStaffScalarWhereInput = {
-    AND?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
-    OR?: BusinessStaffScalarWhereInput[]
-    NOT?: BusinessStaffScalarWhereInput | BusinessStaffScalarWhereInput[]
-    id?: StringFilter<"BusinessStaff"> | string
-    createdAt?: DateTimeFilter<"BusinessStaff"> | Date | string
-    updatedAt?: DateTimeFilter<"BusinessStaff"> | Date | string
-    businessId?: StringFilter<"BusinessStaff"> | string
-    staffId?: StringFilter<"BusinessStaff"> | string
-    positionId?: StringFilter<"BusinessStaff"> | string
+  export type ContactScalarWhereInput = {
+    AND?: ContactScalarWhereInput | ContactScalarWhereInput[]
+    OR?: ContactScalarWhereInput[]
+    NOT?: ContactScalarWhereInput | ContactScalarWhereInput[]
+    id?: StringFilter<"Contact"> | string
+    createdAt?: DateTimeFilter<"Contact"> | Date | string
+    updatedAt?: DateTimeFilter<"Contact"> | Date | string
+    firstName?: StringFilter<"Contact"> | string
+    lastName?: StringFilter<"Contact"> | string
+    title?: StringNullableFilter<"Contact"> | string | null
+    email?: StringNullableFilter<"Contact"> | string | null
+    phone?: StringNullableFilter<"Contact"> | string | null
+    isDecisionMaker?: BoolFilter<"Contact"> | boolean
+    notes?: StringNullableFilter<"Contact"> | string | null
+    leadId?: StringFilter<"Contact"> | string
   }
 
   export type IndustryUpsertWithoutLeadsInput = {
@@ -21034,6 +19197,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Reminder"> | Date | string
     updatedAt?: DateTimeFilter<"Reminder"> | Date | string
     leadId?: StringFilter<"Reminder"> | string
+    touchPointId?: StringNullableFilter<"Reminder"> | string | null
     type?: EnumTouchPointTypeFilter<"Reminder"> | $Enums.TouchPointType
     dueDate?: DateTimeFilter<"Reminder"> | Date | string
     note?: StringNullableFilter<"Reminder"> | string | null
@@ -21081,228 +19245,18 @@ export namespace Prisma {
     notes?: NoteUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
-  export type PhoneNumberCreateWithoutStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    number: string
-    label?: $Enums.PhoneType | null
-    location?: LocationCreateNestedOneWithoutPhoneNumbersInput
-  }
-
-  export type PhoneNumberUncheckedCreateWithoutStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    number: string
-    label?: $Enums.PhoneType | null
-    locationId?: string | null
-  }
-
-  export type PhoneNumberCreateOrConnectWithoutStaffInput = {
-    where: PhoneNumberWhereUniqueInput
-    create: XOR<PhoneNumberCreateWithoutStaffInput, PhoneNumberUncheckedCreateWithoutStaffInput>
-  }
-
-  export type PhoneNumberCreateManyStaffInputEnvelope = {
-    data: PhoneNumberCreateManyStaffInput | PhoneNumberCreateManyStaffInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BusinessStaffCreateWithoutStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    business: LeadCreateNestedOneWithoutStaffInput
-    position: PositionCreateNestedOneWithoutBusinessStaffInput
-  }
-
-  export type BusinessStaffUncheckedCreateWithoutStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    businessId: string
-    positionId: string
-  }
-
-  export type BusinessStaffCreateOrConnectWithoutStaffInput = {
-    where: BusinessStaffWhereUniqueInput
-    create: XOR<BusinessStaffCreateWithoutStaffInput, BusinessStaffUncheckedCreateWithoutStaffInput>
-  }
-
-  export type BusinessStaffCreateManyStaffInputEnvelope = {
-    data: BusinessStaffCreateManyStaffInput | BusinessStaffCreateManyStaffInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type PhoneNumberUpsertWithWhereUniqueWithoutStaffInput = {
-    where: PhoneNumberWhereUniqueInput
-    update: XOR<PhoneNumberUpdateWithoutStaffInput, PhoneNumberUncheckedUpdateWithoutStaffInput>
-    create: XOR<PhoneNumberCreateWithoutStaffInput, PhoneNumberUncheckedCreateWithoutStaffInput>
-  }
-
-  export type PhoneNumberUpdateWithWhereUniqueWithoutStaffInput = {
-    where: PhoneNumberWhereUniqueInput
-    data: XOR<PhoneNumberUpdateWithoutStaffInput, PhoneNumberUncheckedUpdateWithoutStaffInput>
-  }
-
-  export type PhoneNumberUpdateManyWithWhereWithoutStaffInput = {
-    where: PhoneNumberScalarWhereInput
-    data: XOR<PhoneNumberUpdateManyMutationInput, PhoneNumberUncheckedUpdateManyWithoutStaffInput>
-  }
-
-  export type PhoneNumberScalarWhereInput = {
-    AND?: PhoneNumberScalarWhereInput | PhoneNumberScalarWhereInput[]
-    OR?: PhoneNumberScalarWhereInput[]
-    NOT?: PhoneNumberScalarWhereInput | PhoneNumberScalarWhereInput[]
-    id?: StringFilter<"PhoneNumber"> | string
-    createdAt?: DateTimeFilter<"PhoneNumber"> | Date | string
-    updatedAt?: DateTimeFilter<"PhoneNumber"> | Date | string
-    number?: StringFilter<"PhoneNumber"> | string
-    label?: EnumPhoneTypeNullableFilter<"PhoneNumber"> | $Enums.PhoneType | null
-    locationId?: StringNullableFilter<"PhoneNumber"> | string | null
-    staffId?: StringNullableFilter<"PhoneNumber"> | string | null
-  }
-
-  export type BusinessStaffUpsertWithWhereUniqueWithoutStaffInput = {
-    where: BusinessStaffWhereUniqueInput
-    update: XOR<BusinessStaffUpdateWithoutStaffInput, BusinessStaffUncheckedUpdateWithoutStaffInput>
-    create: XOR<BusinessStaffCreateWithoutStaffInput, BusinessStaffUncheckedCreateWithoutStaffInput>
-  }
-
-  export type BusinessStaffUpdateWithWhereUniqueWithoutStaffInput = {
-    where: BusinessStaffWhereUniqueInput
-    data: XOR<BusinessStaffUpdateWithoutStaffInput, BusinessStaffUncheckedUpdateWithoutStaffInput>
-  }
-
-  export type BusinessStaffUpdateManyWithWhereWithoutStaffInput = {
-    where: BusinessStaffScalarWhereInput
-    data: XOR<BusinessStaffUpdateManyMutationInput, BusinessStaffUncheckedUpdateManyWithoutStaffInput>
-  }
-
-  export type LeadCreateWithoutStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    business: string
-    igHandle?: string | null
-    igFollowerCount?: number | null
-    email?: string | null
-    website?: string | null
-    pipelineStage?: $Enums.PipelineStage
-    source?: $Enums.LeadSource | null
-    discoveredVia?: $Enums.DiscoveredVia | null
-    discoveredViaOther?: string | null
-    convertedAt?: Date | string | null
-    isBlackOwned?: boolean
-    isWomanOwned?: boolean
-    isLatinoOwned?: boolean
-    isImmigrantOwned?: boolean
-    priority?: $Enums.Priority | null
-    sequenceStep?: number
-    sequenceActive?: boolean
-    locations?: LocationCreateNestedManyWithoutBusinessInput
-    primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    industry: IndustryCreateNestedOneWithoutLeadsInput
-    businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
-    touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
-    notes?: NoteCreateNestedManyWithoutLeadInput
-    reminders?: ReminderCreateNestedManyWithoutLeadInput
-    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
-  }
-
-  export type LeadUncheckedCreateWithoutStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    business: string
-    primaryLocationId?: string | null
-    industryId: string
-    businessTypeId: string
-    igHandle?: string | null
-    igFollowerCount?: number | null
-    email?: string | null
-    website?: string | null
-    pipelineStage?: $Enums.PipelineStage
-    source?: $Enums.LeadSource | null
-    discoveredVia?: $Enums.DiscoveredVia | null
-    discoveredViaOther?: string | null
-    convertedAt?: Date | string | null
-    isBlackOwned?: boolean
-    isWomanOwned?: boolean
-    isLatinoOwned?: boolean
-    isImmigrantOwned?: boolean
-    priority?: $Enums.Priority | null
-    sequenceStep?: number
-    sequenceActive?: boolean
-    assignedToId?: string | null
-    locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
-    notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
-    reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
-  }
-
-  export type LeadCreateOrConnectWithoutStaffInput = {
-    where: LeadWhereUniqueInput
-    create: XOR<LeadCreateWithoutStaffInput, LeadUncheckedCreateWithoutStaffInput>
-  }
-
-  export type StaffCreateWithoutBusinessLinksInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    firstName: string
-    lastName: string
-    email?: string | null
-    phoneNumbers?: PhoneNumberCreateNestedManyWithoutStaffInput
-  }
-
-  export type StaffUncheckedCreateWithoutBusinessLinksInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    firstName: string
-    lastName: string
-    email?: string | null
-    phoneNumbers?: PhoneNumberUncheckedCreateNestedManyWithoutStaffInput
-  }
-
-  export type StaffCreateOrConnectWithoutBusinessLinksInput = {
-    where: StaffWhereUniqueInput
-    create: XOR<StaffCreateWithoutBusinessLinksInput, StaffUncheckedCreateWithoutBusinessLinksInput>
-  }
-
-  export type PositionCreateWithoutBusinessStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-  }
-
-  export type PositionUncheckedCreateWithoutBusinessStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    name: string
-  }
-
-  export type PositionCreateOrConnectWithoutBusinessStaffInput = {
-    where: PositionWhereUniqueInput
-    create: XOR<PositionCreateWithoutBusinessStaffInput, PositionUncheckedCreateWithoutBusinessStaffInput>
-  }
-
-  export type LeadUpsertWithoutStaffInput = {
-    update: XOR<LeadUpdateWithoutStaffInput, LeadUncheckedUpdateWithoutStaffInput>
-    create: XOR<LeadCreateWithoutStaffInput, LeadUncheckedCreateWithoutStaffInput>
+  export type LeadUpsertWithoutReferralsInput = {
+    update: XOR<LeadUpdateWithoutReferralsInput, LeadUncheckedUpdateWithoutReferralsInput>
+    create: XOR<LeadCreateWithoutReferralsInput, LeadUncheckedCreateWithoutReferralsInput>
     where?: LeadWhereInput
   }
 
-  export type LeadUpdateToOneWithWhereWithoutStaffInput = {
+  export type LeadUpdateToOneWithWhereWithoutReferralsInput = {
     where?: LeadWhereInput
-    data: XOR<LeadUpdateWithoutStaffInput, LeadUncheckedUpdateWithoutStaffInput>
+    data: XOR<LeadUpdateWithoutReferralsInput, LeadUncheckedUpdateWithoutReferralsInput>
   }
 
-  export type LeadUpdateWithoutStaffInput = {
+  export type LeadUpdateWithoutReferralsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21323,17 +19277,29 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
   }
 
-  export type LeadUncheckedUpdateWithoutStaffInput = {
+  export type LeadUncheckedUpdateWithoutReferralsInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21357,109 +19323,227 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
   }
 
-  export type StaffUpsertWithoutBusinessLinksInput = {
-    update: XOR<StaffUpdateWithoutBusinessLinksInput, StaffUncheckedUpdateWithoutBusinessLinksInput>
-    create: XOR<StaffCreateWithoutBusinessLinksInput, StaffUncheckedCreateWithoutBusinessLinksInput>
-    where?: StaffWhereInput
+  export type LeadUpsertWithWhereUniqueWithoutReferredByLeadInput = {
+    where: LeadWhereUniqueInput
+    update: XOR<LeadUpdateWithoutReferredByLeadInput, LeadUncheckedUpdateWithoutReferredByLeadInput>
+    create: XOR<LeadCreateWithoutReferredByLeadInput, LeadUncheckedCreateWithoutReferredByLeadInput>
   }
 
-  export type StaffUpdateToOneWithWhereWithoutBusinessLinksInput = {
-    where?: StaffWhereInput
-    data: XOR<StaffUpdateWithoutBusinessLinksInput, StaffUncheckedUpdateWithoutBusinessLinksInput>
+  export type LeadUpdateWithWhereUniqueWithoutReferredByLeadInput = {
+    where: LeadWhereUniqueInput
+    data: XOR<LeadUpdateWithoutReferredByLeadInput, LeadUncheckedUpdateWithoutReferredByLeadInput>
   }
 
-  export type StaffUpdateWithoutBusinessLinksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phoneNumbers?: PhoneNumberUpdateManyWithoutStaffNestedInput
+  export type LeadUpdateManyWithWhereWithoutReferredByLeadInput = {
+    where: LeadScalarWhereInput
+    data: XOR<LeadUpdateManyMutationInput, LeadUncheckedUpdateManyWithoutReferredByLeadInput>
   }
 
-  export type StaffUncheckedUpdateWithoutBusinessLinksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phoneNumbers?: PhoneNumberUncheckedUpdateManyWithoutStaffNestedInput
-  }
-
-  export type PositionUpsertWithoutBusinessStaffInput = {
-    update: XOR<PositionUpdateWithoutBusinessStaffInput, PositionUncheckedUpdateWithoutBusinessStaffInput>
-    create: XOR<PositionCreateWithoutBusinessStaffInput, PositionUncheckedCreateWithoutBusinessStaffInput>
-    where?: PositionWhereInput
-  }
-
-  export type PositionUpdateToOneWithWhereWithoutBusinessStaffInput = {
-    where?: PositionWhereInput
-    data: XOR<PositionUpdateWithoutBusinessStaffInput, PositionUncheckedUpdateWithoutBusinessStaffInput>
-  }
-
-  export type PositionUpdateWithoutBusinessStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PositionUncheckedUpdateWithoutBusinessStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BusinessStaffCreateWithoutPositionInput = {
+  export type LeadCreateWithoutContactsInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    business: LeadCreateNestedOneWithoutStaffInput
-    staff: StaffCreateNestedOneWithoutBusinessLinksInput
+    business: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationCreateNestedManyWithoutBusinessInput
+    primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
+    industry: IndustryCreateNestedOneWithoutLeadsInput
+    businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
+    touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
+    notes?: NoteCreateNestedManyWithoutLeadInput
+    reminders?: ReminderCreateNestedManyWithoutLeadInput
+    assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
-  export type BusinessStaffUncheckedCreateWithoutPositionInput = {
+  export type LeadUncheckedCreateWithoutContactsInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    businessId: string
-    staffId: string
+    business: string
+    primaryLocationId?: string | null
+    industryId: string
+    businessTypeId: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
+    touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
+    notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
-  export type BusinessStaffCreateOrConnectWithoutPositionInput = {
-    where: BusinessStaffWhereUniqueInput
-    create: XOR<BusinessStaffCreateWithoutPositionInput, BusinessStaffUncheckedCreateWithoutPositionInput>
+  export type LeadCreateOrConnectWithoutContactsInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutContactsInput, LeadUncheckedCreateWithoutContactsInput>
   }
 
-  export type BusinessStaffCreateManyPositionInputEnvelope = {
-    data: BusinessStaffCreateManyPositionInput | BusinessStaffCreateManyPositionInput[]
-    skipDuplicates?: boolean
+  export type LeadUpsertWithoutContactsInput = {
+    update: XOR<LeadUpdateWithoutContactsInput, LeadUncheckedUpdateWithoutContactsInput>
+    create: XOR<LeadCreateWithoutContactsInput, LeadUncheckedCreateWithoutContactsInput>
+    where?: LeadWhereInput
   }
 
-  export type BusinessStaffUpsertWithWhereUniqueWithoutPositionInput = {
-    where: BusinessStaffWhereUniqueInput
-    update: XOR<BusinessStaffUpdateWithoutPositionInput, BusinessStaffUncheckedUpdateWithoutPositionInput>
-    create: XOR<BusinessStaffCreateWithoutPositionInput, BusinessStaffUncheckedCreateWithoutPositionInput>
+  export type LeadUpdateToOneWithWhereWithoutContactsInput = {
+    where?: LeadWhereInput
+    data: XOR<LeadUpdateWithoutContactsInput, LeadUncheckedUpdateWithoutContactsInput>
   }
 
-  export type BusinessStaffUpdateWithWhereUniqueWithoutPositionInput = {
-    where: BusinessStaffWhereUniqueInput
-    data: XOR<BusinessStaffUpdateWithoutPositionInput, BusinessStaffUncheckedUpdateWithoutPositionInput>
+  export type LeadUpdateWithoutContactsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    locations?: LocationUpdateManyWithoutBusinessNestedInput
+    primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
+    industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
+    businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
+    touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
+    notes?: NoteUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
-  export type BusinessStaffUpdateManyWithWhereWithoutPositionInput = {
-    where: BusinessStaffScalarWhereInput
-    data: XOR<BusinessStaffUpdateManyMutationInput, BusinessStaffUncheckedUpdateManyWithoutPositionInput>
+  export type LeadUncheckedUpdateWithoutContactsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: StringFieldUpdateOperationsInput | string
+    primaryLocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    industryId?: StringFieldUpdateOperationsInput | string
+    businessTypeId?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
+    touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadCreateWithoutIndustryInput = {
@@ -21483,14 +19567,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutIndustryInput = {
@@ -21516,12 +19612,24 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutIndustryInput = {
@@ -21571,14 +19679,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutBusinessTypeInput = {
@@ -21604,12 +19724,24 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutBusinessTypeInput = {
@@ -21659,14 +19791,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutLocationsInput = {
@@ -21693,11 +19837,23 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutLocationsInput = {
@@ -21711,7 +19867,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     number: string
     label?: $Enums.PhoneType | null
-    staff?: StaffCreateNestedOneWithoutPhoneNumbersInput
   }
 
   export type PhoneNumberUncheckedCreateWithoutLocationInput = {
@@ -21720,7 +19875,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     number: string
     label?: $Enums.PhoneType | null
-    staffId?: string | null
   }
 
   export type PhoneNumberCreateOrConnectWithoutLocationInput = {
@@ -21754,14 +19908,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutPrimaryLocationInput = {
@@ -21787,12 +19953,24 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutPrimaryLocationInput = {
@@ -21832,14 +20010,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutLocationsInput = {
@@ -21866,11 +20056,23 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type PhoneNumberUpsertWithWhereUniqueWithoutLocationInput = {
@@ -21887,6 +20089,18 @@ export namespace Prisma {
   export type PhoneNumberUpdateManyWithWhereWithoutLocationInput = {
     where: PhoneNumberScalarWhereInput
     data: XOR<PhoneNumberUpdateManyMutationInput, PhoneNumberUncheckedUpdateManyWithoutLocationInput>
+  }
+
+  export type PhoneNumberScalarWhereInput = {
+    AND?: PhoneNumberScalarWhereInput | PhoneNumberScalarWhereInput[]
+    OR?: PhoneNumberScalarWhereInput[]
+    NOT?: PhoneNumberScalarWhereInput | PhoneNumberScalarWhereInput[]
+    id?: StringFilter<"PhoneNumber"> | string
+    createdAt?: DateTimeFilter<"PhoneNumber"> | Date | string
+    updatedAt?: DateTimeFilter<"PhoneNumber"> | Date | string
+    number?: StringFilter<"PhoneNumber"> | string
+    label?: EnumPhoneTypeNullableFilter<"PhoneNumber"> | $Enums.PhoneType | null
+    locationId?: StringNullableFilter<"PhoneNumber"> | string | null
   }
 
   export type LeadUpsertWithoutPrimaryLocationInput = {
@@ -21921,14 +20135,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutPrimaryLocationInput = {
@@ -21954,12 +20180,24 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LocationCreateWithoutPhoneNumbersInput = {
@@ -21991,31 +20229,6 @@ export namespace Prisma {
   export type LocationCreateOrConnectWithoutPhoneNumbersInput = {
     where: LocationWhereUniqueInput
     create: XOR<LocationCreateWithoutPhoneNumbersInput, LocationUncheckedCreateWithoutPhoneNumbersInput>
-  }
-
-  export type StaffCreateWithoutPhoneNumbersInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    firstName: string
-    lastName: string
-    email?: string | null
-    businessLinks?: BusinessStaffCreateNestedManyWithoutStaffInput
-  }
-
-  export type StaffUncheckedCreateWithoutPhoneNumbersInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    firstName: string
-    lastName: string
-    email?: string | null
-    businessLinks?: BusinessStaffUncheckedCreateNestedManyWithoutStaffInput
-  }
-
-  export type StaffCreateOrConnectWithoutPhoneNumbersInput = {
-    where: StaffWhereUniqueInput
-    create: XOR<StaffCreateWithoutPhoneNumbersInput, StaffUncheckedCreateWithoutPhoneNumbersInput>
   }
 
   export type LocationUpsertWithoutPhoneNumbersInput = {
@@ -22055,37 +20268,6 @@ export namespace Prisma {
     primaryForBusiness?: LeadUncheckedUpdateOneWithoutPrimaryLocationNestedInput
   }
 
-  export type StaffUpsertWithoutPhoneNumbersInput = {
-    update: XOR<StaffUpdateWithoutPhoneNumbersInput, StaffUncheckedUpdateWithoutPhoneNumbersInput>
-    create: XOR<StaffCreateWithoutPhoneNumbersInput, StaffUncheckedCreateWithoutPhoneNumbersInput>
-    where?: StaffWhereInput
-  }
-
-  export type StaffUpdateToOneWithWhereWithoutPhoneNumbersInput = {
-    where?: StaffWhereInput
-    data: XOR<StaffUpdateWithoutPhoneNumbersInput, StaffUncheckedUpdateWithoutPhoneNumbersInput>
-  }
-
-  export type StaffUpdateWithoutPhoneNumbersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    businessLinks?: BusinessStaffUpdateManyWithoutStaffNestedInput
-  }
-
-  export type StaffUncheckedUpdateWithoutPhoneNumbersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    businessLinks?: BusinessStaffUncheckedUpdateManyWithoutStaffNestedInput
-  }
-
   export type LeadCreateWithoutNotesInput = {
     id?: string
     createdAt?: Date | string
@@ -22107,14 +20289,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutNotesInput = {
@@ -22141,11 +20335,23 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutNotesInput = {
@@ -22216,14 +20422,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutNotesInput = {
@@ -22250,11 +20468,23 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type UserUpsertWithoutNotesInput = {
@@ -22315,14 +20545,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     reminders?: ReminderCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutTouchPointInput = {
@@ -22349,11 +20591,23 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutTouchPointInput = {
@@ -22392,6 +20646,46 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutTouchPointsInput, UserUncheckedCreateWithoutTouchPointsInput>
   }
 
+  export type ReminderCreateWithoutTouchPointInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    type: $Enums.TouchPointType
+    dueDate: Date | string
+    note?: string | null
+    completed?: boolean
+    completedAt?: Date | string | null
+    isCheckIn?: boolean
+    isResponseCheck?: boolean
+    isEmailSentCheck?: boolean
+    lead: LeadCreateNestedOneWithoutRemindersInput
+  }
+
+  export type ReminderUncheckedCreateWithoutTouchPointInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leadId: string
+    type: $Enums.TouchPointType
+    dueDate: Date | string
+    note?: string | null
+    completed?: boolean
+    completedAt?: Date | string | null
+    isCheckIn?: boolean
+    isResponseCheck?: boolean
+    isEmailSentCheck?: boolean
+  }
+
+  export type ReminderCreateOrConnectWithoutTouchPointInput = {
+    where: ReminderWhereUniqueInput
+    create: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput>
+  }
+
+  export type ReminderCreateManyTouchPointInputEnvelope = {
+    data: ReminderCreateManyTouchPointInput | ReminderCreateManyTouchPointInput[]
+    skipDuplicates?: boolean
+  }
+
   export type LeadUpsertWithoutTouchPointInput = {
     update: XOR<LeadUpdateWithoutTouchPointInput, LeadUncheckedUpdateWithoutTouchPointInput>
     create: XOR<LeadCreateWithoutTouchPointInput, LeadUncheckedCreateWithoutTouchPointInput>
@@ -22424,14 +20718,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutTouchPointInput = {
@@ -22458,11 +20764,23 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type UserUpsertWithoutTouchPointsInput = {
@@ -22502,6 +20820,22 @@ export namespace Prisma {
     assignedLeads?: LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
+  export type ReminderUpsertWithWhereUniqueWithoutTouchPointInput = {
+    where: ReminderWhereUniqueInput
+    update: XOR<ReminderUpdateWithoutTouchPointInput, ReminderUncheckedUpdateWithoutTouchPointInput>
+    create: XOR<ReminderCreateWithoutTouchPointInput, ReminderUncheckedCreateWithoutTouchPointInput>
+  }
+
+  export type ReminderUpdateWithWhereUniqueWithoutTouchPointInput = {
+    where: ReminderWhereUniqueInput
+    data: XOR<ReminderUpdateWithoutTouchPointInput, ReminderUncheckedUpdateWithoutTouchPointInput>
+  }
+
+  export type ReminderUpdateManyWithWhereWithoutTouchPointInput = {
+    where: ReminderScalarWhereInput
+    data: XOR<ReminderUpdateManyMutationInput, ReminderUncheckedUpdateManyWithoutTouchPointInput>
+  }
+
   export type LeadCreateWithoutRemindersInput = {
     id?: string
     createdAt?: Date | string
@@ -22523,14 +20857,26 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationCreateNestedManyWithoutBusinessInput
     primaryLocation?: LocationCreateNestedOneWithoutPrimaryForBusinessInput
-    staff?: BusinessStaffCreateNestedManyWithoutBusinessInput
+    contacts?: ContactCreateNestedManyWithoutLeadInput
     industry: IndustryCreateNestedOneWithoutLeadsInput
     businessType: BusinessTypeCreateNestedOneWithoutLeadsInput
     touchPoint?: TouchPointCreateNestedManyWithoutLeadInput
     notes?: NoteCreateNestedManyWithoutLeadInput
     assignedTo?: UserCreateNestedOneWithoutAssignedLeadsInput
+    referredByLead?: LeadCreateNestedOneWithoutReferralsInput
+    referrals?: LeadCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadUncheckedCreateWithoutRemindersInput = {
@@ -22557,16 +20903,59 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
     locations?: LocationUncheckedCreateNestedManyWithoutBusinessInput
-    staff?: BusinessStaffUncheckedCreateNestedManyWithoutBusinessInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutLeadInput
     touchPoint?: TouchPointUncheckedCreateNestedManyWithoutLeadInput
     notes?: NoteUncheckedCreateNestedManyWithoutLeadInput
+    referrals?: LeadUncheckedCreateNestedManyWithoutReferredByLeadInput
   }
 
   export type LeadCreateOrConnectWithoutRemindersInput = {
     where: LeadWhereUniqueInput
     create: XOR<LeadCreateWithoutRemindersInput, LeadUncheckedCreateWithoutRemindersInput>
+  }
+
+  export type TouchPointCreateWithoutRemindersInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    date: Date | string
+    type: $Enums.TouchPointType
+    receivedResponse?: boolean
+    summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+    lead: LeadCreateNestedOneWithoutTouchPointInput
+    contactedBy: UserCreateNestedOneWithoutTouchPointsInput
+  }
+
+  export type TouchPointUncheckedCreateWithoutRemindersInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    date: Date | string
+    type: $Enums.TouchPointType
+    leadId: string
+    contactedById: string
+    receivedResponse?: boolean
+    summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
+  }
+
+  export type TouchPointCreateOrConnectWithoutRemindersInput = {
+    where: TouchPointWhereUniqueInput
+    create: XOR<TouchPointCreateWithoutRemindersInput, TouchPointUncheckedCreateWithoutRemindersInput>
   }
 
   export type LeadUpsertWithoutRemindersInput = {
@@ -22601,14 +20990,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutRemindersInput = {
@@ -22635,11 +21036,60 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
+  }
+
+  export type TouchPointUpsertWithoutRemindersInput = {
+    update: XOR<TouchPointUpdateWithoutRemindersInput, TouchPointUncheckedUpdateWithoutRemindersInput>
+    create: XOR<TouchPointCreateWithoutRemindersInput, TouchPointUncheckedCreateWithoutRemindersInput>
+    where?: TouchPointWhereInput
+  }
+
+  export type TouchPointUpdateToOneWithWhereWithoutRemindersInput = {
+    where?: TouchPointWhereInput
+    data: XOR<TouchPointUpdateWithoutRemindersInput, TouchPointUncheckedUpdateWithoutRemindersInput>
+  }
+
+  export type TouchPointUpdateWithoutRemindersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    receivedResponse?: BoolFieldUpdateOperationsInput | boolean
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
+    contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
+  }
+
+  export type TouchPointUncheckedUpdateWithoutRemindersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    leadId?: StringFieldUpdateOperationsInput | string
+    contactedById?: StringFieldUpdateOperationsInput | string
+    receivedResponse?: BoolFieldUpdateOperationsInput | boolean
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
   }
 
   export type TouchPointCreateManyContactedByInput = {
@@ -22651,6 +21101,7 @@ export namespace Prisma {
     leadId: string
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
   }
 
   export type NoteCreateManyAuthorInput = {
@@ -22685,6 +21136,17 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
   }
 
   export type TouchPointUpdateWithoutContactedByInput = {
@@ -22695,7 +21157,9 @@ export namespace Prisma {
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     lead?: LeadUpdateOneRequiredWithoutTouchPointNestedInput
+    reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
   }
 
   export type TouchPointUncheckedUpdateWithoutContactedByInput = {
@@ -22707,6 +21171,8 @@ export namespace Prisma {
     leadId?: StringFieldUpdateOperationsInput | string
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
   }
 
   export type TouchPointUncheckedUpdateManyWithoutContactedByInput = {
@@ -22718,6 +21184,7 @@ export namespace Prisma {
     leadId?: StringFieldUpdateOperationsInput | string
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
   }
 
   export type NoteUpdateWithoutAuthorInput = {
@@ -22765,14 +21232,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutAssignedToInput = {
@@ -22799,11 +21278,23 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateManyWithoutAssignedToInput = {
@@ -22830,6 +21321,17 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type LocationCreateManyBusinessInput = {
@@ -22843,12 +21345,17 @@ export namespace Prisma {
     zip: string
   }
 
-  export type BusinessStaffCreateManyBusinessInput = {
+  export type ContactCreateManyLeadInput = {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    staffId: string
-    positionId: string
+    firstName: string
+    lastName: string
+    title?: string | null
+    email?: string | null
+    phone?: string | null
+    isDecisionMaker?: boolean
+    notes?: string | null
   }
 
   export type TouchPointCreateManyLeadInput = {
@@ -22860,6 +21367,7 @@ export namespace Prisma {
     contactedById: string
     receivedResponse?: boolean
     summary?: string | null
+    sequencePosition?: $Enums.SequencePosition | null
   }
 
   export type NoteCreateManyLeadInput = {
@@ -22874,6 +21382,7 @@ export namespace Prisma {
     id?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    touchPointId?: string | null
     type: $Enums.TouchPointType
     dueDate: Date | string
     note?: string | null
@@ -22882,6 +21391,43 @@ export namespace Prisma {
     isCheckIn?: boolean
     isResponseCheck?: boolean
     isEmailSentCheck?: boolean
+  }
+
+  export type LeadCreateManyReferredByLeadInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    business: string
+    primaryLocationId?: string | null
+    industryId: string
+    businessTypeId: string
+    igHandle?: string | null
+    igFollowerCount?: number | null
+    email?: string | null
+    website?: string | null
+    pipelineStage?: $Enums.PipelineStage
+    source?: $Enums.LeadSource | null
+    discoveredVia?: $Enums.DiscoveredVia | null
+    discoveredViaOther?: string | null
+    convertedAt?: Date | string | null
+    isBlackOwned?: boolean
+    isWomanOwned?: boolean
+    isLatinoOwned?: boolean
+    isImmigrantOwned?: boolean
+    priority?: $Enums.Priority | null
+    sequenceStep?: number
+    sequenceActive?: boolean
+    isHot?: boolean
+    assignedToId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
   }
 
   export type LocationUpdateWithoutBusinessInput = {
@@ -22921,28 +21467,43 @@ export namespace Prisma {
     zip?: StringFieldUpdateOperationsInput | string
   }
 
-  export type BusinessStaffUpdateWithoutBusinessInput = {
+  export type ContactUpdateWithoutLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    staff?: StaffUpdateOneRequiredWithoutBusinessLinksNestedInput
-    position?: PositionUpdateOneRequiredWithoutBusinessStaffNestedInput
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type BusinessStaffUncheckedUpdateWithoutBusinessInput = {
+  export type ContactUncheckedUpdateWithoutLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    staffId?: StringFieldUpdateOperationsInput | string
-    positionId?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type BusinessStaffUncheckedUpdateManyWithoutBusinessInput = {
+  export type ContactUncheckedUpdateManyWithoutLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    staffId?: StringFieldUpdateOperationsInput | string
-    positionId?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDecisionMaker?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TouchPointUpdateWithoutLeadInput = {
@@ -22953,7 +21514,9 @@ export namespace Prisma {
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
     contactedBy?: UserUpdateOneRequiredWithoutTouchPointsNestedInput
+    reminders?: ReminderUpdateManyWithoutTouchPointNestedInput
   }
 
   export type TouchPointUncheckedUpdateWithoutLeadInput = {
@@ -22965,6 +21528,8 @@ export namespace Prisma {
     contactedById?: StringFieldUpdateOperationsInput | string
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
+    reminders?: ReminderUncheckedUpdateManyWithoutTouchPointNestedInput
   }
 
   export type TouchPointUncheckedUpdateManyWithoutLeadInput = {
@@ -22976,6 +21541,7 @@ export namespace Prisma {
     contactedById?: StringFieldUpdateOperationsInput | string
     receivedResponse?: BoolFieldUpdateOperationsInput | boolean
     summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sequencePosition?: NullableEnumSequencePositionFieldUpdateOperationsInput | $Enums.SequencePosition | null
   }
 
   export type NoteUpdateWithoutLeadInput = {
@@ -23014,12 +21580,14 @@ export namespace Prisma {
     isCheckIn?: BoolFieldUpdateOperationsInput | boolean
     isResponseCheck?: BoolFieldUpdateOperationsInput | boolean
     isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
+    touchPoint?: TouchPointUpdateOneWithoutRemindersNestedInput
   }
 
   export type ReminderUncheckedUpdateWithoutLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    touchPointId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23034,6 +21602,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    touchPointId?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
     dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23044,104 +21613,127 @@ export namespace Prisma {
     isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type PhoneNumberCreateManyStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    number: string
-    label?: $Enums.PhoneType | null
-    locationId?: string | null
-  }
-
-  export type BusinessStaffCreateManyStaffInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    businessId: string
-    positionId: string
-  }
-
-  export type PhoneNumberUpdateWithoutStaffInput = {
+  export type LeadUpdateWithoutReferredByLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    number?: StringFieldUpdateOperationsInput | string
-    label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
-    location?: LocationUpdateOneWithoutPhoneNumbersNestedInput
+    business?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    locations?: LocationUpdateManyWithoutBusinessNestedInput
+    primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
+    industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
+    businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
+    touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
+    notes?: NoteUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
-  export type PhoneNumberUncheckedUpdateWithoutStaffInput = {
+  export type LeadUncheckedUpdateWithoutReferredByLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    number?: StringFieldUpdateOperationsInput | string
-    label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
+    business?: StringFieldUpdateOperationsInput | string
+    primaryLocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    industryId?: StringFieldUpdateOperationsInput | string
+    businessTypeId?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
+    touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
-  export type PhoneNumberUncheckedUpdateManyWithoutStaffInput = {
+  export type LeadUncheckedUpdateManyWithoutReferredByLeadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    number?: StringFieldUpdateOperationsInput | string
-    label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
-    locationId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type BusinessStaffUpdateWithoutStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    business?: LeadUpdateOneRequiredWithoutStaffNestedInput
-    position?: PositionUpdateOneRequiredWithoutBusinessStaffNestedInput
-  }
-
-  export type BusinessStaffUncheckedUpdateWithoutStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    positionId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BusinessStaffUncheckedUpdateManyWithoutStaffInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    positionId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BusinessStaffCreateManyPositionInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    businessId: string
-    staffId: string
-  }
-
-  export type BusinessStaffUpdateWithoutPositionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    business?: LeadUpdateOneRequiredWithoutStaffNestedInput
-    staff?: StaffUpdateOneRequiredWithoutBusinessLinksNestedInput
-  }
-
-  export type BusinessStaffUncheckedUpdateWithoutPositionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    staffId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type BusinessStaffUncheckedUpdateManyWithoutPositionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    businessId?: StringFieldUpdateOperationsInput | string
-    staffId?: StringFieldUpdateOperationsInput | string
+    business?: StringFieldUpdateOperationsInput | string
+    primaryLocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    industryId?: StringFieldUpdateOperationsInput | string
+    businessTypeId?: StringFieldUpdateOperationsInput | string
+    igHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    igFollowerCount?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    source?: NullableEnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource | null
+    discoveredVia?: NullableEnumDiscoveredViaFieldUpdateOperationsInput | $Enums.DiscoveredVia | null
+    discoveredViaOther?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isBlackOwned?: BoolFieldUpdateOperationsInput | boolean
+    isWomanOwned?: BoolFieldUpdateOperationsInput | boolean
+    isLatinoOwned?: BoolFieldUpdateOperationsInput | boolean
+    isImmigrantOwned?: BoolFieldUpdateOperationsInput | boolean
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    sequenceStep?: IntFieldUpdateOperationsInput | number
+    sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type LeadCreateManyIndustryInput = {
@@ -23167,7 +21759,18 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
   }
 
   export type LeadUpdateWithoutIndustryInput = {
@@ -23191,14 +21794,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     businessType?: BusinessTypeUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutIndustryInput = {
@@ -23224,12 +21839,24 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateManyWithoutIndustryInput = {
@@ -23255,7 +21882,18 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type LeadCreateManyBusinessTypeInput = {
@@ -23281,7 +21919,18 @@ export namespace Prisma {
     priority?: $Enums.Priority | null
     sequenceStep?: number
     sequenceActive?: boolean
+    isHot?: boolean
     assignedToId?: string | null
+    referredByLeadId?: string | null
+    referredByName?: string | null
+    instagramHandle?: string | null
+    instagramFollowers?: number | null
+    tiktokHandle?: string | null
+    tiktokFollowers?: number | null
+    youtubeHandle?: string | null
+    youtubeFollowers?: number | null
+    facebookHandle?: string | null
+    facebookFollowers?: number | null
   }
 
   export type LeadUpdateWithoutBusinessTypeInput = {
@@ -23305,14 +21954,26 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUpdateManyWithoutBusinessNestedInput
     primaryLocation?: LocationUpdateOneWithoutPrimaryForBusinessNestedInput
-    staff?: BusinessStaffUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUpdateManyWithoutLeadNestedInput
     industry?: IndustryUpdateOneRequiredWithoutLeadsNestedInput
     touchPoint?: TouchPointUpdateManyWithoutLeadNestedInput
     notes?: NoteUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUpdateManyWithoutLeadNestedInput
     assignedTo?: UserUpdateOneWithoutAssignedLeadsNestedInput
+    referredByLead?: LeadUpdateOneWithoutReferralsNestedInput
+    referrals?: LeadUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateWithoutBusinessTypeInput = {
@@ -23338,12 +21999,24 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     locations?: LocationUncheckedUpdateManyWithoutBusinessNestedInput
-    staff?: BusinessStaffUncheckedUpdateManyWithoutBusinessNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutLeadNestedInput
     touchPoint?: TouchPointUncheckedUpdateManyWithoutLeadNestedInput
     notes?: NoteUncheckedUpdateManyWithoutLeadNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    referrals?: LeadUncheckedUpdateManyWithoutReferredByLeadNestedInput
   }
 
   export type LeadUncheckedUpdateManyWithoutBusinessTypeInput = {
@@ -23369,7 +22042,18 @@ export namespace Prisma {
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     sequenceStep?: IntFieldUpdateOperationsInput | number
     sequenceActive?: BoolFieldUpdateOperationsInput | boolean
+    isHot?: BoolFieldUpdateOperationsInput | boolean
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredByName?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    instagramFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    tiktokHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    youtubeHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    youtubeFollowers?: NullableIntFieldUpdateOperationsInput | number | null
+    facebookHandle?: NullableStringFieldUpdateOperationsInput | string | null
+    facebookFollowers?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PhoneNumberCreateManyLocationInput = {
@@ -23378,7 +22062,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     number: string
     label?: $Enums.PhoneType | null
-    staffId?: string | null
   }
 
   export type PhoneNumberUpdateWithoutLocationInput = {
@@ -23387,7 +22070,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     number?: StringFieldUpdateOperationsInput | string
     label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
-    staff?: StaffUpdateOneWithoutPhoneNumbersNestedInput
   }
 
   export type PhoneNumberUncheckedUpdateWithoutLocationInput = {
@@ -23396,7 +22078,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     number?: StringFieldUpdateOperationsInput | string
     label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PhoneNumberUncheckedUpdateManyWithoutLocationInput = {
@@ -23405,7 +22086,66 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     number?: StringFieldUpdateOperationsInput | string
     label?: NullableEnumPhoneTypeFieldUpdateOperationsInput | $Enums.PhoneType | null
-    staffId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ReminderCreateManyTouchPointInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leadId: string
+    type: $Enums.TouchPointType
+    dueDate: Date | string
+    note?: string | null
+    completed?: boolean
+    completedAt?: Date | string | null
+    isCheckIn?: boolean
+    isResponseCheck?: boolean
+    isEmailSentCheck?: boolean
+  }
+
+  export type ReminderUpdateWithoutTouchPointInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCheckIn?: BoolFieldUpdateOperationsInput | boolean
+    isResponseCheck?: BoolFieldUpdateOperationsInput | boolean
+    isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
+    lead?: LeadUpdateOneRequiredWithoutRemindersNestedInput
+  }
+
+  export type ReminderUncheckedUpdateWithoutTouchPointInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leadId?: StringFieldUpdateOperationsInput | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCheckIn?: BoolFieldUpdateOperationsInput | boolean
+    isResponseCheck?: BoolFieldUpdateOperationsInput | boolean
+    isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ReminderUncheckedUpdateManyWithoutTouchPointInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leadId?: StringFieldUpdateOperationsInput | string
+    type?: EnumTouchPointTypeFieldUpdateOperationsInput | $Enums.TouchPointType
+    dueDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCheckIn?: BoolFieldUpdateOperationsInput | boolean
+    isResponseCheck?: BoolFieldUpdateOperationsInput | boolean
+    isEmailSentCheck?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

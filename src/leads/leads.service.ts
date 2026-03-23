@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
@@ -21,6 +21,9 @@ export class LeadsService {
         },
         assignedTo: {
           select: { id: true, firstName: true, lastName: true },
+        },
+        referredByLead: {
+          select: { id: true, business: true },
         },
       },
     });
@@ -125,6 +128,9 @@ export class LeadsService {
         },
         assignedTo: {
           select: { id: true, firstName: true, lastName: true },
+        },
+        referredByLead: {
+          select: { id: true, business: true },
         },
       },
     });

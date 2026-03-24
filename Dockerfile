@@ -18,8 +18,8 @@ RUN npm install
 COPY . .
 
 # Build the NestJS app
-RUN npm run build
+RUN npm run build && echo "=== dist contents ===" && ls -la dist/
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]

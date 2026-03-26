@@ -13,7 +13,10 @@ COPY prisma ./prisma/
 RUN npm install
 
 # Generate Prisma client (dummy URL satisfies schema validation, no connection made)
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
+# RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
+
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
 # Copy the rest of the source code
 COPY . .

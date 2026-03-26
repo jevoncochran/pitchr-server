@@ -22,4 +22,4 @@ RUN npm run build 2>&1 && echo "=== dist contents ===" && ls -laR dist/
 
 EXPOSE 3000
 
-CMD ["node", "dist/src/main"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]

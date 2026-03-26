@@ -12,11 +12,8 @@ COPY prisma ./prisma/
 # Install all dependencies
 RUN npm install
 
-# Generate Prisma client (dummy URL satisfies schema validation, no connection made)
-# RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
-
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
+# Generate Prisma client (dummy URL satisfies schema validation at build time, no connection made)
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
 
 # Copy the rest of the source code
 COPY . .
@@ -26,4 +23,5 @@ RUN npm run build 2>&1 && echo "=== dist contents ===" && ls -laR dist/
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "echo DATABASE_URL=$DATABASE_URL && node dist/src/main"]
+# Run migrations against real DATABASE_URL, then start server
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]

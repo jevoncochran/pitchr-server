@@ -24,4 +24,4 @@ RUN npm run build 2>&1 && echo "=== dist contents ===" && ls -laR dist/
 EXPOSE 3000
 
 # Run migrations against real DATABASE_URL, then start server
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
+CMD ["node", "dist/src/main"]

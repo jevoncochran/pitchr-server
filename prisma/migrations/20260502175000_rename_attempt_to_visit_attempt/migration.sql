@@ -1,0 +1,2 @@
+-- Rename ATTEMPT to VISIT_ATTEMPT in TouchPointType enum
+ALTER TYPE "TouchPointType" RENAME VALUE 'ATTEMPT' TO 'VISIT_ATTEMPT';

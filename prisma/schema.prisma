@@ -273,6 +273,7 @@ enum TouchPointType {
   TEXT
   IN_PERSON
   MEETING
+  VISIT_ATTEMPT
 }
 
 enum PhoneType {

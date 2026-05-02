@@ -18,7 +18,7 @@ const ALLOWED_MIME_PREFIXES = ['image/', 'video/'];
 const ALLOWED_MIME_EXACT = ['application/pdf'];
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
-@Controller('api/attachments')
+@Controller('attachments')
 export class AttachmentsController {
   constructor(private readonly attachmentsService: AttachmentsService) {}
 

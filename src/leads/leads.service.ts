@@ -123,7 +123,7 @@ export class LeadsService {
             },
           },
         },
-        reminders: {
+        tasks: {
           orderBy: { dueDate: 'asc' },
         },
         assignedTo: {

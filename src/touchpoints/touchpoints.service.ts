@@ -39,15 +39,15 @@ export class TouchpointsService {
     });
 
     if (tp) {
-      // Delete reminders directly linked to this touchpoint
-      await this.databaseService.reminder.deleteMany({
+      // Delete tasks directly linked to this touchpoint
+      await this.databaseService.task.deleteMany({
         where: { touchPointId: id, completed: false },
       });
 
-      // Also delete any incomplete sequence reminders created after this touchpoint
+      // Also delete any incomplete sequence tasks created after this touchpoint
       // was logged — these are downstream effects (e.g. check-in answered "No" →
       // "Send email 2" action) that have no touchPointId but still belong to the chain
-      await this.databaseService.reminder.deleteMany({
+      await this.databaseService.task.deleteMany({
         where: {
           leadId: tp.leadId,
           completed: false,

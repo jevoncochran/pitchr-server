@@ -69,13 +69,14 @@ model Lead {
 
   touchPoint    TouchPoint[]
   notes   Note[]
-  reminders     Reminder[]
+  tasks         Task[]
   attachments   Attachment[]
   priority    Priority?
 
   sequenceStep    Int     @default(0)
   sequenceActive  Boolean @default(false)
   isHot           Boolean @default(false)
+  noInPersonContact Boolean @default(false)
 
   assignedTo    User?    @relation("LeadAssignment", fields: [assignedToId], references: [id])
   assignedToId  String?
@@ -194,7 +195,7 @@ model TouchPoint {
 
   sequencePosition    SequencePosition?
 
-  reminders   Reminder[]
+  tasks       Task[]
   attachments Attachment[]
 }
 
@@ -282,7 +283,7 @@ enum PhoneType {
   HOME
 }
 
-model Reminder {
+model Task {
   id          String         @id @default(uuid())
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -294,7 +295,7 @@ model Reminder {
   touchPointId String?
 
   type        TouchPointType
-  dueDate     DateTime
+  dueDate     DateTime?
   note        String?
 
   completed        Boolean        @default(false)
@@ -303,4 +304,6 @@ model Reminder {
   isCheckIn        Boolean        @default(false)
   isResponseCheck  Boolean        @default(false)
   isEmailSentCheck Boolean        @default(false)
+
+  @@map("Reminder")
 }

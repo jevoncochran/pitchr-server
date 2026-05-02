@@ -21,68 +21,68 @@ const SEQUENCE_MAP: Record<number, { type: string; note: string }> = {
 };
 
 @Injectable()
-export class RemindersService {
+export class TasksService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createReminderDto: Prisma.ReminderCreateInput) {
-    return this.databaseService.reminder.create({ data: createReminderDto });
+  async create(createTaskDto: Prisma.TaskCreateInput) {
+    return this.databaseService.task.create({ data: createTaskDto });
   }
 
   async findAll() {
-    return this.databaseService.reminder.findMany({
+    return this.databaseService.task.findMany({
       where: { completed: false },
       include: {
         lead: { select: { id: true, business: true, sequenceStep: true } },
       },
-      orderBy: { dueDate: 'asc' },
+      orderBy: [{ dueDate: 'asc' }],
     });
   }
 
   async findOne(id: string) {
-    return this.databaseService.reminder.findUnique({ where: { id } });
+    return this.databaseService.task.findUnique({ where: { id } });
   }
 
-  async update(id: string, updateReminderDto: Prisma.ReminderUpdateInput) {
-    return this.databaseService.reminder.update({
+  async update(id: string, updateTaskDto: Prisma.TaskUpdateInput) {
+    return this.databaseService.task.update({
       where: { id },
-      data: updateReminderDto,
+      data: updateTaskDto,
     });
   }
 
   async complete(id: string) {
-    return this.databaseService.reminder.update({
+    return this.databaseService.task.update({
       where: { id },
       data: { completed: true, completedAt: new Date() },
     });
   }
 
   async respond(id: string, responded: boolean) {
-    const reminder = await this.databaseService.reminder.findUnique({
+    const task = await this.databaseService.task.findUnique({
       where: { id },
       include: { lead: true },
     });
 
-    if (!reminder) throw new Error('Reminder not found');
+    if (!task) throw new Error('Task not found');
 
-    await this.databaseService.reminder.update({
+    await this.databaseService.task.update({
       where: { id },
       data: { completed: true, completedAt: new Date() },
     });
 
-    const lead = reminder.lead;
+    const lead = task.lead;
     const fourDays = new Date();
     fourDays.setDate(fourDays.getDate() + 4);
     const now = new Date();
 
     // ── "Did you send the follow-up email?" ──────────────────────────────────
-    if (reminder.isEmailSentCheck) {
+    if (task.isEmailSentCheck) {
       if (responded) {
         // Email was sent — advance to step 1, queue 4-day "did they respond?" check-in
         await this.databaseService.lead.update({
           where: { id: lead.id },
           data: { sequenceStep: 1 },
         });
-        await this.databaseService.reminder.create({
+        await this.databaseService.task.create({
           data: {
             leadId: lead.id,
             type: 'EMAIL',
@@ -92,8 +92,8 @@ export class RemindersService {
           },
         });
       } else {
-        // Not sent yet — create immediate action reminder to send it
-        await this.databaseService.reminder.create({
+        // Not sent yet — create immediate action task to send it
+        await this.databaseService.task.create({
           data: {
             leadId: lead.id,
             type: 'EMAIL',
@@ -106,14 +106,14 @@ export class RemindersService {
     }
 
     // ── "Did they respond to your reply?" ────────────────────────────────────
-    if (reminder.isResponseCheck) {
+    if (task.isResponseCheck) {
       if (responded) {
         // They replied again — reset to step 1, create another response check-in
         await this.databaseService.lead.update({
           where: { id: lead.id },
           data: { sequenceStep: 1 },
         });
-        await this.databaseService.reminder.create({
+        await this.databaseService.task.create({
           data: {
             leadId: lead.id,
             type: 'EMAIL',
@@ -124,12 +124,12 @@ export class RemindersService {
           },
         });
       } else {
-        // No response to our reply — restart cycle: next action is Email 2
+        // No response to our reply — restart cycle
         await this.databaseService.lead.update({
           where: { id: lead.id },
           data: { sequenceStep: 1 },
         });
-        await this.databaseService.reminder.create({
+        await this.databaseService.task.create({
           data: {
             leadId: lead.id,
             type: 'EMAIL',
@@ -143,12 +143,12 @@ export class RemindersService {
 
     // ── Regular sequence check-in ─────────────────────────────────────────────
     if (responded) {
-      // Lead responded — reset to step 1, wait 4 days to check if they replied to our reply
+      // Lead responded — reset to step 1, wait 4 days to check if they replied
       await this.databaseService.lead.update({
         where: { id: lead.id },
         data: { sequenceStep: 1 },
       });
-      await this.databaseService.reminder.create({
+      await this.databaseService.task.create({
         data: {
           leadId: lead.id,
           type: 'EMAIL',
@@ -168,7 +168,7 @@ export class RemindersService {
       } else {
         const action = SEQUENCE_MAP[step];
         if (action) {
-          await this.databaseService.reminder.create({
+          await this.databaseService.task.create({
             data: {
               leadId: lead.id,
               type: action.type as any,
@@ -184,6 +184,6 @@ export class RemindersService {
   }
 
   async remove(id: string) {
-    return this.databaseService.reminder.delete({ where: { id } });
+    return this.databaseService.task.delete({ where: { id } });
   }
 }

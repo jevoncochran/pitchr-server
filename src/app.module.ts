@@ -13,7 +13,7 @@ import { TouchpointsModule } from './touchpoints/touchpoints.module';
 import { LocationsModule } from './locations/locations.module';
 import { PhoneNumbersModule } from './phone-numbers/phone-numbers.module';
 import { AuthModule } from './auth/auth.module';
-import { RemindersModule } from './reminders/reminders.module';
+import { TasksModule } from './tasks/tasks.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { AttachmentsModule } from './attachments/attachments.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
@@ -34,7 +34,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     LocationsModule,
     PhoneNumbersModule,
     AuthModule,
-    RemindersModule,
+    TasksModule,
     ContactsModule,
     AttachmentsModule,
   ],

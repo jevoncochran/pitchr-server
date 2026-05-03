@@ -24,6 +24,11 @@ export class TouchpointsController {
     return this.touchpointsService.findAll();
   }
 
+  @Get('stats/outreach')
+  outreachStats() {
+    return this.touchpointsService.outreachStats();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.touchpointsService.findOne(id);

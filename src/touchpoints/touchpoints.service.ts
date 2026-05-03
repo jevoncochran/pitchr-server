@@ -22,6 +22,40 @@ export class TouchpointsService {
     });
   }
 
+  async outreachStats() {
+    const [dmTotal, dmResponded, emailTotal, emailResponded] =
+      await Promise.all([
+        this.databaseService.touchPoint.count({
+          where: { type: 'INSTAGRAM_DM' },
+        }),
+        this.databaseService.touchPoint.count({
+          where: { type: 'INSTAGRAM_DM', receivedResponse: true },
+        }),
+        this.databaseService.touchPoint.count({
+          where: { type: 'EMAIL' },
+        }),
+        this.databaseService.touchPoint.count({
+          where: { type: 'EMAIL', receivedResponse: true },
+        }),
+      ]);
+
+    return {
+      dm: {
+        sent: dmTotal,
+        responded: dmResponded,
+        rate: dmTotal > 0 ? Math.round((dmResponded / dmTotal) * 100) : 0,
+      },
+      email: {
+        sent: emailTotal,
+        responded: emailResponded,
+        rate:
+          emailTotal > 0
+            ? Math.round((emailResponded / emailTotal) * 100)
+            : 0,
+      },
+    };
+  }
+
   async findOne(id: string) {
     return this.databaseService.touchPoint.findUnique({ where: { id } });
   }

@@ -109,8 +109,9 @@ model Contact {
   isDecisionMaker Boolean  @default(false)
   notes           String?
 
-  lead    Lead   @relation(fields: [leadId], references: [id])
-  leadId  String
+  lead        Lead         @relation(fields: [leadId], references: [id])
+  leadId      String
+  touchPoints TouchPoint[]
 }
 
 model Industry {
@@ -197,6 +198,7 @@ model TouchPoint {
 
   tasks       Task[]
   attachments Attachment[]
+  contacts    Contact[]
 }
 
 model Attachment {

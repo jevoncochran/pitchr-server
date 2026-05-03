@@ -113,6 +113,9 @@ export class LeadsService {
             contactedBy: {
               select: { id: true, firstName: true, lastName: true },
             },
+            contacts: {
+              select: { id: true, firstName: true, lastName: true, title: true },
+            },
           },
         },
         notes: {
@@ -125,6 +128,9 @@ export class LeadsService {
         },
         tasks: {
           orderBy: { dueDate: 'asc' },
+        },
+        contacts: {
+          orderBy: [{ isDecisionMaker: 'desc' }, { createdAt: 'asc' }],
         },
         assignedTo: {
           select: { id: true, firstName: true, lastName: true },

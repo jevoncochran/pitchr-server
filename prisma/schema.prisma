@@ -260,6 +260,8 @@ enum DiscoveredVia {
   TIKTOK
   YOUTUBE
   GOOGLE
+  NETWORKING
+  IN_PERSON
   OTHER
 }
 

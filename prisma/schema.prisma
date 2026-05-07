@@ -281,6 +281,8 @@ enum TouchPointType {
   IN_PERSON
   MEETING
   VISIT_ATTEMPT
+  NETWORKING
+  WALK_UP
 }
 
 enum PhoneType {

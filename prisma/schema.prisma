@@ -250,6 +250,8 @@ enum LeadSource {
   OUTREACH
   REFERRAL
   FORM
+  NETWORKING
+  IN_PERSON
 }
 
 enum DiscoveredVia {

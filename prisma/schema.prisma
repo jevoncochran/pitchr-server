@@ -79,6 +79,9 @@ model Lead {
   isHot           Boolean @default(false)
   noInPersonContact Boolean @default(false)
 
+  dormantReason     String?
+  dormantRevisitAt  DateTime?
+
   assignedTo    User?    @relation("LeadAssignment", fields: [assignedToId], references: [id])
   assignedToId  String?
 
@@ -284,6 +287,7 @@ enum TouchPointType {
   VISIT_ATTEMPT
   NETWORKING
   WALK_UP
+  REFERRAL_OUTREACH
 }
 
 enum PhoneType {

@@ -80,14 +80,17 @@ export class TouchpointsService {
 
       // Also delete any incomplete sequence tasks created after this touchpoint
       // was logged — these are downstream effects (e.g. check-in answered "No" →
-      // "Send email 2" action) that have no touchPointId but still belong to the chain
-      await this.databaseService.task.deleteMany({
-        where: {
-          leadId: tp.leadId,
-          completed: false,
-          createdAt: { gt: tp.createdAt },
-        },
-      });
+      // "Send email 2" action) that have no touchPointId but still belong to the chain.
+      // Only applies to lead touchpoints (contactId-only touchpoints have no sequence).
+      if (tp.leadId) {
+        await this.databaseService.task.deleteMany({
+          where: {
+            leadId: tp.leadId,
+            completed: false,
+            createdAt: { gt: tp.createdAt },
+          },
+        });
+      }
     }
 
     return this.databaseService.touchPoint.delete({ where: { id } });

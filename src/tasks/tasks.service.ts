@@ -33,6 +33,7 @@ export class TasksService {
       where: { completed: false },
       include: {
         lead: { select: { id: true, business: true, sequenceStep: true } },
+        contact: { select: { id: true, firstName: true, lastName: true } },
       },
       orderBy: [{ dueDate: 'asc' }],
     });
@@ -63,6 +64,7 @@ export class TasksService {
     });
 
     if (!task) throw new Error('Task not found');
+    if (!task.lead) throw new Error('Task is not associated with a lead');
 
     await this.databaseService.task.update({
       where: { id },

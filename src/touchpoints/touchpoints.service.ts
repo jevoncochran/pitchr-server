@@ -17,6 +17,7 @@ export class TouchpointsService {
       orderBy: { date: 'desc' },
       include: {
         lead: { select: { id: true, business: true } },
+        contact: { select: { id: true, firstName: true, lastName: true } },
         contactedBy: { select: { id: true, firstName: true, lastName: true } },
       },
     });

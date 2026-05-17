@@ -19,6 +19,11 @@ export class NotesController {
     return this.notesService.create(createNoteDto);
   }
 
+  @Get('contact/:contactId')
+  findByContact(@Param('contactId') contactId: string) {
+    return this.notesService.findByContact(contactId);
+  }
+
   @Get()
   findAll() {
     return this.notesService.findAll();

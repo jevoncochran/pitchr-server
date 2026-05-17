@@ -10,6 +10,14 @@ export class NotesService {
     return this.databaseService.note.create({ data: createNoteDto });
   }
 
+  async findByContact(contactId: string) {
+    return this.databaseService.note.findMany({
+      where: { contactId },
+      include: { author: { select: { id: true, firstName: true, lastName: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async findAll() {
     return this.databaseService.note.findMany();
   }

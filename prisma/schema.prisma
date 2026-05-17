@@ -112,7 +112,7 @@ model Contact {
   email           String?
   phone           String?
   isDecisionMaker Boolean  @default(false)
-  notes           String?
+  bio             String?
 
   howWeMet        ContactSource?
   howWeMetNote    String?
@@ -127,6 +127,8 @@ model Contact {
 
   tasks       Task[]
   touchpoints TouchPoint[] @relation("ContactTouchPoints")
+  notes       Note[]
+  attachments Attachment[]
 }
 
 model Industry {
@@ -186,8 +188,11 @@ model Note {
 
   text    String
 
-  lead    Lead    @relation(fields: [leadId], references: [id])
-  leadId    String
+  lead    Lead?    @relation(fields: [leadId], references: [id])
+  leadId    String?
+
+  contact   Contact?  @relation(fields: [contactId], references: [id])
+  contactId String?
 
   author    User    @relation(fields: [userId], references: [id])
   userId    String
@@ -224,8 +229,11 @@ model Attachment {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
 
-  leadId      String
-  lead        Lead     @relation(fields: [leadId], references: [id])
+  leadId      String?
+  lead        Lead?    @relation(fields: [leadId], references: [id])
+
+  contactId   String?
+  contact     Contact? @relation(fields: [contactId], references: [id])
 
   touchpointId String?
   touchpoint   TouchPoint? @relation(fields: [touchpointId], references: [id])

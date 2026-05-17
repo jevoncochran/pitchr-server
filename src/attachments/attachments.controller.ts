@@ -41,18 +41,24 @@ export class AttachmentsController {
   )
   async upload(
     @UploadedFile() file: Express.Multer.File,
-    @Body('leadId') leadId: string,
+    @Body('leadId') leadId?: string,
+    @Body('contactId') contactId?: string,
     @Body('touchpointId') touchpointId?: string,
     @Body('caption') caption?: string,
   ) {
     if (!file) throw new BadRequestException('No file provided');
-    if (!leadId) throw new BadRequestException('leadId is required');
-    return this.attachmentsService.upload(file, leadId, touchpointId, caption);
+    if (!leadId && !contactId) throw new BadRequestException('leadId or contactId is required');
+    return this.attachmentsService.upload(file, { leadId, contactId, touchpointId, caption });
   }
 
   @Get('lead/:leadId')
   findByLead(@Param('leadId') leadId: string) {
     return this.attachmentsService.findByLead(leadId);
+  }
+
+  @Get('contact/:contactId')
+  findByContact(@Param('contactId') contactId: string) {
+    return this.attachmentsService.findByContact(contactId);
   }
 
   @Patch(':id/caption')

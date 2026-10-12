@@ -129,6 +129,9 @@ export class LeadsService {
         tasks: {
           orderBy: { dueDate: 'asc' },
         },
+        signals: {
+          orderBy: { date: 'desc' },
+        },
         contacts: {
           orderBy: [{ isDecisionMaker: 'desc' }, { createdAt: 'asc' }],
         },

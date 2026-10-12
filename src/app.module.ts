@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { AttachmentsModule } from './attachments/attachments.module';
+import { SignalsModule } from './signals/signals.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
@@ -37,6 +38,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     TasksModule,
     ContactsModule,
     AttachmentsModule,
+    SignalsModule,
   ],
   controllers: [AppController],
   providers: [

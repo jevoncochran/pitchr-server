@@ -185,6 +185,20 @@ export class TasksService {
     return { success: true };
   }
 
+  async dismissOverdue() {
+    const now = new Date();
+    return this.databaseService.task.updateMany({
+      where: { completed: false, dueDate: { lt: now } },
+      data: { completed: true, completedAt: now },
+    });
+  }
+
+  async clearAll() {
+    return this.databaseService.task.deleteMany({
+      where: { completed: false },
+    });
+  }
+
   async remove(id: string) {
     return this.databaseService.task.delete({ where: { id } });
   }

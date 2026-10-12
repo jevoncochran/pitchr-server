@@ -29,6 +29,16 @@ export class TasksController {
     return this.tasksService.findOne(id);
   }
 
+  @Delete('clear-all')
+  clearAll() {
+    return this.tasksService.clearAll();
+  }
+
+  @Patch('dismiss-overdue')
+  dismissOverdue() {
+    return this.tasksService.dismissOverdue();
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

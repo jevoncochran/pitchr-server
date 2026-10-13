@@ -73,6 +73,7 @@ model Lead {
   notes   Note[]
   tasks         Task[]
   attachments   Attachment[]
+  signals       Signal[]
   priority    Priority?
 
   sequenceStep    Int     @default(0)
@@ -309,6 +310,25 @@ enum Priority {
   THREE
 }
 
+// Interest a lead showed on their own, without us reaching out (vs. TouchPoint, which is our outreach).
+enum SignalType {
+  FOLLOW
+  POST_ENGAGEMENT
+  DIRECT_MESSAGE
+  WEBSITE_FORM
+  REFERRAL
+}
+
+// Where a social signal happened. Null for non-social signals (website form, referral).
+enum SocialPlatform {
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  YOUTUBE
+  LINKEDIN
+  OTHER
+}
+
 enum TouchPointType {
   EMAIL
   INSTAGRAM_DM
@@ -357,3 +377,16 @@ model Task {
   @@map("Reminder")
 }
 
+model Signal {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  lead        Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId      String
+
+  type        SignalType
+  platform    SocialPlatform?
+  date        DateTime
+  note        String?
+}

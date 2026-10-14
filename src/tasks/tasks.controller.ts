@@ -8,6 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
+import { ReplyInput } from 'src/touchpoints/touchpoint-response';
 import { Prisma } from '@prisma/client';
 
 @Controller('tasks')
@@ -53,8 +54,12 @@ export class TasksController {
   }
 
   @Patch(':id/respond')
-  respond(@Param('id') id: string, @Body() body: { responded: boolean }) {
-    return this.tasksService.respond(id, body.responded);
+  // For a check-in about a message, "responded" also sends what they said (reply)
+  respond(
+    @Param('id') id: string,
+    @Body() body: { responded: boolean; reply?: ReplyInput },
+  ) {
+    return this.tasksService.respond(id, body.responded, body.reply);
   }
 
   @Delete(':id')

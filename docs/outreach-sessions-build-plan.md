@@ -44,7 +44,7 @@ Before, logging a touchpoint on a lead's page was one request to save it, then 2
 
 - **`OutreachSession`**: user, channel, plannedFor (date), startedAt, endedAt, area, goal (a number), notes. Planned = `plannedFor` set and not started; in progress = `startedAt`; ended = `endedAt`.
 - **`SessionItem`**: session, lead, position, plannedTime, status (planned · completed · skipped), the touchpoint it produced (each touchpoint belongs to at most one item).
-- **`TouchPoint` additions** (all optional, so existing touchpoints are unaffected): `sessionId`, `outcome`, `delivery`, `response`, `providerType` (video · marketing agency · unknown, for "has a provider"), `respondedOn` (date only), `leftMaterials`, `comeBackAt`.
+- **`TouchPoint` additions** (all optional, so existing touchpoints are unaffected): `sessionId`, `outcome`, `delivery`, `response` (pending · replied · no response), `responseText` (their reply), `providerType` (video · marketing agency · unknown, for the "has a provider" outcome), `respondedOn` (date only), `leftMaterials`, `comeBackAt`.
 - **Enums:** `SessionChannel`, `SessionItemStatus`, `TouchPointOutcome`, `TouchPointDelivery`, `TouchPointResponse`, `ProviderType`.
 - **Deleting:** a session's items go with it; its touchpoints stay (they just lose the session link). Deleting a touchpoint leaves its item, unlinked.
 - `response` has no database default: step 5 sets **Pending** when a DM, email or text is logged. Older touchpoints keep an empty response.
@@ -90,15 +90,21 @@ Rules: staff see and change only their own sessions, admins anyone's; an ended s
 
 Also: a shared `teamDateKey()` helper for "today in Tampa" (used by the snapshot too), and `recordInitialStage()` shared by lead creation and quick-add. 21 new Jest tests (72 total).
 
-### ⏭️ Step 6: Check-ins resolve responses
-- The 4-day check-in's **Yes** asks what they said and when they replied (`[Today ✓] [Yesterday] [Earlier: pick a date]`), and saves it as the touchpoint's response; **No** saves "No response".
-- A reply that comes in early can be recorded from the lead page at any time.
+### ✅ Step 6: Check-ins resolve responses
+**Files:** `src/touchpoints/touchpoint-response.ts` (new), `src/tasks/tasks.service.ts` (+ new `.spec.ts`), `tasks.controller.ts`, `tasks.module.ts`, `touchpoints.controller.ts`, `touchpoints.module.ts` (pitchr-server); `src/components/leads/RecordReplyDialog.tsx` (new), `src/constants/results.ts` (new), `src/utils/dates.ts` (new), `ConfirmModal.tsx`, `ConvertLeadDialog.tsx`, `useLeadDetail.ts`, `LeadDetailPage.tsx` (pitchr-client)
+
+- **Check-ins about a DM, email or text now save the response on that message.** **No response** → `NO_RESPONSE`. **Yes, they responded** → the lead page opens **Their reply**: paste or type their message (required) and **When did they reply?** (`[Today] [Yesterday] [Earlier]`). Saved as `response: REPLIED`, `responseText`, `respondedOn` (date only, not in the future). No category: the reply's own words say more. The sequence continues exactly as before.
+- **Revised after review:** the first version asked for a category reused from in-person outcomes (interested, has a provider...). Those don't fit written replies, so the response became Pending / Replied / No response plus the message itself (step 3's migration was regenerated before ever being applied).
+- Check-ins that aren't about a message (e.g. "did they respond to your reply?") work as before, with no dialog.
+- **`PATCH /api/touchpoints/:id/response`** (`{ responseText, respondedOn }`) records a reply anytime. If that message still has an open check-in, it's answered too, so it isn't asked again. (The button for it comes in step 10.)
+- The check-in logic now runs in **one transaction** (it was several separate writes).
+- `ConfirmModal` gained `confirmDisabled` (Save stays disabled until there's text). 85 Jest tests.
 
 ---
 
 ## Part C: Screens (pitchr-client, phone first)
 
-### ⬜ Step 7: Sessions page and planning
+### ⏭️ Step 7: Sessions page and planning
 - Sessions list (upcoming, in progress, past).
 - Plan a session: channel, area, goal, then pick leads and drag to order.
 
@@ -112,8 +118,9 @@ Also: a shared `teamDateKey()` helper for "today in Tampa" (used by the snapshot
 - Items completed vs. planned ("10 of 12 stops visited"), skipped, conversations, decision-makers reached, meetings booked, messages sent, follow-up tasks created.
 
 ### ⬜ Step 10: Results on the lead page
-- Touchpoint history shows outcomes, delivery and responses (with Pending visible).
+- Touchpoint history shows outcomes, delivery and responses (with Pending visible), including **their reply text** and date.
 - "Record a reply" on any pending touchpoint.
+- **Snapshots read replies:** NestJS sends each message's reply text and date to pitchr-ai, and the snapshot prompt uses them (contract update in pitchr-ai, then a quick eval rerun).
 
 ---
 

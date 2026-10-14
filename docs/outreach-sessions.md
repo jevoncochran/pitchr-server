@@ -24,7 +24,7 @@ Session: Tue 10/14 · In person · South Tampa · 9:10–11:45am · Jevon
 
 Session: Wed 10/15 · Instagram DMs · Jevon
   ├─ Summit Build Co.    Sent · Response: Pending
-  ├─ Peak Roofing        Sent · Response: Interested (10/17)
+  ├─ Peak Roofing        Sent · Replied 10/17: "Sounds good, what do you charge?"
   └─ ...
 ```
 
@@ -62,13 +62,13 @@ When we spoke to someone, pick **who** from the lead's contacts (decision-makers
 
 - **Delivery**, recorded when sent: **Sent** · **Failed** (bounced, or the message couldn't be delivered).
 - **Response** starts as **Pending** and is updated when we know:
-  - They replied → what they said, using the same options as outcomes: Interested · Come back later · Not interested · Has a provider · Not a fit · Meeting booked.
+  - They replied → **Replied**, with **their actual message** (pasted or typed in). No category: a written reply says far more than a button could ("Sounds great, what do you charge?" vs. "Maybe, send me something"), and snapshots can read it.
   - **When they replied** is entered by hand (nothing logs replies automatically), so it's a date, not a time, prefilled with **Today**: `[Today ✓] [Yesterday] [Earlier: pick a date]`. Zero extra taps when replies are recorded the day they arrive.
   - They didn't → **No response**.
 
-The existing check-in task ("Did they respond?", due 4 days after outreach) is where Pending gets resolved: **Yes** → pick what they said (the reply date defaults to today); **No** → No response. A reply that arrives before the check-in can be recorded from the lead page at any time.
+The existing check-in task ("Did they respond?", due 4 days after outreach) is where Pending gets resolved: **Yes** → paste their reply (the date defaults to today); **No** → No response. A reply that arrives before the check-in can be recorded from the lead page at any time.
 
-Using the same "what they said" options for outcomes and responses means analytics can compare channels directly (e.g. "Interested" rate in person vs. by DM).
+Outcome categories (interested, has a provider, come back later...) are for visits and calls only. Messages are counted by response rate (replied vs. no response); what replies say lives in their text. Later, Claude could read replies and categorize them for analytics.
 
 
 ### Come back later
@@ -179,7 +179,7 @@ Rules for showing numbers:
 
 - **New `OutreachSession`:** user, channel, startedAt, endedAt, area, goal, notes.
 - **New `SessionItem`**: one lead on a session's list. Session, lead, position, planned time (for "come back later today"), status (planned · completed · skipped), the touchpoint it produced. Planned items exist before anything happens; skipped ones never get a touchpoint. Unplanned contacts (e.g. a business you spot mid-route) are added as items when logged, so every touchpoint in a session belongs to an item.
-- **`TouchPoint` additions:** `sessionId` (optional: touchpoints can still be logged outside a session), `outcome` (in person / calls), `delivery` (sent / failed), `response` (pending → what they said / no response), `respondedOn` (date only), `leftMaterials`, `comeBackAt`.
+- **`TouchPoint` additions:** `sessionId` (optional: touchpoints can still be logged outside a session), `outcome` (in person / calls), `delivery` (sent / failed), `response` (pending → replied / no response), `responseText` (their reply), `respondedOn` (date only), `leftMaterials`, `comeBackAt`.
 - **`receivedResponse`** stays for now so existing screens keep working; it's set automatically when a response or a "spoke to someone" outcome is recorded.
 - **New `LeadStageChange`:** lead, from stage, to stage, changed by, changedAt.
 - **`Location` additions (V1.5):** latitude, longitude.
@@ -199,6 +199,7 @@ Rules for showing numbers:
 - ✅ Who was spoken to is recorded as a **contact** (existing link), not a separate staff / decision-maker field.
 - ✅ A pending response becomes **No response** at the 4-day check-in.
 - ✅ The reply date is entered by hand as a **date** (not a time), defaulting to today.
+- ✅ A message reply is saved as **their actual message**, with no category. Outcome categories are for visits and calls only.
 - ✅ "Circle back" is **Come back later**, with optional timing (later today or another day).
 - ✅ Routes are planned ahead, so sessions can start from a planned list of leads.
 - ✅ Designed for multiple people from the start; one person today.

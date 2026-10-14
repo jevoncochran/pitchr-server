@@ -11,7 +11,7 @@ CREATE TYPE "TouchPointOutcome" AS ENUM ('BUSINESS_CLOSED', 'NO_ANSWER', 'LEFT_V
 CREATE TYPE "TouchPointDelivery" AS ENUM ('SENT', 'FAILED');
 
 -- CreateEnum
-CREATE TYPE "TouchPointResponse" AS ENUM ('PENDING', 'INTERESTED', 'COME_BACK_LATER', 'NOT_INTERESTED', 'HAS_PROVIDER', 'NOT_A_FIT', 'MEETING_BOOKED', 'NO_RESPONSE');
+CREATE TYPE "TouchPointResponse" AS ENUM ('PENDING', 'REPLIED', 'NO_RESPONSE');
 
 -- CreateEnum
 CREATE TYPE "ProviderType" AS ENUM ('VIDEO', 'MARKETING_AGENCY', 'UNKNOWN');
@@ -24,6 +24,7 @@ ADD COLUMN     "outcome" "TouchPointOutcome",
 ADD COLUMN     "providerType" "ProviderType",
 ADD COLUMN     "respondedOn" DATE,
 ADD COLUMN     "response" "TouchPointResponse",
+ADD COLUMN     "responseText" TEXT,
 ADD COLUMN     "sessionId" TEXT;
 
 -- CreateTable

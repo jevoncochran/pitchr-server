@@ -22,6 +22,7 @@ import {
   parseResults,
   TouchpointLoggingService,
 } from 'src/touchpoints/touchpoint-logging.service';
+import { STAGE_SUGGESTIONS } from 'src/touchpoints/touchpoint-response';
 import { SessionsService, SessionUser } from './sessions.service';
 
 /** What the session screen sends to log one lead. */
@@ -72,12 +73,6 @@ const CHANNEL_TYPE: Record<SessionChannel, TouchPointType | null> = {
   EMAIL: TouchPointType.EMAIL,
   TEXT: TouchPointType.TEXT,
   MIXED: null,
-};
-
-// Results that should offer to move the lead to a new stage
-const STAGE_SUGGESTIONS: Partial<Record<string, PipelineStage>> = {
-  NOT_A_FIT: PipelineStage.NOT_A_FIT,
-  MEETING_BOOKED: PipelineStage.MEETING_SCHEDULED,
 };
 
 /**
@@ -277,8 +272,9 @@ export class SessionLoggingService {
     );
 
     // Offer a stage change the client can apply (through the normal stage rules)
-    const result = parsed.outcome ?? parsed.response;
-    const suggestion = result ? STAGE_SUGGESTIONS[result] : undefined;
+    const suggestion = parsed.outcome
+      ? STAGE_SUGGESTIONS[parsed.outcome]
+      : undefined;
     let suggestedStage: PipelineStage | null = null;
     if (suggestion) {
       const lead = await this.databaseService.lead.findUnique({

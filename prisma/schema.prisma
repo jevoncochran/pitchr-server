@@ -231,7 +231,9 @@ model TouchPoint {
   outcome       TouchPointOutcome?
   delivery      TouchPointDelivery?
   response      TouchPointResponse?
-  // Set when the outcome or response is "has a provider"
+  // Their reply, pasted or typed in, when response is REPLIED
+  responseText  String?
+  // Set when the outcome is "has a provider"
   providerType  ProviderType?
   // Entered by hand, date only (defaults to the day it's recorded)
   respondedOn   DateTime?           @db.Date
@@ -469,15 +471,11 @@ enum TouchPointDelivery {
   FAILED
 }
 
-// DMs, emails, texts: how they responded. PENDING until we know.
+// DMs, emails, texts: where the reply stands. PENDING until we know.
+// When REPLIED, their message is saved in TouchPoint.responseText.
 enum TouchPointResponse {
   PENDING
-  INTERESTED
-  COME_BACK_LATER
-  NOT_INTERESTED
-  HAS_PROVIDER
-  NOT_A_FIT
-  MEETING_BOOKED
+  REPLIED
   NO_RESPONSE
 }
 

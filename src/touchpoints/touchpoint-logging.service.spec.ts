@@ -201,6 +201,25 @@ describe('parseResults (outcomes, delivery and responses)', () => {
     expect(r.receivedResponse).toBe(false);
   });
 
+  it('a message logged as already answered is replied, with its text', () => {
+    const r = parseResults({
+      ...base,
+      type: 'INSTAGRAM_DM',
+      receivedResponse: true,
+      responseText: ' Sounds good! ',
+    });
+    expect(r.response).toBe('REPLIED');
+    expect(r.responseText).toBe('Sounds good!');
+    expect(r.receivedResponse).toBe(true);
+    expect(r.respondedOn).toBeInstanceOf(Date);
+  });
+
+  it('reply text only goes with a reply', () => {
+    expect(() =>
+      parseResults({ ...base, type: 'EMAIL', responseText: 'hello' }),
+    ).toThrow(BadRequestException);
+  });
+
   it('a failed message has no response', () => {
     const r = parseResults({ ...base, type: 'EMAIL', delivery: 'FAILED' });
     expect(r.response).toBeNull();
@@ -209,7 +228,7 @@ describe('parseResults (outcomes, delivery and responses)', () => {
         ...base,
         type: 'EMAIL',
         delivery: 'FAILED',
-        response: 'INTERESTED',
+        response: 'REPLIED',
       }),
     ).toThrow(BadRequestException);
   });
@@ -229,7 +248,7 @@ describe('parseResults (outcomes, delivery and responses)', () => {
       parseResults({ ...base, type: 'EMAIL', outcome: 'INTERESTED' }),
     ).toThrow(BadRequestException);
     expect(() =>
-      parseResults({ ...base, type: 'CALL', response: 'INTERESTED' }),
+      parseResults({ ...base, type: 'CALL', response: 'REPLIED' }),
     ).toThrow(BadRequestException);
     expect(() =>
       parseResults({ ...base, type: 'IN_PERSON', outcome: 'NO_ANSWER' }),

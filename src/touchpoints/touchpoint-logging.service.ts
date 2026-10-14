@@ -31,11 +31,13 @@ export interface LogTouchpointInput {
   outcome?: TouchPointOutcome | null;
   /** DMs / emails / texts: whether it got through (defaults to SENT) */
   delivery?: TouchPointDelivery | null;
-  /** DMs / emails / texts: how they responded (defaults to PENDING) */
+  /** DMs / emails / texts: where the reply stands (defaults to PENDING, or REPLIED if receivedResponse) */
   response?: TouchPointResponse | null;
-  /** When the outcome or response is HAS_PROVIDER (defaults to UNKNOWN) */
+  /** DMs / emails / texts: their reply, when response is REPLIED */
+  responseText?: string | null;
+  /** When the outcome is HAS_PROVIDER (defaults to UNKNOWN) */
   providerType?: ProviderType | null;
-  /** When the outcome or response is COME_BACK_LATER and they named a time */
+  /** When the outcome is COME_BACK_LATER and they named a time */
   comeBackAt?: string | null;
   leftMaterials?: boolean;
   sessionId?: string | null;
@@ -73,10 +75,6 @@ const NO_CONVERSATION_OUTCOMES: TouchPointOutcome[] = [
   TouchPointOutcome.BUSINESS_CLOSED,
   TouchPointOutcome.NO_ANSWER,
   TouchPointOutcome.LEFT_VOICEMAIL,
-];
-const NO_REPLY_RESPONSES: TouchPointResponse[] = [
-  TouchPointResponse.PENDING,
-  TouchPointResponse.NO_RESPONSE,
 ];
 
 const CHECK_IN_AFTER_DAYS = 4;
@@ -131,6 +129,7 @@ export class TouchpointLoggingService {
         outcome: parsed.outcome,
         delivery: parsed.delivery,
         response: parsed.response,
+        responseText: parsed.responseText,
         providerType: parsed.providerType,
         respondedOn: parsed.respondedOn,
         comeBackAt: parsed.comeBackAt,
@@ -275,12 +274,19 @@ export function parseResults(input: LogTouchpointInput) {
   const finalResponse =
     isAsync && !failed
       ? (response ??
-        (input.receivedResponse ? null : TouchPointResponse.PENDING))
+        (input.receivedResponse
+          ? TouchPointResponse.REPLIED
+          : TouchPointResponse.PENDING))
       : null;
+  const replied = finalResponse === TouchPointResponse.REPLIED;
+  const responseText = input.responseText?.trim() || null;
+  if (responseText && !replied) {
+    throw new BadRequestException('responseText only goes with a reply');
+  }
 
-  const result = outcome ?? finalResponse;
-  const hasProvider = result === 'HAS_PROVIDER';
-  const comeBackLater = result === 'COME_BACK_LATER';
+  // Provider type and "come back later" timing belong to visit and call outcomes
+  const hasProvider = outcome === TouchPointOutcome.HAS_PROVIDER;
+  const comeBackLater = outcome === TouchPointOutcome.COME_BACK_LATER;
   if (input.providerType && !hasProvider) {
     throw new BadRequestException(
       'providerType only applies to "has a provider"',
@@ -303,11 +309,7 @@ export function parseResults(input: LogTouchpointInput) {
   // screens and stats ("responded") stay correct
   let receivedResponse = input.receivedResponse ?? false;
   if (outcome) receivedResponse = !NO_CONVERSATION_OUTCOMES.includes(outcome);
-  if (finalResponse)
-    receivedResponse = !NO_REPLY_RESPONSES.includes(finalResponse);
-
-  const isReply =
-    finalResponse !== null && !NO_REPLY_RESPONSES.includes(finalResponse);
+  if (finalResponse) receivedResponse = replied;
 
   return {
     date,
@@ -315,11 +317,12 @@ export function parseResults(input: LogTouchpointInput) {
     outcome,
     delivery,
     response: finalResponse,
+    responseText,
     providerType: hasProvider
       ? (input.providerType ?? ProviderType.UNKNOWN)
       : null,
     // A reply recorded while logging happened today (date only)
-    respondedOn: isReply ? new Date() : null,
+    respondedOn: replied ? new Date() : null,
     comeBackAt,
     receivedResponse,
   };

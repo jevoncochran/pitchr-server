@@ -150,7 +150,7 @@ Conversions haven't been recorded consistently, and upcoming client-management f
 
 - **One action marks a conversion:** moving a lead to the **Converted** stage. The server sets `convertedAt` automatically (editable, so a conversion can be backdated to the real date). Nobody has to remember a second step.
 - **Stage history:** every stage change is recorded with who made it and when. That gives reliable conversion dates, shows how long leads sit in each stage, and is the foundation for client management.
-- **One-time cleanup:** a report of leads whose stage and conversion date disagree (e.g. Converted with no date) to fix by hand before analytics are trusted.
+- **One-time cleanup:** fewer than 20 conversions exist, so a one-time list (not a report page) of Converted leads and their dates, plus leads with a date that aren't Converted. Each is checked against the definition and fixed by hand on the lead page before analytics are trusted.
 
 - **What counts:** a booked project with money in the bank. A signed or verbal agreement alone isn't a conversion. It's marked by hand.
 - **Moving a lead out of Converted** (e.g. by mistake) clears its conversion date, so it never counts in conversion analytics. Stage history still records it.
@@ -186,7 +186,7 @@ Rules for showing numbers:
 
 ## Scope
 
-- **V1, logging, planned sessions and conversions:** sessions (per person), outcomes / delivery / response, come back later with timing, quick-add lead, the phone logging screen, end-of-session summary, check-in tasks resolving responses, planned session items from a list (pick, drag to order, Navigate buttons, log through them), automatic conversion dates, stage history, conversion cleanup report.
+- **V1, logging, planned sessions and conversions:** sessions (per person), outcomes / delivery / response, come back later with timing, quick-add lead, the phone logging screen, end-of-session summary, check-in tasks resolving responses, planned session items from a list (pick, drag to order, Navigate buttons, log through them), automatic conversion dates, stage history, a one-time conversion cleanup.
 - **V1.5, maps:** coordinates for every location, map of leads, automatic best stop order. MyWay can be cancelled here.
 - **V2, analytics and team views:** conversion and outcome metrics, per-person filters and comparisons, double-visit warnings.
 - **Later: automatic reply detection.** A Gmail connection could detect replies to emails sent to a lead and fill in the response and date. Instagram's business API is possible but restricted; texts aren't realistic.

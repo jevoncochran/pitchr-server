@@ -25,14 +25,17 @@ Before, logging a touchpoint on a lead's page was one request to save it, then 2
 - The lead page's Save uses the new endpoint (one request instead of up to five). `CHECK_IN_LABELS` now lives only on the server.
 - 10 Jest tests, one per rule plus validation. Adding a brand-new contact while logging is still its own request first (proper quick-add is step 6).
 
-### ⏭️ Step 2: Stage history and automatic conversion dates
-- New `LeadStageChange` table (lead, from, to, changed by, when) + migration.
-- Every stage change goes through one server method that records history, sets `convertedAt` when moving to Converted (today, or a date you pick) and clears it when moving out.
-- `changed by` comes from the logged-in user (the JWT).
-- Lead page: moving to **Converted** opens a confirmation (ConfirmModal style) with a date picker: "Booked project with money in the bank?"
-- Tests for the conversion date rules.
+### ✅ Step 2: Stage history and automatic conversion dates
+**Files:** `prisma/schema.prisma` + migration `20261014000000_add_lead_stage_history`, `src/leads/lead-stage.ts` (+ `.spec.ts`), `leads.service.ts`, `leads.controller.ts`, `src/tasks/tasks.service.ts` (pitchr-server); `src/components/leads/ConvertLeadDialog.tsx` (new), `useLeadDetail.ts`, `LeadDetailPage.tsx`, `PipelinePage.tsx` (pitchr-client)
 
-### ⬜ Step 3: Conversion cleanup report
+- New `LeadStageChange` table: lead, from stage, to stage, changed by (null for system changes), when. History starts when this ships; earlier changes weren't recorded.
+- `changeStage()` in `lead-stage.ts` is the one place stages change: it records history, sets `convertedAt` on Converted (today or a chosen date) and clears it when leaving Converted.
+- The normal `PATCH /api/leads/:id` routes any `pipelineStage` through it, so the lead page, the Pipeline board and the Dormant modal all follow the rules without being able to bypass them. `convertedAt` alone can only be edited on a Converted lead; it can't be cleared directly.
+- Creating a lead records its first stage. The sequence ending in Dormant (tasks service) goes through it too, as a system change.
+- Client: moving to Converted (stage picker or Pipeline drag) opens **Mark as converted?** with a date picker and the definition (booked project, money in the bank). Cancelling a drag leaves the card where it was. Converted leads show "Converted 10/14/26 · Edit date", or "No conversion date recorded · Add date".
+- 15 new Jest tests (32 total).
+
+### ⏭️ Step 3: Conversion cleanup report
 - A read-only report of leads whose stage and conversion date disagree (Converted with no date, a date but not Converted).
 - You fix each one by hand on the lead page. After this, conversion numbers can be trusted.
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { changeStage } from 'src/leads/lead-stage';
 
 // What to do when check-in at step N says "no response"
 const SEQUENCE_MAP: Record<number, { type: string; note: string }> = {
@@ -163,9 +164,13 @@ export class TasksService {
     } else {
       const step = lead.sequenceStep;
       if (step >= 9) {
-        await this.databaseService.lead.update({
-          where: { id: lead.id },
-          data: { pipelineStage: 'DORMANT', sequenceActive: false },
+        // The sequence ran out with no response: the system moves the lead to Dormant
+        await this.databaseService.$transaction(async (tx) => {
+          const stageData = await changeStage(tx, lead, 'DORMANT', null);
+          await tx.lead.update({
+            where: { id: lead.id },
+            data: { ...stageData, sequenceActive: false },
+          });
         });
       } else {
         const action = SEQUENCE_MAP[step];

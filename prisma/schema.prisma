@@ -27,6 +27,7 @@ model User {
   notes   Note[]
   assignedLeads Lead[]    @relation("LeadAssignment")
   contactsOwned       Contact[]            @relation("ContactOwner")
+  stageChanges        LeadStageChange[]
 }
 
 enum Role {
@@ -74,6 +75,7 @@ model Lead {
   tasks         Task[]
   attachments   Attachment[]
   signals       Signal[]
+  stageChanges  LeadStageChange[]
   priority    Priority?
 
   sequenceStep    Int     @default(0)
@@ -389,4 +391,24 @@ model Signal {
   platform    SocialPlatform?
   date        DateTime
   note        String?
+}
+
+// Every change to a lead's pipeline stage, with who made it and when.
+// fromStage is null for the lead's first stage (when it was created).
+model LeadStageChange {
+  id          String         @id @default(uuid())
+
+  lead        Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId      String
+
+  fromStage   PipelineStage?
+  toStage     PipelineStage
+
+  // Null when the system made the change (e.g. a sequence ending in Dormant)
+  changedBy   User?          @relation(fields: [changedById], references: [id])
+  changedById String?
+
+  changedAt   DateTime       @default(now())
+
+  @@index([leadId, changedAt])
 }

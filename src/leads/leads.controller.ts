@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { LeadsService } from './leads.service';
 import { LeadSnapshotService } from './lead-snapshot.service';
@@ -19,8 +20,11 @@ export class LeadsController {
   ) {}
 
   @Post()
-  async create(@Body() createLeadDto: Prisma.LeadCreateInput) {
-    return this.leadsService.create(createLeadDto);
+  async create(
+    @Body() createLeadDto: Prisma.LeadCreateInput,
+    @Request() req: { user: { id: string } },
+  ) {
+    return this.leadsService.create(createLeadDto, req.user.id);
   }
 
   @Get()
@@ -61,8 +65,9 @@ export class LeadsController {
   update(
     @Param('id') id: string,
     @Body() updateLeadDto: Prisma.LeadUpdateInput,
+    @Request() req: { user: { id: string } },
   ) {
-    return this.leadsService.update(id, updateLeadDto);
+    return this.leadsService.update(id, updateLeadDto, req.user.id);
   }
 
   @Delete(':id')

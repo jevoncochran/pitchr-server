@@ -1,6 +1,6 @@
 # Feature: Outreach sessions (draft for review)
 
-**Status:** Building. Steps 1–9 of the build plan are done (logging, planned lists, the phone screen, the end-of-session summary); results on the lead page and the conversion cleanup are next. Build plan: [outreach-sessions-build-plan.md](outreach-sessions-build-plan.md).
+**Status:** Building. Steps 1–10 of the build plan are done (logging, planned lists, the phone screen, the end-of-session summary, results and replies on the lead page and in snapshots); the conversion cleanup is next. Build plan: [outreach-sessions-build-plan.md](outreach-sessions-build-plan.md).
 
 ## Why
 
@@ -66,7 +66,7 @@ When we spoke to someone, pick **who** from the lead's contacts (decision-makers
   - **When they replied** is entered by hand (nothing logs replies automatically), so it's a date, not a time, prefilled with **Today**: `[Today ✓] [Yesterday] [Earlier: pick a date]`. Zero extra taps when replies are recorded the day they arrive.
   - They didn't → **No response**.
 
-The existing check-in task ("Did they respond?", due 4 days after outreach) is where Pending gets resolved: **Yes** → paste their reply (the date defaults to today); **No** → No response. A reply that arrives before the check-in can be recorded from the lead page at any time.
+The existing check-in task ("Did they respond?", due 4 days after outreach) is where Pending gets resolved: **Yes** → paste their reply (the date defaults to today); **No** → No response. A reply that arrives before the check-in (or after a No response) can be recorded from the lead page at any time with **Record a reply**. The lead page shows each message's status and their reply, and snapshots read the reply's words and date.
 
 Outcome categories (interested, has a provider, come back later...) are for visits and calls only. Messages are counted by response rate (replied vs. no response); what replies say lives in their text. Later, Claude could read replies and categorize them for analytics.
 

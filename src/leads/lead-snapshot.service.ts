@@ -144,6 +144,10 @@ export class LeadSnapshotService {
         date: tp.date,
         type: tp.type,
         receivedResponse: tp.receivedResponse,
+        // DMs, emails, texts: pending / replied / no response, and their reply
+        response: tp.response,
+        responseText: tp.responseText,
+        respondedOn: tp.respondedOn?.toISOString().slice(0, 10) ?? null,
         contactNames: tp.contacts.map((c) =>
           [c.firstName, c.lastName].filter(Boolean).join(' '),
         ),

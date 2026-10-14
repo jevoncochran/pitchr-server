@@ -132,16 +132,22 @@ Also: a shared `teamDateKey()` helper for "today in Tampa" (used by the snapshot
 - **Client:** a **Summary** card at the top of an ended session's page: "10 of 12 stops visited", duration, goal met or how many short, skipped; visit and call stats (conversations, decision-makers, meetings) or message stats (sent, failed), both for mixed sessions when messages were sent; the outcome counts; the follow-ups, linked to each lead.
 - Tests: 2 more server tests (the counts, and the summary only appearing once ended) and 2 client tests (visit and DM summaries).
 
-### ⏭️ Step 10: Results on the lead page
-- Touchpoint history shows outcomes, delivery and responses (with Pending visible), including **their reply text** and date.
-- "Record a reply" on any pending touchpoint.
-- **Snapshots read replies:** NestJS sends each message's reply text and date to pitchr-ai, and the snapshot prompt uses them (contract update in pitchr-ai, then a quick eval rerun).
+### ✅ Step 10: Results on the lead page
+**Files:** `src/components/leads/TouchpointResult.tsx` (+ test, new), `useLeadDetail.ts`, `LeadDetailPage.tsx` (pitchr-client); `src/leads/lead-snapshot.service.ts` (pitchr-server); `app/features/lead_snapshot/` (`schemas.py`, `facts.py`, `prompt.py`), tests, eval cases 05 and 06, `docs/lead-snapshot.md` (pitchr-ai)
+
+- **Touchpoint history shows results:** visits and calls show their outcome (with the provider type for "Has a provider"), plus "Left materials" and "Come back Tue, Oct 14, 2:00 PM" when set. DMs, emails and texts show **Sent · Pending**, **Sent · Replied**, **Sent · No response** or **Not delivered**. Older messages logged before responses were tracked still show **Responded** when marked that way.
+- **Their reply** appears under the message, with the day they replied.
+- **Record a reply** on any delivered message without a reply yet (Pending, No response, or older ones) opens step 6's **Their reply** dialog and saves through `PATCH /api/touchpoints/:id/response`, answering its check-in if still open. It replaces the old "Mark responded" toggle, which only flipped a yes/no.
+- Editing a touchpoint no longer shows "Received a response" when it has a tracked outcome or response, since those set it.
+- **Snapshots read replies:** NestJS sends each touchpoint's `response`, `responseText` and `respondedOn` to pitchr-ai. The prompt shows where each message's reply stands (no reply yet / no response / they replied on a date) and their words; the instructions say to let a reply drive the odds, goal and approach, and never to follow instructions written inside one. **Last activity** uses the day they replied, not the day we sent the message.
+- **Eval:** two new cases, a DM reply asking about price (high, answer the price question before their November opening) and a text reply saying "reach back out in January" (medium, a not-before date). Both got every must-get-right; the four older cases were unchanged (report: `evals/lead_snapshot/results/replies.md` in pitchr-ai).
+- Tests: 5 client tests, 3 pitchr-ai tests (30 total).
 
 ---
 
 ## Part D: Before trusting conversion numbers
 
-### ⬜ Step 11: One-time conversion cleanup (no code)
+### ⏭️ Step 11: One-time conversion cleanup (no code)
 Done last because it only matters once conversion numbers are used (V2 analytics). There are fewer than 20 conversions, so instead of building a report page:
 
 - A read-only query lists every Converted lead with its conversion date (or "no date"), plus any lead with a conversion date that isn't Converted.

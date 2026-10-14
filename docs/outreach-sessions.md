@@ -1,6 +1,6 @@
 # Feature: Outreach sessions (draft for review)
 
-**Status:** Draft, ready to build. Nothing is built yet. Build plan: [outreach-sessions-build-plan.md](outreach-sessions-build-plan.md).
+**Status:** Building. Steps 1–9 of the build plan are done (logging, planned lists, the phone screen, the end-of-session summary); results on the lead page and the conversion cleanup are next. Build plan: [outreach-sessions-build-plan.md](outreach-sessions-build-plan.md).
 
 ## Why
 
@@ -111,7 +111,7 @@ The bar: logging each item must be faster than writing on paper.
    - DM / email / text: **Sent** is preselected; response starts Pending.
    - Optional: note, left materials, come-back-later timing.
    - **Next**.
-3. **End session:** summary (items completed vs. planned, conversations, decision-makers reached, meetings booked, messages sent) and the follow-up tasks it created.
+3. **End session:** summary (items completed vs. planned and skipped, time taken, goal met or not, conversations, decision-makers reached, meetings booked, a count of each outcome, messages sent and failed) and the follow-up tasks it created. A conversation is a visit or call where someone was spoken to. Decision-makers are counted once per lead. The summary stays on the session's page afterwards.
 
 ## Planned routes (replaces MyWay)
 

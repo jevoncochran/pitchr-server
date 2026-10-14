@@ -22,6 +22,7 @@ const mockDb = {
     update: jest.fn(),
     delete: jest.fn(),
   },
+  touchPoint: { findMany: jest.fn() },
   lead: { count: jest.fn() },
   $transaction: jest.fn(),
 };
@@ -47,6 +48,7 @@ describe('SessionsService', () => {
     mockDb.outreachSession.create.mockResolvedValue({ id: 's-1' });
     mockDb.lead.count.mockImplementation(({ where }) => where.id.in.length);
     mockDb.sessionItem.findMany.mockResolvedValue([]);
+    mockDb.touchPoint.findMany.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -291,6 +293,80 @@ describe('SessionsService', () => {
         completed: 1,
         skipped: 1,
       });
+    });
+
+    it('summarizes conversations, decision-makers, meetings and messages', async () => {
+      mockDb.outreachSession.findUnique.mockResolvedValue(
+        session({ startedAt: new Date() }),
+      );
+      const owner = { isDecisionMaker: true };
+      const frontDesk = { isDecisionMaker: false };
+      const task = (id: string, dueDate: Date | null) => ({
+        id,
+        dueDate,
+        lead: { id: 'l', business: 'B' },
+      });
+      mockDb.touchPoint.findMany.mockResolvedValue([
+        // Visited twice (came back later): one decision-maker reached, not two
+        {
+          leadId: 'a',
+          outcome: 'COME_BACK_LATER',
+          contacts: [owner],
+          tasks: [task('t2', new Date('2026-10-20'))],
+        },
+        {
+          leadId: 'a',
+          outcome: 'MEETING_BOOKED',
+          contacts: [owner],
+          tasks: [task('t1', new Date('2026-10-15'))],
+        },
+        {
+          leadId: 'b',
+          outcome: 'INTERESTED',
+          contacts: [frontDesk],
+          tasks: [task('t3', null)],
+        },
+        { leadId: 'c', outcome: 'BUSINESS_CLOSED', contacts: [], tasks: [] },
+        { leadId: 'd', outcome: 'NO_ANSWER', contacts: [], tasks: [] },
+        { leadId: 'e', delivery: 'SENT', contacts: [], tasks: [] },
+        { leadId: 'f', delivery: 'FAILED', contacts: [], tasks: [] },
+      ]);
+
+      const summary = await service.end('s-1', ME);
+
+      expect(summary.conversations).toBe(3);
+      expect(summary.decisionMakersReached).toBe(1);
+      expect(summary.meetingsBooked).toBe(1);
+      expect(summary.outcomes).toEqual({
+        COME_BACK_LATER: 1,
+        MEETING_BOOKED: 1,
+        INTERESTED: 1,
+        BUSINESS_CLOSED: 1,
+        NO_ANSWER: 1,
+      });
+      expect(summary.messages).toEqual({ sent: 1, failed: 1 });
+      // Soonest first, undated last
+      expect(summary.followUps.map((t) => t.id)).toEqual(['t1', 't2', 't3']);
+    });
+
+    it('includes the summary when loading an ended session, not before', async () => {
+      const base = { id: 's-1', userId: ME.id, items: [] };
+      mockDb.outreachSession.findUnique.mockResolvedValue({
+        ...base,
+        startedAt: new Date(),
+        endedAt: null,
+      });
+      expect(await service.findOne('s-1', ME)).not.toHaveProperty('summary');
+
+      mockDb.outreachSession.findUnique.mockResolvedValue({
+        ...base,
+        startedAt: new Date(),
+        endedAt: new Date(),
+      });
+      expect(await service.findOne('s-1', ME)).toHaveProperty(
+        'summary.conversations',
+        0,
+      );
     });
 
     it("can't change the channel once the session has started", async () => {

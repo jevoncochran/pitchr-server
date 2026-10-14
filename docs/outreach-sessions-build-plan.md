@@ -104,20 +104,35 @@ Also: a shared `teamDateKey()` helper for "today in Tampa" (used by the snapshot
 
 ## Part C: Screens (pitchr-client, phone first)
 
-### ⏭️ Step 7: Sessions page and planning
-- Sessions list (upcoming, in progress, past).
-- Plan a session: channel, area, goal, then pick leads and drag to order.
+### ✅ Step 7: Sessions page and planning
+**Files (pitchr-client):** `src/pages/SessionsPage.tsx`, `src/pages/SessionPage.tsx`, `src/components/sessions/SessionDetailsDialog.tsx`, `src/components/sessions/LeadPicker.tsx`, `src/types/sessions.ts`, `src/constants/sessions.ts` (all new), `src/utils/dates.ts`, `src/App.tsx`, `src/components/InternalLayout.tsx`
 
-### ⬜ Step 8: The active session screen
-- One item at a time, labeled by channel ("Stop 3 of 12", "Message 3 of 12"): business, **Navigate** (Google / Apple Maps), **Snapshot**, outcome buttons, contact picker with quick-add, come-back-later timing, note, **Next**.
-- Async channels (DMs, emails): a faster list mode where each lead is marked **Sent** (or Failed) in one tap.
-- Add an unplanned item or quick-add a business mid-session.
-- Session timer and progress.
+- **Sessions** in the navigation (sidebar and phone bar) → `/sessions`: your sessions grouped **In progress · Upcoming** (soonest first) **· Past**, each with channel, area, date and progress ("12 stops" planned, "8 of 12 visited" once started). Admins can show everyone's.
+- **+ Plan a session**: channel, date (defaults to today), optional area, goal and notes → creates it and opens it.
+- **Session page** (`/sessions/:id`): details with **Edit** (the channel locks once started) and **Delete** (logged touchpoints stay on leads); the list numbered in order, **drag to reorder** (saved right away, undone if saving fails), **✕ to remove** (with confirmation), **Navigate** (Google Maps directions) for in-person and mixed sessions, done / skipped badges. Ended sessions are read-only.
+- **+ Add leads** opens a picker: search, industry, stage, "not contacted in 30+ days", with Converted / Not a Fit / Lost hidden unless included; already-planned leads aren't offered.
+- Labels follow the channel ("stops", "calls", "messages", "emails", "leads"). No Start button yet: running a session is step 8.
 
-### ⬜ Step 9: End-of-session summary
-- Items completed vs. planned ("10 of 12 stops visited"), skipped, conversations, decision-makers reached, meetings booked, messages sent, follow-up tasks created.
+### ✅ Step 8: The active session screen
+**Files:** `src/pages/RunSessionPage.tsx`, `src/components/sessions/LogVisitForm.tsx`, `MessageRow.tsx`, `AddToSessionDialog.tsx` (all new), `src/pages/__tests__/RunSessionPage.test.tsx` (new), `src/constants/results.ts`, `src/types/sessions.ts`, `SessionPage.tsx`, `App.tsx`, `package.json` (pitchr-client); `src/sessions/sessions.service.ts` (items include the lead's contacts) (pitchr-server)
 
-### ⬜ Step 10: Results on the lead page
+- **Start session / Continue session** on the session page opens `/sessions/:id/run`, which starts the session if needed (an ended session goes back to its page).
+- **Top bar:** channel, area, "3 of 12 visited", time elapsed; **List**, **+ Add**, **End**.
+- **Visits and calls, one lead at a time** ("Stop 3 of 12", "back at 3:00 PM" for come-back stops): business, industry and stage, **Navigate**, **Snapshot** (the AI snapshot inline). **What happened?** buttons (calls get no answer / left voicemail; visits get business closed); **has a provider** asks what kind; **come back later** asks when (later today / another day / not specified, plus a time) and offers **add back to today's route**; **who did you talk to?** (the lead's contacts, decision-makers marked ★, or **+ New contact**), hidden when nobody was reached; a note; **left materials** for visits. **Save & next** (disabled until an outcome is picked) or **Skip**.
+- **Not a fit / meeting booked** offers the stage change afterwards.
+- **DMs, emails, texts: a list** with **Sent** / **Failed** on each lead (one tap), optional note, Skip.
+- **Mixed sessions** pick the type per lead (visit, call, DM, email, text).
+- **List** shows every item with its result; tap a planned or skipped one to go to it. **+ Add** logs an unplanned existing lead, or a new business (name, industry, business type, how we got the lead).
+- **End** confirms (mentioning anything still planned), ends the session and returns to its page, which shows the summary (step 9).
+- **First React component tests in the client:** 6 tests render the run screen with a fake server (next stop and progress, logging an outcome with a contact, auto-start, stage suggestion, closed business hides contacts, one-tap DM). Added the missing `@testing-library/dom` dev dependency they need.
+
+### ✅ Step 9: End-of-session summary
+- **Server:** `SessionsService.summarize()` works it out from the touchpoints logged in the session (`TouchPoint.sessionId`). `POST /sessions/:id/end` returns it, and `GET /sessions/:id` includes it as `summary` once the session has ended, so it can be looked at again later.
+- **What it counts:** items completed / planned / skipped and the duration; **conversations** (visits and calls where someone was spoken to, so not business closed, no answer or left voicemail); **decision-makers reached** (leads where a ★ contact was picked, counted once per lead even if visited twice); **meetings booked**; a count of each outcome; messages **sent** and **failed**; and the **follow-ups** those touchpoints created (follow-up email checks, 4-day check-ins, come-back tasks), soonest first, each marked done or to do.
+- **Client:** a **Summary** card at the top of an ended session's page: "10 of 12 stops visited", duration, goal met or how many short, skipped; visit and call stats (conversations, decision-makers, meetings) or message stats (sent, failed), both for mixed sessions when messages were sent; the outcome counts; the follow-ups, linked to each lead.
+- Tests: 2 more server tests (the counts, and the summary only appearing once ended) and 2 client tests (visit and DM summaries).
+
+### ⏭️ Step 10: Results on the lead page
 - Touchpoint history shows outcomes, delivery and responses (with Pending visible), including **their reply text** and date.
 - "Record a reply" on any pending touchpoint.
 - **Snapshots read replies:** NestJS sends each message's reply text and date to pitchr-ai, and the snapshot prompt uses them (contract update in pitchr-ai, then a quick eval rerun).
@@ -144,6 +159,9 @@ Run a real in-person session and a real DM session with it, phone only, no paper
 ## After V1
 
 - **Right after V1: one "How this lead started" field.** `source` (how we got the lead) and `discoveredVia` (how they heard about us) confuse even the owner, and their options overlap (both have Outreach, Referral, Networking, In person). Merge them into one field with grouped options. **We reached out:** cold outreach · walked in · networking event. **They came to us:** website form · referral · Instagram · Facebook · TikTok · YouTube · Google · walk-up · other. Start with a read-only look at the combinations existing leads have, then propose how each converts, for approval, before a migration converts them. Updates all three repos (including the snapshot's input). Do it before V2, so analytics like "do inbound leads convert faster?" use the new field.
+- **Fill in missing addresses (before the field test if possible).** 162 of 195 leads (150 excluding Converted / Not a Fit / Lost) have no address, so Navigate rarely works. One-time job, no feature to build: look each business up with Google Places (biased to Tampa Bay), show the matches for review (confident / check / not found), then save the approved ones as primary locations in one transaction. Also collects coordinates (half of V1.5's map work) and optionally phone and website. Needs a Google key usable from a script (likely a second, server-side key). Then stop new gaps: let add-lead and session quick-add search Google for the business and fill the address in.
+- **pitchr-client: move to feature folders.** The client is organized by layer (`pages/`, `components/`, `constants/`, `types/`...), so one feature like sessions is spread across six folders. Move to `src/features/<feature>/` (pages, components, hooks, types, constants together), with shared UI in `src/components/ui/`, helpers in `src/lib/` and app setup in `src/app/`, matching pitchr-server and pitchr-ai. Mechanical, no behavior change; TypeScript and the tests catch broken imports.
+- **pitchr-client: split `LeadDetailPage`.** It's 2,738 lines (plus 809 in `useLeadDetail`), holding lead info, contacts, locations, attachments, tasks, touchpoints, notes, signals and dialogs. Split it into section components inside `features/leads/` (e.g. `LeadTouchpoints`, `LeadTasks`, `LeadContacts`), one section at a time, checking each in the app. Do this after the folder move.
 - **V1.5, maps:** coordinates for locations, map of leads, automatic best stop order. Cancel MyWay.
 - **V2, analytics and team views.**
 - **V3, AI:** voice notes to structured logs, snapshot before each item, "what's working" summaries.

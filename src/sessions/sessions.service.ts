@@ -4,7 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, SessionChannel, SessionItemStatus } from '@prisma/client';
+import {
+  Prisma,
+  SessionChannel,
+  SessionItemStatus,
+  TouchPointDelivery,
+  TouchPointOutcome,
+} from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 
 /** The logged-in user, as the JWT strategy provides it. */
@@ -26,7 +32,7 @@ export interface CreateSessionInput {
 
 export type UpdateSessionInput = Partial<Omit<CreateSessionInput, 'leadIds'>>;
 
-// What a session's items include: enough about each lead to show it and navigate to it
+// What a session's items include: enough about each lead to show it, navigate to it and log it
 const ITEM_INCLUDE = {
   lead: {
     select: {
@@ -36,6 +42,17 @@ const ITEM_INCLUDE = {
       industry: { select: { name: true } },
       primaryLocation: {
         select: { addressLine1: true, city: true, state: true, zip: true },
+      },
+      // For "who did you talk to?" on the session screen
+      contacts: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          title: true,
+          isDecisionMaker: true,
+        },
+        orderBy: [{ isDecisionMaker: 'desc' }, { firstName: 'asc' }],
       },
     },
   },
@@ -49,6 +66,13 @@ const ITEM_INCLUDE = {
     },
   },
 } satisfies Prisma.SessionItemInclude;
+
+// Outcomes where nobody was spoken to
+const NO_CONVERSATION: TouchPointOutcome[] = [
+  TouchPointOutcome.BUSINESS_CLOSED,
+  TouchPointOutcome.NO_ANSWER,
+  TouchPointOutcome.LEFT_VOICEMAIL,
+];
 
 @Injectable()
 export class SessionsService {
@@ -91,15 +115,26 @@ export class SessionsService {
     }));
   }
 
+  /** The session and its list, plus its summary once it has ended. */
   async findOne(id: string, user: SessionUser) {
     await this.getAccessible(id, user);
-    return this.databaseService.outreachSession.findUnique({
+    const session = await this.databaseService.outreachSession.findUnique({
       where: { id },
       include: {
         user: { select: { id: true, firstName: true, lastName: true } },
         items: { orderBy: { position: 'asc' }, include: ITEM_INCLUDE },
       },
     });
+    if (!session?.startedAt || !session.endedAt) return session;
+    return {
+      ...session,
+      summary: await this.summarize(
+        id,
+        session.startedAt,
+        session.endedAt,
+        session.items,
+      ),
+    };
   }
 
   async update(id: string, input: UpdateSessionInput, user: SessionUser) {
@@ -137,7 +172,7 @@ export class SessionsService {
     return this.findOne(id, user);
   }
 
-  /** Ends the session and returns a basic summary (step 9 adds outcomes). */
+  /** Ends the session and returns its summary. */
   async end(id: string, user: SessionUser) {
     const session = await this.getAccessible(id, user);
     if (!session.startedAt) {
@@ -155,14 +190,82 @@ export class SessionsService {
       where: { sessionId: id },
       select: { status: true },
     });
+    return this.summarize(id, session.startedAt, endedAt, items);
+  }
+
+  /**
+   * What a session got done, from the touchpoints logged in it: how many
+   * items were worked, the conversations and their outcomes, decision-makers
+   * reached, meetings booked, messages sent, and the follow-ups it created.
+   */
+  private async summarize(
+    sessionId: string,
+    startedAt: Date,
+    endedAt: Date,
+    items: { status: SessionItemStatus }[],
+  ) {
+    const touchpoints = await this.databaseService.touchPoint.findMany({
+      where: { sessionId },
+      select: {
+        leadId: true,
+        outcome: true,
+        delivery: true,
+        contacts: { select: { isDecisionMaker: true } },
+        tasks: {
+          select: {
+            id: true,
+            type: true,
+            note: true,
+            dueDate: true,
+            completed: true,
+            lead: { select: { id: true, business: true } },
+          },
+        },
+      },
+    });
+
+    const outcomes: Partial<Record<TouchPointOutcome, number>> = {};
+    for (const { outcome } of touchpoints) {
+      if (outcome) outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
+    }
+    const withOutcome = touchpoints.filter((t) => t.outcome);
+    const withDelivery = touchpoints.filter((t) => t.delivery);
+    // Counted per lead: talking to the owner twice in one session is one reached
+    const decisionMakerLeads = new Set(
+      touchpoints
+        .filter((t) => t.contacts.some((c) => c.isDecisionMaker))
+        .map((t) => t.leadId),
+    );
+
     return {
-      sessionId: id,
-      startedAt: session.startedAt,
+      sessionId,
+      startedAt,
       endedAt,
       durationMinutes: Math.round(
-        (endedAt.getTime() - session.startedAt.getTime()) / 60_000,
+        (endedAt.getTime() - startedAt.getTime()) / 60_000,
       ),
       itemCounts: countItems(items),
+      conversations: withOutcome.filter(
+        (t) => !NO_CONVERSATION.includes(t.outcome!),
+      ).length,
+      decisionMakersReached: decisionMakerLeads.size,
+      meetingsBooked: outcomes.MEETING_BOOKED ?? 0,
+      outcomes,
+      messages: {
+        sent: withDelivery.filter((t) => t.delivery === TouchPointDelivery.SENT)
+          .length,
+        failed: withDelivery.filter(
+          (t) => t.delivery === TouchPointDelivery.FAILED,
+        ).length,
+      },
+      // Soonest first; tasks without a due date last
+      followUps: touchpoints
+        .flatMap((t) => t.tasks)
+        .sort(
+          (a, b) =>
+            (a.dueDate?.getTime() ?? Infinity) -
+            (b.dueDate?.getTime() ?? Infinity),
+        ),
     };
   }
 

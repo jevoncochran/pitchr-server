@@ -38,7 +38,7 @@ export interface LogSessionItemInput {
     business: string;
     industryId: string;
     businessTypeId: string;
-    /** How this lead started. Left empty, it's filled in from what's logged (docs/lead-origin.md). */
+    /** How this lead started (docs/lead-origin.md); empty if not known */
     origin?: LeadOrigin | null;
     /** Only with origin OTHER */
     originOther?: string | null;

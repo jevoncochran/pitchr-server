@@ -143,7 +143,7 @@ describe('SessionLoggingService', () => {
     );
   });
 
-  it('a quick-added business with no origin is left for what gets logged to fill in', async () => {
+  it('a quick-added business can be saved without an origin', async () => {
     tx.lead.create.mockResolvedValue({ id: 'lead-new', pipelineStage: 'NEW' });
 
     await service.log(

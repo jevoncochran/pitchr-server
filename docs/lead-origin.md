@@ -1,8 +1,8 @@
-# How this lead started (lead origin)
+# Lead origin
 
 **Status:** Building. Build plan: [lead-origin-build-plan.md](lead-origin-build-plan.md).
 
-One field, `origin`, says how each lead started: whether we reached out to them (and how), or they came to us (and how). It replaces two fields, `source` (how we got the lead) and `discoveredVia` (how they heard about us). Their options overlapped (both had Outreach, Referral, Networking, In person) and confused even the owner.
+One field, `origin` (**Lead origin** on screen), says how each lead started: whether we reached out to them (and how), or they came to us (and how). It replaces two fields, `source` (how we got the lead) and `discoveredVia` (how they heard about us). Their options overlapped (both had Outreach, Referral, Networking, In person) and confused even the owner.
 
 The origin is what analytics like "do inbound leads convert faster?" group by, so it comes before V2 analytics.
 
@@ -24,34 +24,34 @@ The origin is what analytics like "do inbound leads convert faster?" group by, s
 
 The group isn't stored: it follows from the origin (`ORIGIN_GROUP` on the server, `ORIGINS` in the client).
 
-## Empty until known
+## Only set by hand
 
-A lead can have no origin. That's normal for leads we haven't contacted yet (for example an imported list), and for older leads whose first contact wasn't recorded. Guessing would put wrong numbers into analytics, so leads stay empty until someone knows.
+The origin is only ever what someone entered: on the lead page, when adding a lead, or when quick-adding one in a session. It's never worked out from touchpoints. Logged touchpoints can be wrong (e.g. an AI import that turned "reach the owner by email" in a visit's notes into an email touchpoint) or missing (the real first contact was never logged), and the app can't tell either case apart from a real first contact.
 
-- **Filled in automatically on first contact:** logging a touchpoint on a lead with no origin **and no touchpoints at all** sets the origin from that touchpoint: visit or visit attempt → In-person visit, Instagram DM → DM, email → Email, text → Text, call → Call, networking → Networking event, walk-up → Approached us, referral outreach → Referral. Meetings and "other" touchpoints don't set it. A lead that already has touchpoints is never filled in this way, because its first logged touchpoint may not be how it really started.
-- **Set by hand** anytime on the lead page, when adding a lead, or when quick-adding one in a session (where it can be left to fill itself in from what's logged).
+A lead can have no origin: leads we haven't contacted yet (for example an imported list) stay empty until someone sets it.
 
 ## Converting existing leads
 
-`discoveredVia` was never filled in, so existing leads are converted from `source`, using the first touchpoint where `source` doesn't say how. The migration applies these rules, so it gives the same result wherever it runs:
+Existing leads keep what was explicitly entered in `source` / `discoveredVia`. `discoveredVia` was never filled in, and "Outreach" didn't say how we reached out, so everything else becomes **In-person visit**, since most leads started that way. Leads that were wrong can be changed on the lead page.
 
-| Old | First touchpoint | Becomes |
-| --- | --- | --- |
-| Networking | | Networking event |
-| Referral | | Referral |
-| In person | | Approached us (people who came up to us) |
-| Form | | The social platform or Other from `discoveredVia` if set, otherwise Website form |
-| Outreach or empty | Visit or visit attempt | In-person visit |
-| Outreach or empty | Instagram DM · email · text · call | DM · Email · Text · Call |
-| Outreach or empty | Anything else, or none | Empty |
+| Old | Becomes |
+| --- | --- |
+| Networking | Networking event |
+| Referral | Referral |
+| In person | Approached us (people who came up to us) |
+| Form | The social platform or Other from `discoveredVia` if set, otherwise Website form |
+| Outreach or empty, with touchpoints | In-person visit |
+| Outreach or empty, never contacted | Empty |
 
-On dev (10/14/26) that's 65 in-person visits, 75 DMs, 12 emails, 2 texts, 7 networking events, 1 referral, 3 approached us and 30 empty (29 never contacted, plus Modern Medical Aesthetics, whose first visit wasn't logged; it can be set by hand).
+On dev (10/14/26): 155 in-person visits, 7 networking events, 3 approached us, 1 referral and 29 empty (never contacted).
+
+This takes two migrations: `20261016000000_add_lead_origin` first guessed from each lead's first touchpoint; `20261016010000_lead_origin_explicit_only` replaces those guesses with In-person visit (see the build plan).
 
 ## Where it shows
 
-- **Lead page:** "How this lead started", with the options grouped. "Other" asks for a short description.
-- **Add lead:** the same picker, optional.
-- **Session quick-add:** the same picker, defaulting to "Fill in from what I log".
+- **Lead page:** **Lead Origin**, shown as the group then the origin, e.g. "We reached out · In-person visit", or "Not known yet". Editing shows the options grouped; "Other" asks for a short description.
+- **Add lead:** the same picker, optional ("Not known yet").
+- **Session quick-add:** the same picker, preselected from the session's channel (in-person and mixed → In-person visit, calls → Call, DMs → DM, emails → Email, texts → Text), changeable before adding.
 - **Pipeline cards:** the origin's label.
 - **Analytics:** "We reached out vs. they came to us" and conversion by origin. Leads without an origin are counted as "Not recorded".
 - **Lead snapshot:** pitchr-ai gets the origin and its group ("How this lead started: DM (we reached out)").

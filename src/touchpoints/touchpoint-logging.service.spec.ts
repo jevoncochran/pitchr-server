@@ -1,7 +1,10 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseService } from 'src/database/database.service';
-import { TouchpointLoggingService } from './touchpoint-logging.service';
+import {
+  parseResults,
+  TouchpointLoggingService,
+} from './touchpoint-logging.service';
 
 // A fake database. $transaction just runs the callback with the same fake,
 // so the tests can check exactly which writes the service makes.
@@ -185,5 +188,124 @@ describe('TouchpointLoggingService', () => {
       service.logTouchpoint(input({ date: 'not-a-date' }), USER_ID),
     ).rejects.toThrow(BadRequestException);
     expect(mockDb.$transaction).not.toHaveBeenCalled();
+  });
+});
+
+describe('parseResults (outcomes, delivery and responses)', () => {
+  const base = { leadId: 'lead-1', date: '2026-10-14T15:00:00.000Z' };
+
+  it('messages default to sent and waiting for a reply', () => {
+    const r = parseResults({ ...base, type: 'INSTAGRAM_DM' });
+    expect(r.delivery).toBe('SENT');
+    expect(r.response).toBe('PENDING');
+    expect(r.receivedResponse).toBe(false);
+  });
+
+  it('a failed message has no response', () => {
+    const r = parseResults({ ...base, type: 'EMAIL', delivery: 'FAILED' });
+    expect(r.response).toBeNull();
+    expect(() =>
+      parseResults({
+        ...base,
+        type: 'EMAIL',
+        delivery: 'FAILED',
+        response: 'INTERESTED',
+      }),
+    ).toThrow(BadRequestException);
+  });
+
+  it('an in-person visit to a closed business is saved as a visit attempt', () => {
+    const r = parseResults({
+      ...base,
+      type: 'IN_PERSON',
+      outcome: 'BUSINESS_CLOSED',
+    });
+    expect(r.type).toBe('VISIT_ATTEMPT');
+    expect(r.receivedResponse).toBe(false);
+  });
+
+  it('keeps outcomes for visits and calls, delivery and responses for messages', () => {
+    expect(() =>
+      parseResults({ ...base, type: 'EMAIL', outcome: 'INTERESTED' }),
+    ).toThrow(BadRequestException);
+    expect(() =>
+      parseResults({ ...base, type: 'CALL', response: 'INTERESTED' }),
+    ).toThrow(BadRequestException);
+    expect(() =>
+      parseResults({ ...base, type: 'IN_PERSON', outcome: 'NO_ANSWER' }),
+    ).toThrow(BadRequestException);
+  });
+
+  it('a conversation outcome marks receivedResponse; no answer does not', () => {
+    expect(
+      parseResults({ ...base, type: 'CALL', outcome: 'INTERESTED' })
+        .receivedResponse,
+    ).toBe(true);
+    expect(
+      parseResults({ ...base, type: 'CALL', outcome: 'NO_ANSWER' })
+        .receivedResponse,
+    ).toBe(false);
+  });
+
+  it('"has a provider" defaults to an unknown provider type', () => {
+    expect(
+      parseResults({ ...base, type: 'IN_PERSON', outcome: 'HAS_PROVIDER' })
+        .providerType,
+    ).toBe('UNKNOWN');
+    expect(() =>
+      parseResults({
+        ...base,
+        type: 'IN_PERSON',
+        outcome: 'INTERESTED',
+        providerType: 'VIDEO',
+      }),
+    ).toThrow(BadRequestException);
+  });
+
+  it('comeBackAt only goes with "come back later"', () => {
+    expect(
+      parseResults({
+        ...base,
+        type: 'IN_PERSON',
+        outcome: 'COME_BACK_LATER',
+        comeBackAt: '2026-10-14T19:00:00.000Z',
+      }).comeBackAt,
+    ).toEqual(new Date('2026-10-14T19:00:00.000Z'));
+    expect(() =>
+      parseResults({
+        ...base,
+        type: 'IN_PERSON',
+        outcome: 'INTERESTED',
+        comeBackAt: '2026-10-14T19:00:00.000Z',
+      }),
+    ).toThrow(BadRequestException);
+  });
+});
+
+describe('a failed email', () => {
+  it('does not advance the sequence or create a check-in', async () => {
+    jest.clearAllMocks();
+    tx.lead.findUnique.mockResolvedValue({
+      id: 'lead-1',
+      sequenceActive: true,
+      sequenceStep: 1,
+    });
+    tx.touchPoint.create.mockResolvedValue({ id: 'tp-1' });
+    const service = new TouchpointLoggingService(
+      mockDb as unknown as DatabaseService,
+    );
+
+    await service.logTouchpoint(
+      {
+        leadId: 'lead-1',
+        date: '2026-10-14T15:00:00.000Z',
+        type: 'EMAIL',
+        delivery: 'FAILED',
+      },
+      'user-1',
+    );
+
+    expect(tx.lead.update).not.toHaveBeenCalled();
+    expect(tx.task.create).not.toHaveBeenCalled();
   });
 });

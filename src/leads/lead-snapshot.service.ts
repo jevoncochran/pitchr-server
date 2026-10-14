@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { teamDateKey } from 'src/common/team-time';
 
 // Where pitchr-ai runs. On Railway this is its private network address.
 const PITCHR_AI_URL = process.env.PITCHR_AI_URL ?? 'http://localhost:8000';
@@ -17,9 +18,6 @@ const PITCHR_AI_API_KEY = process.env.PITCHR_AI_API_KEY;
 
 // Snapshots take a few seconds; give up if pitchr-ai hasn't answered in 60.
 const TIMEOUT_MS = 60_000;
-
-// Our team works in Tampa, so "today" means today there, not in UTC.
-const TIME_ZONE = 'America/New_York';
 
 // pitchr-ai only looks at the 25 most recent touchpoints.
 const MAX_TOUCHPOINTS = 25;
@@ -117,7 +115,7 @@ export class LeadSnapshotService {
   /** Reshape the lead into the request pitchr-ai expects (LeadSnapshotRequest). */
   private buildRequest(lead: LeadWithSnapshotData) {
     return {
-      today: todayIn(TIME_ZONE),
+      today: teamDateKey(),
       lead: {
         business: lead.business,
         industry: lead.industry?.name ?? null,
@@ -168,10 +166,4 @@ export class LeadSnapshotService {
       })),
     };
   }
-}
-
-/** Today's date as YYYY-MM-DD in the given time zone. */
-function todayIn(timeZone: string): string {
-  // The en-CA locale formats dates as YYYY-MM-DD
-  return new Intl.DateTimeFormat('en-CA', { timeZone }).format(new Date());
 }

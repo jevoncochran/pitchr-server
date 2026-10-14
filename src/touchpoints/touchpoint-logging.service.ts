@@ -3,7 +3,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { SequencePosition, TouchPointType } from '@prisma/client';
+import {
+  Prisma,
+  ProviderType,
+  SequencePosition,
+  TouchPointDelivery,
+  TouchPointOutcome,
+  TouchPointResponse,
+  TouchPointType,
+} from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 
 /** What the client sends to log a touchpoint for a lead. */
@@ -17,6 +25,20 @@ export interface LogTouchpointInput {
   contactIds?: string[];
   /** Set when the touchpoint is logged from a task ("Log completion"); that task is completed. */
   completingTaskId?: string | null;
+
+  // Results (see "Results" in docs/outreach-sessions.md)
+  /** In person / calls: what happened */
+  outcome?: TouchPointOutcome | null;
+  /** DMs / emails / texts: whether it got through (defaults to SENT) */
+  delivery?: TouchPointDelivery | null;
+  /** DMs / emails / texts: how they responded (defaults to PENDING) */
+  response?: TouchPointResponse | null;
+  /** When the outcome or response is HAS_PROVIDER (defaults to UNKNOWN) */
+  providerType?: ProviderType | null;
+  /** When the outcome or response is COME_BACK_LATER and they named a time */
+  comeBackAt?: string | null;
+  leftMaterials?: boolean;
+  sessionId?: string | null;
 }
 
 // The check-in task's wording for each sequence step
@@ -32,6 +54,31 @@ export const CHECK_IN_LABELS: Record<number, string> = {
   9: 'Did they respond to outreach C3?',
 };
 
+/** Messages: delivery at the time, response later. Everything else records an outcome. */
+export const ASYNC_TYPES: TouchPointType[] = [
+  TouchPointType.EMAIL,
+  TouchPointType.INSTAGRAM_DM,
+  TouchPointType.TEXT,
+];
+
+// Outcomes only some live types can have
+const OUTCOME_TYPES: Partial<Record<TouchPointOutcome, TouchPointType[]>> = {
+  BUSINESS_CLOSED: [TouchPointType.IN_PERSON, TouchPointType.VISIT_ATTEMPT],
+  NO_ANSWER: [TouchPointType.CALL],
+  LEFT_VOICEMAIL: [TouchPointType.CALL],
+};
+
+// Results that mean we got a reply or talked to someone (for receivedResponse)
+const NO_CONVERSATION_OUTCOMES: TouchPointOutcome[] = [
+  TouchPointOutcome.BUSINESS_CLOSED,
+  TouchPointOutcome.NO_ANSWER,
+  TouchPointOutcome.LEFT_VOICEMAIL,
+];
+const NO_REPLY_RESPONSES: TouchPointResponse[] = [
+  TouchPointResponse.PENDING,
+  TouchPointResponse.NO_RESPONSE,
+];
+
 const CHECK_IN_AFTER_DAYS = 4;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -39,100 +86,241 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  * Logs a touchpoint and applies the follow-up sequence rules in one database
  * transaction: either everything is saved, or nothing is.
  *
- * Rules (moved unchanged from the client's useLeadDetail hook):
- * - VISIT_ATTEMPT: no contact made, so nothing else happens.
+ * Sequence rules (moved unchanged from the client's useLeadDetail hook):
+ * - VISIT_ATTEMPT: no contact made, so nothing else happens. An in-person
+ *   visit with the outcome BUSINESS_CLOSED is saved as a VISIT_ATTEMPT.
  * - IN_PERSON: starts the lead's sequence (if it isn't running) and creates a
  *   "Did you send the follow-up email?" task, due now.
  * - EMAIL, while the sequence is running: completes any pending "did you send
  *   the email?" task, moves the lead to the next sequence step, and creates a
- *   "Did they respond?" check-in task due 4 days after the email.
+ *   "Did they respond?" check-in task due 4 days after the email. An email
+ *   that FAILED to deliver does none of this: there's nothing to follow up on.
  */
 @Injectable()
 export class TouchpointLoggingService {
   constructor(private readonly databaseService: DatabaseService) {}
 
+  /** Logs a touchpoint in its own transaction. */
   async logTouchpoint(input: LogTouchpointInput, userId: string) {
-    if (!Object.values(TouchPointType).includes(input.type)) {
-      throw new BadRequestException(`Unknown touchpoint type: ${input.type}`);
-    }
-    const date = new Date(input.date);
-    if (Number.isNaN(date.getTime())) {
-      throw new BadRequestException('Invalid touchpoint date');
+    const data = parseResults(input);
+    return this.databaseService.$transaction((tx) =>
+      this.logWithin(tx, input, userId, data),
+    );
+  }
+
+  /**
+   * Logs a touchpoint inside a transaction someone else started, so callers
+   * (like session logging) can save more alongside it, all or nothing.
+   */
+  async logWithin(
+    tx: Prisma.TransactionClient,
+    input: LogTouchpointInput,
+    userId: string,
+    parsed = parseResults(input),
+  ) {
+    const lead = await tx.lead.findUnique({ where: { id: input.leadId } });
+    if (!lead) throw new NotFoundException('Lead not found');
+
+    const touchpoint = await tx.touchPoint.create({
+      data: {
+        date: parsed.date,
+        type: parsed.type,
+        summary: input.summary ?? null,
+        receivedResponse: parsed.receivedResponse,
+        sequencePosition: input.sequencePosition ?? null,
+        outcome: parsed.outcome,
+        delivery: parsed.delivery,
+        response: parsed.response,
+        providerType: parsed.providerType,
+        respondedOn: parsed.respondedOn,
+        comeBackAt: parsed.comeBackAt,
+        leftMaterials: input.leftMaterials ?? false,
+        lead: { connect: { id: lead.id } },
+        contactedBy: { connect: { id: userId } },
+        ...(input.sessionId && {
+          session: { connect: { id: input.sessionId } },
+        }),
+        ...(input.contactIds?.length && {
+          contacts: { connect: input.contactIds.map((id) => ({ id })) },
+        }),
+      },
+    });
+
+    if (input.completingTaskId) {
+      await tx.task.update({
+        where: { id: input.completingTaskId },
+        data: { completed: true, completedAt: new Date() },
+      });
     }
 
-    return this.databaseService.$transaction(async (tx) => {
-      const lead = await tx.lead.findUnique({ where: { id: input.leadId } });
-      if (!lead) throw new NotFoundException('Lead not found');
-
-      const touchpoint = await tx.touchPoint.create({
+    if (parsed.type === TouchPointType.IN_PERSON) {
+      if (!lead.sequenceActive) {
+        await tx.lead.update({
+          where: { id: lead.id },
+          data: { sequenceActive: true },
+        });
+      }
+      await tx.task.create({
         data: {
-          date,
-          type: input.type,
-          summary: input.summary ?? null,
-          receivedResponse: input.receivedResponse ?? false,
-          sequencePosition: input.sequencePosition ?? null,
+          type: TouchPointType.EMAIL,
+          dueDate: new Date(),
+          note: 'Did you send the follow-up email?',
+          isEmailSentCheck: true,
           lead: { connect: { id: lead.id } },
-          contactedBy: { connect: { id: userId } },
-          ...(input.contactIds?.length && {
-            contacts: { connect: input.contactIds.map((id) => ({ id })) },
-          }),
+          touchPoint: { connect: { id: touchpoint.id } },
         },
       });
-
-      if (input.completingTaskId) {
+    } else if (
+      parsed.type === TouchPointType.EMAIL &&
+      parsed.delivery !== TouchPointDelivery.FAILED &&
+      lead.sequenceActive
+    ) {
+      const pendingEmailCheck = await tx.task.findFirst({
+        where: { leadId: lead.id, isEmailSentCheck: true, completed: false },
+      });
+      if (pendingEmailCheck) {
         await tx.task.update({
-          where: { id: input.completingTaskId },
+          where: { id: pendingEmailCheck.id },
           data: { completed: true, completedAt: new Date() },
         });
       }
 
-      if (input.type === TouchPointType.IN_PERSON) {
-        if (!lead.sequenceActive) {
-          await tx.lead.update({
-            where: { id: lead.id },
-            data: { sequenceActive: true },
-          });
-        }
-        await tx.task.create({
-          data: {
-            type: TouchPointType.EMAIL,
-            dueDate: new Date(),
-            note: 'Did you send the follow-up email?',
-            isEmailSentCheck: true,
-            lead: { connect: { id: lead.id } },
-            touchPoint: { connect: { id: touchpoint.id } },
-          },
-        });
-      } else if (input.type === TouchPointType.EMAIL && lead.sequenceActive) {
-        const pendingEmailCheck = await tx.task.findFirst({
-          where: { leadId: lead.id, isEmailSentCheck: true, completed: false },
-        });
-        if (pendingEmailCheck) {
-          await tx.task.update({
-            where: { id: pendingEmailCheck.id },
-            data: { completed: true, completedAt: new Date() },
-          });
-        }
+      const newStep = lead.sequenceStep + 1;
+      await tx.lead.update({
+        where: { id: lead.id },
+        data: { sequenceStep: newStep },
+      });
+      await tx.task.create({
+        data: {
+          type: TouchPointType.EMAIL,
+          dueDate: new Date(
+            parsed.date.getTime() + CHECK_IN_AFTER_DAYS * DAY_MS,
+          ),
+          note: CHECK_IN_LABELS[newStep] ?? 'Did they respond?',
+          isCheckIn: true,
+          lead: { connect: { id: lead.id } },
+          touchPoint: { connect: { id: touchpoint.id } },
+        },
+      });
+    }
+    // VISIT_ATTEMPT and every other type: just the touchpoint
 
-        const newStep = lead.sequenceStep + 1;
-        await tx.lead.update({
-          where: { id: lead.id },
-          data: { sequenceStep: newStep },
-        });
-        await tx.task.create({
-          data: {
-            type: TouchPointType.EMAIL,
-            dueDate: new Date(date.getTime() + CHECK_IN_AFTER_DAYS * DAY_MS),
-            note: CHECK_IN_LABELS[newStep] ?? 'Did they respond?',
-            isCheckIn: true,
-            lead: { connect: { id: lead.id } },
-            touchPoint: { connect: { id: touchpoint.id } },
-          },
-        });
-      }
-      // VISIT_ATTEMPT and every other type: just the touchpoint
-
-      return touchpoint;
-    });
+    return touchpoint;
   }
+}
+
+/**
+ * Checks the type, date and results against each other and fills in the
+ * defaults. Throws before anything is saved if they don't fit together.
+ */
+export function parseResults(input: LogTouchpointInput) {
+  if (!Object.values(TouchPointType).includes(input.type)) {
+    throw new BadRequestException(`Unknown touchpoint type: ${input.type}`);
+  }
+  const date = new Date(input.date);
+  if (Number.isNaN(date.getTime())) {
+    throw new BadRequestException('Invalid touchpoint date');
+  }
+  const outcome = input.outcome ?? null;
+  const response = input.response ?? null;
+  const isAsync = ASYNC_TYPES.includes(input.type);
+
+  if (outcome && !Object.values(TouchPointOutcome).includes(outcome)) {
+    throw new BadRequestException(`Unknown outcome: ${outcome}`);
+  }
+  if (response && !Object.values(TouchPointResponse).includes(response)) {
+    throw new BadRequestException(`Unknown response: ${response}`);
+  }
+  if (
+    input.delivery &&
+    !Object.values(TouchPointDelivery).includes(input.delivery)
+  ) {
+    throw new BadRequestException(`Unknown delivery: ${input.delivery}`);
+  }
+  if (isAsync && outcome) {
+    throw new BadRequestException(
+      'Messages record delivery and a response, not an outcome',
+    );
+  }
+  if (!isAsync && (input.delivery || response)) {
+    throw new BadRequestException(
+      'Visits and calls record an outcome, not delivery or a response',
+    );
+  }
+  if (
+    outcome &&
+    OUTCOME_TYPES[outcome] &&
+    !OUTCOME_TYPES[outcome].includes(input.type)
+  ) {
+    throw new BadRequestException(
+      `${outcome} doesn't apply to a ${input.type} touchpoint`,
+    );
+  }
+
+  // An in-person visit to a closed business reached no one: same as a visit attempt
+  const type =
+    input.type === TouchPointType.IN_PERSON &&
+    outcome === TouchPointOutcome.BUSINESS_CLOSED
+      ? TouchPointType.VISIT_ATTEMPT
+      : input.type;
+
+  // Messages: sent unless we know otherwise; waiting for a reply unless we already know
+  const delivery = isAsync ? (input.delivery ?? TouchPointDelivery.SENT) : null;
+  const failed = delivery === TouchPointDelivery.FAILED;
+  if (failed && response) {
+    throw new BadRequestException(
+      "A message that wasn't delivered can't have a response",
+    );
+  }
+  const finalResponse =
+    isAsync && !failed
+      ? (response ??
+        (input.receivedResponse ? null : TouchPointResponse.PENDING))
+      : null;
+
+  const result = outcome ?? finalResponse;
+  const hasProvider = result === 'HAS_PROVIDER';
+  const comeBackLater = result === 'COME_BACK_LATER';
+  if (input.providerType && !hasProvider) {
+    throw new BadRequestException(
+      'providerType only applies to "has a provider"',
+    );
+  }
+  if (input.comeBackAt && !comeBackLater) {
+    throw new BadRequestException(
+      'comeBackAt only applies to "come back later"',
+    );
+  }
+  let comeBackAt: Date | null = null;
+  if (input.comeBackAt) {
+    comeBackAt = new Date(input.comeBackAt);
+    if (Number.isNaN(comeBackAt.getTime())) {
+      throw new BadRequestException('Invalid comeBackAt');
+    }
+  }
+
+  // receivedResponse follows the results when they're given, so existing
+  // screens and stats ("responded") stay correct
+  let receivedResponse = input.receivedResponse ?? false;
+  if (outcome) receivedResponse = !NO_CONVERSATION_OUTCOMES.includes(outcome);
+  if (finalResponse)
+    receivedResponse = !NO_REPLY_RESPONSES.includes(finalResponse);
+
+  const isReply =
+    finalResponse !== null && !NO_REPLY_RESPONSES.includes(finalResponse);
+
+  return {
+    date,
+    type,
+    outcome,
+    delivery,
+    response: finalResponse,
+    providerType: hasProvider
+      ? (input.providerType ?? ProviderType.UNKNOWN)
+      : null,
+    // A reply recorded while logging happened today (date only)
+    respondedOn: isReply ? new Date() : null,
+    comeBackAt,
+    receivedResponse,
+  };
 }

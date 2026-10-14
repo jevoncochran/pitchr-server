@@ -45,6 +45,22 @@ export async function changeStage(
   return { pipelineStage: toStage };
 }
 
+/** Starts a new lead's stage history with the stage it was created in. */
+export async function recordInitialStage(
+  tx: Prisma.TransactionClient,
+  lead: { id: string; pipelineStage: PipelineStage },
+  changedById: string | null,
+) {
+  await tx.leadStageChange.create({
+    data: {
+      leadId: lead.id,
+      fromStage: null,
+      toStage: lead.pipelineStage,
+      changedById,
+    },
+  });
+}
+
 /** Turns a conversion date sent by the client into a Date, or rejects it. */
 export function parseConvertedAt(value: unknown): Date | undefined {
   if (value === undefined) return undefined;

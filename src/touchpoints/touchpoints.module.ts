@@ -8,5 +8,6 @@ import { DatabaseModule } from 'src/database/database.module';
   imports: [DatabaseModule],
   controllers: [TouchpointsController],
   providers: [TouchpointsService, TouchpointLoggingService],
+  exports: [TouchpointLoggingService],
 })
 export class TouchpointsModule {}

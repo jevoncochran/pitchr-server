@@ -106,7 +106,7 @@ The bar: logging each item must be faster than writing on paper.
 
 1. **Start session:** pick channel; optional area and goal; or start from a planned route (below).
 2. **Log each item** (about 10 seconds):
-   - The next planned item, or search for a lead, or **quick-add** a business (name + industry; "discovered via" includes **Tip**, for businesses someone points you to mid-session).
+   - The next planned item, or search for a lead, or **quick-add** a business (name, industry and business type; its source, how we got the lead, defaults to Outreach).
    - In person / call: tap the **outcome**, and pick or quick-add the **contact** spoken to.
    - DM / email / text: **Sent** is preselected; response starts Pending.
    - Optional: note, left materials, come-back-later timing.
@@ -178,7 +178,7 @@ Rules for showing numbers:
 ## Data model (sketch)
 
 - **New `OutreachSession`:** user, channel, startedAt, endedAt, area, goal, notes.
-- **New `SessionItem`**: one lead on a session's list. Session, lead, position, planned time (for "come back later today"), status (planned · completed · skipped), the touchpoint it produced. Planned items exist before anything happens; skipped ones never get a touchpoint. Unplanned contacts (e.g. a tip mid-route) are added as items when logged, so every touchpoint in a session belongs to an item.
+- **New `SessionItem`**: one lead on a session's list. Session, lead, position, planned time (for "come back later today"), status (planned · completed · skipped), the touchpoint it produced. Planned items exist before anything happens; skipped ones never get a touchpoint. Unplanned contacts (e.g. a business you spot mid-route) are added as items when logged, so every touchpoint in a session belongs to an item.
 - **`TouchPoint` additions:** `sessionId` (optional: touchpoints can still be logged outside a session), `outcome` (in person / calls), `delivery` (sent / failed), `response` (pending → what they said / no response), `respondedOn` (date only), `leftMaterials`, `comeBackAt`.
 - **`receivedResponse`** stays for now so existing screens keep working; it's set automatically when a response or a "spoke to someone" outcome is recorded.
 - **New `LeadStageChange`:** lead, from stage, to stage, changed by, changedAt.
@@ -187,6 +187,7 @@ Rules for showing numbers:
 ## Scope
 
 - **V1, logging, planned sessions and conversions:** sessions (per person), outcomes / delivery / response, come back later with timing, quick-add lead, the phone logging screen, end-of-session summary, check-in tasks resolving responses, planned session items from a list (pick, drag to order, Navigate buttons, log through them), automatic conversion dates, stage history, a one-time conversion cleanup.
+- **Right after V1: one "How this lead started" field.** `source` (how we got the lead) and `discoveredVia` (how they heard about us) confuse even the owner, and their options overlap (both have Outreach, Referral, Networking, In person). Merge them into one field with grouped options. **We reached out:** cold outreach · walked in · networking event. **They came to us:** website form · referral · Instagram · Facebook · TikTok · YouTube · Google · walk-up · other. Start with a read-only look at the combinations existing leads have, then propose how each converts, for approval, before a migration converts them. Updates all three repos (including the snapshot's input). Do it before V2, so analytics like "do inbound leads convert faster?" use the new field.
 - **V1.5, maps:** coordinates for every location, map of leads, automatic best stop order. MyWay can be cancelled here.
 - **V2, analytics and team views:** conversion and outcome metrics, per-person filters and comparisons, double-visit warnings.
 - **Later: automatic reply detection.** A Gmail connection could detect replies to emails sent to a lead and fill in the response and date. Instagram's business API is possible but restricted; texts aren't realistic.

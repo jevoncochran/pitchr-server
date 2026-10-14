@@ -17,12 +17,19 @@ import {
   SessionsService,
   UpdateSessionInput,
 } from './sessions.service';
+import {
+  LogSessionItemInput,
+  SessionLoggingService,
+} from './session-logging.service';
 
 type AuthedRequest = { user: SessionUser };
 
 @Controller('sessions')
 export class SessionsController {
-  constructor(private readonly sessionsService: SessionsService) {}
+  constructor(
+    private readonly sessionsService: SessionsService,
+    private readonly sessionLoggingService: SessionLoggingService,
+  ) {}
 
   @Post()
   create(@Body() input: CreateSessionInput, @Request() req: AuthedRequest) {
@@ -57,6 +64,16 @@ export class SessionsController {
   @Post(':id/start')
   start(@Param('id') id: string, @Request() req: AuthedRequest) {
     return this.sessionsService.start(id, req.user);
+  }
+
+  // Log one lead: a planned item (itemId), or an unplanned / quick-added lead
+  @Post(':id/log')
+  log(
+    @Param('id') id: string,
+    @Body() input: LogSessionItemInput,
+    @Request() req: AuthedRequest,
+  ) {
+    return this.sessionLoggingService.log(id, input, req.user);
   }
 
   @Post(':id/end')

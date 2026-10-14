@@ -66,15 +66,31 @@ Before, logging a touchpoint on a lead's page was one request to save it, then 2
 
 Rules: staff see and change only their own sessions, admins anyone's; an ended session's list can't change; a lead can't be planned twice in a session; completed items can't be skipped, removed or set by hand (logging completes them, step 5); the channel can't change after starting. 19 Jest tests (51 total).
 
-### ⏭️ Step 5: Logging an item
-- Extends step 1's endpoint with outcome / delivery / response, contact (existing or quick-added), note, left materials.
-- Quick-add lead in the same request (name, industry; discovered via can be **Tip**).
-- Marks the session item completed and links it to the touchpoint; unplanned contacts become new items.
-- **Come back later:** creates the follow-up task at the chosen time; "later today" in an in-person session adds a new item back on the route at that time.
-- Returns stage suggestions ("Not a fit" → offer Not a Fit; "Meeting booked" → offer Meeting Scheduled), applied through step 2's method if accepted.
-- Keeps `receivedResponse` in sync for existing screens.
+### ✅ Step 5: Logging an item
+**Files:** `src/sessions/session-logging.service.ts` (+ `.spec.ts`), `sessions.controller.ts`, `sessions.module.ts`, `src/touchpoints/touchpoint-logging.service.ts` (+ tests), `touchpoints.module.ts`, `src/leads/lead-stage.ts`, `src/common/team-time.ts` (new)
 
-### ⬜ Step 6: Check-ins resolve responses
+**`POST /api/sessions/:id/log`** logs one lead, all in one transaction:
+
+- **Which lead:** exactly one of `itemId` (a planned item), `leadId` (an unplanned existing lead) or `newLead` (quick-add: name, industry, business type, and `source`, how we got the lead, defaulting to Outreach). Unplanned and quick-added leads become new items at the end of the list.
+- **Type:** the session's channel, unless one is given; required in mixed sessions.
+- **Starts the session** if it hasn't started yet.
+- **Contacts:** existing ones must belong to the lead; `newContact` adds one (first name, last name, title, decision-maker).
+- **The touchpoint** goes through step 1's `TouchpointLoggingService.logWithin()`, so the sequence rules are shared with the lead page.
+- **The item** is marked completed and linked to the touchpoint. An item can't be logged twice.
+- **Come back later** with a time creates a follow-up task; `addBackToRoute` (in-person or mixed, later the same day) adds the lead back on the route with that planned time.
+- **Returns** the updated session and `suggestedStage` (Not a fit → Not a Fit, Meeting booked → Meeting Scheduled), for the screen to offer.
+
+**Step 1's logging service now handles results**, for the lead page too:
+
+- In person / calls take an **outcome**; DMs / emails / texts take **delivery** (default Sent) and a **response** (default Pending, or empty if "received response" is already checked). Mixing them up is rejected.
+- Business closed on a visit is saved as a **visit attempt** (no sequence tasks, same as before). No answer and left voicemail only apply to calls.
+- A **failed** email doesn't advance the sequence or create a check-in.
+- `receivedResponse` is set from the result (spoke to someone / got a reply), keeping existing screens and stats right.
+- "Has a provider" defaults to an unknown provider type; `comeBackAt` only goes with "come back later".
+
+Also: a shared `teamDateKey()` helper for "today in Tampa" (used by the snapshot too), and `recordInitialStage()` shared by lead creation and quick-add. 21 new Jest tests (72 total).
+
+### ⏭️ Step 6: Check-ins resolve responses
 - The 4-day check-in's **Yes** asks what they said and when they replied (`[Today ✓] [Yesterday] [Earlier: pick a date]`), and saves it as the touchpoint's response; **No** saves "No response".
 - A reply that comes in early can be recorded from the lead page at any time.
 
@@ -120,6 +136,7 @@ Run a real in-person session and a real DM session with it, phone only, no paper
 
 ## After V1
 
+- **Right after V1: one "How this lead started" field.** `source` (how we got the lead) and `discoveredVia` (how they heard about us) confuse even the owner, and their options overlap (both have Outreach, Referral, Networking, In person). Merge them into one field with grouped options. **We reached out:** cold outreach · walked in · networking event. **They came to us:** website form · referral · Instagram · Facebook · TikTok · YouTube · Google · walk-up · other. Start with a read-only look at the combinations existing leads have, then propose how each converts, for approval, before a migration converts them. Updates all three repos (including the snapshot's input). Do it before V2, so analytics like "do inbound leads convert faster?" use the new field.
 - **V1.5, maps:** coordinates for locations, map of leads, automatic best stop order. Cancel MyWay.
 - **V2, analytics and team views.**
 - **V3, AI:** voice notes to structured logs, snapshot before each item, "what's working" summaries.

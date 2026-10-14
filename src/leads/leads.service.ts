@@ -5,7 +5,11 @@ import {
 } from '@nestjs/common';
 import { PipelineStage, Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
-import { changeStage, parseConvertedAt } from './lead-stage';
+import {
+  changeStage,
+  parseConvertedAt,
+  recordInitialStage,
+} from './lead-stage';
 
 @Injectable()
 export class LeadsService {
@@ -25,14 +29,7 @@ export class LeadsService {
         },
       });
       // The lead's first stage starts its stage history
-      await tx.leadStageChange.create({
-        data: {
-          leadId: lead.id,
-          fromStage: null,
-          toStage: lead.pipelineStage,
-          changedById: userId,
-        },
-      });
+      await recordInitialStage(tx, lead, userId);
       return lead;
     });
   }

@@ -288,7 +288,7 @@ export class SessionsService {
   }
 
   /** Like getAccessible, but the session's list must still be changeable. */
-  private async getEditable(id: string, user: SessionUser) {
+  async getEditable(id: string, user: SessionUser) {
     const session = await this.getAccessible(id, user);
     if (session.endedAt) {
       throw new BadRequestException(

@@ -1,13 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PipelineStage, Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import {
+  changeStage,
+  parseConvertedAt,
+  recordInitialStage,
+} from './lead-stage';
+import { originFields } from './lead-origin';
 
 @Injectable()
 export class LeadsService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createLeadDto: Prisma.LeadCreateInput) {
-    return this.databaseService.lead.create({ data: createLeadDto });
+  async create(createLeadDto: Prisma.LeadCreateInput, userId: string) {
+    const { convertedAt, ...data } = createLeadDto;
+    const requestedConvertedAt = parseConvertedAt(convertedAt ?? undefined);
+
+    return this.databaseService.$transaction(async (tx) => {
+      const lead = await tx.lead.create({
+        data: {
+          ...data,
+          ...originFields(data),
+          ...(data.pipelineStage === PipelineStage.CONVERTED && {
+            convertedAt: requestedConvertedAt ?? new Date(),
+          }),
+        },
+      });
+      // The lead's first stage starts its stage history
+      await recordInitialStage(tx, lead, userId);
+      return lead;
+    });
   }
 
   async findAll() {
@@ -114,7 +140,12 @@ export class LeadsService {
               select: { id: true, firstName: true, lastName: true },
             },
             contacts: {
-              select: { id: true, firstName: true, lastName: true, title: true },
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                title: true,
+              },
             },
           },
         },
@@ -145,10 +176,59 @@ export class LeadsService {
     });
   }
 
-  async update(id: string, updateLeadDto: Prisma.LeadUpdateInput) {
-    return this.databaseService.lead.update({
-      where: { id },
-      data: updateLeadDto,
+  /**
+   * Updates a lead. A stage change (pipelineStage) goes through changeStage, so
+   * it's recorded in the stage history and the conversion date stays correct.
+   * convertedAt on its own can only be edited (e.g. backdated) on a Converted lead.
+   */
+  async update(
+    id: string,
+    updateLeadDto: Prisma.LeadUpdateInput,
+    userId: string,
+  ) {
+    const { pipelineStage, convertedAt, ...rest } = updateLeadDto;
+    if (pipelineStage !== undefined && typeof pipelineStage !== 'string') {
+      throw new BadRequestException('pipelineStage must be a stage name');
+    }
+    if (convertedAt === null) {
+      throw new BadRequestException(
+        'To remove a conversion, move the lead out of Converted',
+      );
+    }
+    const requestedConvertedAt = parseConvertedAt(convertedAt);
+
+    return this.databaseService.$transaction(async (tx) => {
+      const lead = await tx.lead.findUnique({
+        where: { id },
+        select: { id: true, pipelineStage: true },
+      });
+      if (!lead) throw new NotFoundException('Lead not found');
+
+      const data: Prisma.LeadUpdateInput = { ...rest };
+      // The origin and its description are saved together
+      if ('origin' in rest) Object.assign(data, originFields(rest));
+      else delete data.originOther;
+      if (pipelineStage && pipelineStage !== lead.pipelineStage) {
+        Object.assign(
+          data,
+          await changeStage(
+            tx,
+            lead,
+            pipelineStage,
+            userId,
+            requestedConvertedAt,
+          ),
+        );
+      } else if (requestedConvertedAt) {
+        if (lead.pipelineStage !== PipelineStage.CONVERTED) {
+          throw new BadRequestException(
+            'Only converted leads have a conversion date',
+          );
+        }
+        data.convertedAt = requestedConvertedAt;
+      }
+
+      return tx.lead.update({ where: { id }, data });
     });
   }
 

@@ -67,6 +67,8 @@ JWT_SECRET="your-secret-key"
 |---|---|
 | `DATABASE_URL` | Full Neon (or other PostgreSQL) connection string |
 | `JWT_SECRET` | Secret used to sign JWT tokens — keep this private |
+| `PITCHR_AI_URL` | Where pitchr-ai runs. Defaults to `http://localhost:8000` |
+| `PITCHR_AI_API_KEY` | Shared secret sent to pitchr-ai. Must match `PITCHR_AI_API_KEY` in pitchr-ai |
 
 ---
 
@@ -108,6 +110,22 @@ src/
 └── generated/
     └── prisma/       # Auto-generated Prisma client (do not edit)
 ```
+
+---
+
+## Docs
+
+| Doc | What it covers |
+| --- | --- |
+| [Outreach sessions](docs/outreach-sessions.md) | Spec draft: logging outreach sessions, planned routes (replacing MyWay), conversions and analytics |
+| [Outreach sessions build plan](docs/outreach-sessions-build-plan.md) | V1, step by step |
+| [Lead origin](docs/lead-origin.md) | How each lead started: one field, grouped into we reached out / they came to us, replacing source and discovered via |
+| [Lead origin build plan](docs/lead-origin-build-plan.md) | How it was built, including the conversion of existing leads |
+| [Lead addresses from Google](docs/address-backfill.md) | The one-time Google Places backfill of lead addresses (with review) and keeping new leads from having gaps |
+| [Lead addresses build plan](docs/address-backfill-build-plan.md) | Step by step |
+| [Lead snapshot](https://github.com/jevoncochran/pitchr-ai/blob/HEAD/docs/lead-snapshot.md) (in pitchr-ai) | The AI lead snapshot. NestJS serves it at `GET /api/leads/:id/snapshot` |
+
+Specs describe how a feature works now and are updated whenever it changes.
 
 ---
 

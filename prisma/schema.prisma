@@ -27,6 +27,8 @@ model User {
   notes   Note[]
   assignedLeads Lead[]    @relation("LeadAssignment")
   contactsOwned       Contact[]            @relation("ContactOwner")
+  stageChanges        LeadStageChange[]
+  outreachSessions    OutreachSession[]
 }
 
 enum Role {
@@ -59,9 +61,10 @@ model Lead {
   website   String?
 
   pipelineStage   PipelineStage   @default(NEW)
-  source          LeadSource?
-  discoveredVia   DiscoveredVia?
-  discoveredViaOther  String?
+  // How this lead started (docs/lead-origin.md). Empty until known.
+  origin          LeadOrigin?
+  // A short description, only when origin is OTHER
+  originOther     String?
   convertedAt     DateTime?
 
   isBlackOwned    Boolean   @default(false)
@@ -74,6 +77,8 @@ model Lead {
   tasks         Task[]
   attachments   Attachment[]
   signals       Signal[]
+  stageChanges  LeadStageChange[]
+  sessionItems  SessionItem[]
   priority    Priority?
 
   sequenceStep    Int     @default(0)
@@ -165,6 +170,11 @@ model Location {
   state   String
   zip   String
 
+  // From Google Places (the address backfill, later the map)
+  latitude      Float?
+  longitude     Float?
+  googlePlaceId String?
+
   phoneNumbers    PhoneNumber[]
 
   // Optional reverse relation to know if this location is primary
@@ -218,6 +228,24 @@ model TouchPoint {
 
   receivedResponse    Boolean   @default(false)
   summary   String?
+
+  // Outreach sessions. In person and calls record an outcome at the time;
+  // DMs, emails and texts record delivery at the time and a response later.
+  session       OutreachSession?    @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  sessionId     String?
+  sessionItem   SessionItem?
+  outcome       TouchPointOutcome?
+  delivery      TouchPointDelivery?
+  response      TouchPointResponse?
+  // Their reply, pasted or typed in, when response is REPLIED
+  responseText  String?
+  // Set when the outcome is "has a provider"
+  providerType  ProviderType?
+  // Entered by hand, date only (defaults to the day it's recorded)
+  respondedOn   DateTime?           @db.Date
+  leftMaterials Boolean             @default(false)
+  // "Come back later": when they said to come back, if they named a time
+  comeBackAt    DateTime?
 
   sequencePosition    SequencePosition?
 
@@ -274,14 +302,6 @@ enum PipelineStage {
   LOST
 }
 
-enum LeadSource {
-  OUTREACH
-  REFERRAL
-  FORM
-  NETWORKING
-  IN_PERSON
-}
-
 enum ContactSource {
   OUTREACH
   REFERRAL
@@ -291,16 +311,22 @@ enum ContactSource {
   OTHER
 }
 
-enum DiscoveredVia {
-  OUTREACH
+// How a lead started. The first six: we reached out. The rest: they came to us.
+enum LeadOrigin {
+  IN_PERSON_VISIT
+  DM
+  EMAIL
+  TEXT
+  CALL
+  NETWORKING_EVENT
+  APPROACHED_US
+  WEBSITE_FORM
   REFERRAL
   INSTAGRAM
   FACEBOOK
   TIKTOK
   YOUTUBE
   GOOGLE
-  NETWORKING
-  IN_PERSON
   OTHER
 }
 
@@ -389,4 +415,127 @@ model Signal {
   platform    SocialPlatform?
   date        DateTime
   note        String?
+}
+
+// Every change to a lead's pipeline stage, with who made it and when.
+// fromStage is null for the lead's first stage (when it was created).
+model LeadStageChange {
+  id          String         @id @default(uuid())
+
+  lead        Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId      String
+
+  fromStage   PipelineStage?
+  toStage     PipelineStage
+
+  // Null when the system made the change (e.g. a sequence ending in Dormant)
+  changedBy   User?          @relation(fields: [changedById], references: [id])
+  changedById String?
+
+  changedAt   DateTime       @default(now())
+
+  @@index([leadId, changedAt])
+}
+
+// ── Outreach sessions ────────────────────────────────────────────────────────
+
+// How outreach is done in a session; sets the default type for its touchpoints.
+enum SessionChannel {
+  IN_PERSON
+  CALL
+  INSTAGRAM_DM
+  EMAIL
+  TEXT
+  MIXED
+}
+
+enum SessionItemStatus {
+  PLANNED
+  COMPLETED
+  SKIPPED
+}
+
+// In person and calls: what happened, recorded at the time
+enum TouchPointOutcome {
+  BUSINESS_CLOSED
+  NO_ANSWER
+  LEFT_VOICEMAIL
+  DECISION_MAKER_NOT_AVAILABLE
+  COME_BACK_LATER
+  INTERESTED
+  NOT_INTERESTED
+  HAS_PROVIDER
+  NOT_A_FIT
+  MEETING_BOOKED
+}
+
+// DMs, emails, texts: whether the message got through, recorded at the time
+enum TouchPointDelivery {
+  SENT
+  FAILED
+}
+
+// DMs, emails, texts: where the reply stands. PENDING until we know.
+// When REPLIED, their message is saved in TouchPoint.responseText.
+enum TouchPointResponse {
+  PENDING
+  REPLIED
+  NO_RESPONSE
+}
+
+enum ProviderType {
+  VIDEO
+  MARKETING_AGENCY
+  UNKNOWN
+}
+
+// A block of outreach work by one person (a route, an hour of DMs, a batch of emails).
+// Planned: plannedFor set, not started. In progress: startedAt set. Ended: endedAt set.
+model OutreachSession {
+  id          String          @id @default(uuid())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user        User            @relation(fields: [userId], references: [id])
+  userId      String
+
+  channel     SessionChannel
+  plannedFor  DateTime?       @db.Date
+  startedAt   DateTime?
+  endedAt     DateTime?
+  area        String?
+  // e.g. 20 (stops, DMs...)
+  goal        Int?
+  notes       String?
+
+  items       SessionItem[]
+  touchPoints TouchPoint[]
+
+  @@index([userId, plannedFor])
+}
+
+// One lead on a session's list. Planned before anything happens; completed when
+// its touchpoint is logged; skipped if we decided not to contact them.
+model SessionItem {
+  id           String            @id @default(uuid())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  session      OutreachSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId    String
+
+  lead         Lead              @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId       String
+
+  // Order in the session (0, 1, 2...)
+  position     Int
+  // Set by "come back later today"
+  plannedTime  DateTime?
+  status       SessionItemStatus @default(PLANNED)
+
+  // The touchpoint this item produced, once logged
+  touchPoint   TouchPoint?       @relation(fields: [touchPointId], references: [id], onDelete: SetNull)
+  touchPointId String?           @unique
+
+  @@index([sessionId, position])
 }

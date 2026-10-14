@@ -13,6 +13,7 @@ import {
   TouchPointType,
 } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { fillOriginOnFirstContact } from 'src/leads/lead-origin';
 
 /** What the client sends to log a touchpoint for a lead. */
 export interface LogTouchpointInput {
@@ -118,6 +119,9 @@ export class TouchpointLoggingService {
   ) {
     const lead = await tx.lead.findUnique({ where: { id: input.leadId } });
     if (!lead) throw new NotFoundException('Lead not found');
+
+    // A lead's very first contact says how it started, if nobody has said yet
+    await fillOriginOnFirstContact(tx, lead, parsed.type);
 
     const touchpoint = await tx.touchPoint.create({
       data: {

@@ -10,6 +10,7 @@ import {
   parseConvertedAt,
   recordInitialStage,
 } from './lead-stage';
+import { originFields } from './lead-origin';
 
 @Injectable()
 export class LeadsService {
@@ -23,6 +24,7 @@ export class LeadsService {
       const lead = await tx.lead.create({
         data: {
           ...data,
+          ...originFields(data),
           ...(data.pipelineStage === PipelineStage.CONVERTED && {
             convertedAt: requestedConvertedAt ?? new Date(),
           }),
@@ -203,6 +205,9 @@ export class LeadsService {
       if (!lead) throw new NotFoundException('Lead not found');
 
       const data: Prisma.LeadUpdateInput = { ...rest };
+      // The origin and its description are saved together
+      if ('origin' in rest) Object.assign(data, originFields(rest));
+      else delete data.originOther;
       if (pipelineStage && pipelineStage !== lead.pipelineStage) {
         Object.assign(
           data,

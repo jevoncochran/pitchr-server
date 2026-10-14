@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
-  LeadSource,
+  LeadOrigin,
   PipelineStage,
   Prisma,
   ProviderType,
@@ -17,6 +17,7 @@ import {
 } from '@prisma/client';
 import { teamDateKey } from 'src/common/team-time';
 import { DatabaseService } from 'src/database/database.service';
+import { originFields, parseOrigin } from 'src/leads/lead-origin';
 import { recordInitialStage } from 'src/leads/lead-stage';
 import {
   parseResults,
@@ -37,8 +38,10 @@ export interface LogSessionItemInput {
     business: string;
     industryId: string;
     businessTypeId: string;
-    /** How we got the lead (defaults to OUTREACH). Not discoveredVia, which is how *they* heard about us. */
-    source?: LeadSource | null;
+    /** How this lead started. Left empty, it's filled in from what's logged (docs/lead-origin.md). */
+    origin?: LeadOrigin | null;
+    /** Only with origin OTHER */
+    originOther?: string | null;
   };
 
   /** Required in a mixed session; otherwise the session's channel decides */
@@ -174,7 +177,7 @@ export class SessionLoggingService {
                 business: input.newLead.business.trim(),
                 industryId: input.newLead.industryId,
                 businessTypeId: input.newLead.businessTypeId,
-                source: input.newLead.source ?? LeadSource.OUTREACH,
+                ...originFields(input.newLead),
               },
             });
             await recordInitialStage(tx, lead, user.id);
@@ -302,9 +305,7 @@ function validateNewLead(newLead: NonNullable<LogSessionItemInput['newLead']>) {
       'A new lead needs an industry and a business type',
     );
   }
-  if (newLead.source && !Object.values(LeadSource).includes(newLead.source)) {
-    throw new BadRequestException(`Unknown source: ${newLead.source}`);
-  }
+  parseOrigin(newLead.origin);
 }
 
 async function nextPosition(tx: Prisma.TransactionClient, sessionId: string) {

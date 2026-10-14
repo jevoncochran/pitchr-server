@@ -118,7 +118,7 @@ describe('SessionLoggingService', () => {
           business: ' Bay Roofing ',
           industryId: 'i-1',
           businessTypeId: 'b-1',
-          source: 'REFERRAL',
+          origin: 'APPROACHED_US',
         },
         outcome: 'INTERESTED',
       },
@@ -130,7 +130,8 @@ describe('SessionLoggingService', () => {
         business: 'Bay Roofing',
         industryId: 'i-1',
         businessTypeId: 'b-1',
-        source: 'REFERRAL',
+        origin: 'APPROACHED_US',
+        originOther: null,
       },
     });
     expect(tx.leadStageChange.create).toHaveBeenCalled();
@@ -142,7 +143,7 @@ describe('SessionLoggingService', () => {
     );
   });
 
-  it('a quick-added business defaults to Outreach as its source', async () => {
+  it('a quick-added business with no origin is left for what gets logged to fill in', async () => {
     tx.lead.create.mockResolvedValue({ id: 'lead-new', pipelineStage: 'NEW' });
 
     await service.log(
@@ -159,8 +160,27 @@ describe('SessionLoggingService', () => {
     );
 
     expect(tx.lead.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ source: 'OUTREACH' }),
+      data: expect.objectContaining({ origin: null }),
     });
+  });
+
+  it('rejects an unknown origin before saving anything', async () => {
+    await expect(
+      service.log(
+        's-1',
+        {
+          newLead: {
+            business: 'Bay Roofing',
+            industryId: 'i-1',
+            businessTypeId: 'b-1',
+            origin: 'OUTREACH' as never,
+          },
+          outcome: 'INTERESTED',
+        },
+        ME,
+      ),
+    ).rejects.toThrow(BadRequestException);
+    expect(tx.lead.create).not.toHaveBeenCalled();
   });
 
   it('needs exactly one way of saying which lead', async () => {

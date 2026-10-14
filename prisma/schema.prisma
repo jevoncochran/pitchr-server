@@ -61,9 +61,10 @@ model Lead {
   website   String?
 
   pipelineStage   PipelineStage   @default(NEW)
-  source          LeadSource?
-  discoveredVia   DiscoveredVia?
-  discoveredViaOther  String?
+  // How this lead started (docs/lead-origin.md). Empty until known.
+  origin          LeadOrigin?
+  // A short description, only when origin is OTHER
+  originOther     String?
   convertedAt     DateTime?
 
   isBlackOwned    Boolean   @default(false)
@@ -296,14 +297,6 @@ enum PipelineStage {
   LOST
 }
 
-enum LeadSource {
-  OUTREACH
-  REFERRAL
-  FORM
-  NETWORKING
-  IN_PERSON
-}
-
 enum ContactSource {
   OUTREACH
   REFERRAL
@@ -313,16 +306,22 @@ enum ContactSource {
   OTHER
 }
 
-enum DiscoveredVia {
-  OUTREACH
+// How a lead started. The first six: we reached out. The rest: they came to us.
+enum LeadOrigin {
+  IN_PERSON_VISIT
+  DM
+  EMAIL
+  TEXT
+  CALL
+  NETWORKING_EVENT
+  APPROACHED_US
+  WEBSITE_FORM
   REFERRAL
   INSTAGRAM
   FACEBOOK
   TIKTOK
   YOUTUBE
   GOOGLE
-  NETWORKING
-  IN_PERSON
   OTHER
 }
 

@@ -1,6 +1,6 @@
 # Feature: Outreach sessions (draft for review)
 
-**Status:** Building. Steps 1–10 of the build plan are done (logging, planned lists, the phone screen, the end-of-session summary, results and replies on the lead page and in snapshots); the conversion cleanup is next. Build plan: [outreach-sessions-build-plan.md](outreach-sessions-build-plan.md).
+**Status:** Building. Steps 1–10 of the build plan are done (logging, planned lists, the phone screen, the end-of-session summary, results and replies on the lead page and in snapshots); next is a real session as a checkpoint. The conversion cleanup is deferred until it can be done against the prod database. Build plan: [outreach-sessions-build-plan.md](outreach-sessions-build-plan.md).
 
 ## Why
 
@@ -187,7 +187,7 @@ Rules for showing numbers:
 ## Scope
 
 - **V1, logging, planned sessions and conversions:** sessions (per person), outcomes / delivery / response, come back later with timing, quick-add lead, the phone logging screen, end-of-session summary, check-in tasks resolving responses, planned session items from a list (pick, drag to order, Navigate buttons, log through them), automatic conversion dates, stage history, a one-time conversion cleanup.
-- **Right after V1: one "How this lead started" field.** `source` (how we got the lead) and `discoveredVia` (how they heard about us) confuse even the owner, and their options overlap (both have Outreach, Referral, Networking, In person). Merge them into one field with grouped options. **We reached out:** cold outreach · walked in · networking event. **They came to us:** website form · referral · Instagram · Facebook · TikTok · YouTube · Google · walk-up · other. Start with a read-only look at the combinations existing leads have, then propose how each converts, for approval, before a migration converts them. Updates all three repos (including the snapshot's input). Do it before V2, so analytics like "do inbound leads convert faster?" use the new field.
+- **Right after V1: one "How this lead started" field.** Being built: see [lead-origin.md](lead-origin.md).
 - **V1.5, maps:** coordinates for every location, map of leads, automatic best stop order. MyWay can be cancelled here.
 - **V2, analytics and team views:** conversion and outcome metrics, per-person filters and comparisons, double-visit warnings.
 - **Later: automatic reply detection.** A Gmail connection could detect replies to emails sent to a lead and fill in the response and date. Instagram's business API is possible but restricted; texts aren't realistic.

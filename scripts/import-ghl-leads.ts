@@ -142,8 +142,7 @@ async function main() {
           industryId: industry!.id,
           businessTypeId: businessType!.id,
           pipelineStage: 'NEW',
-          source: 'OUTREACH',
-          discoveredVia: 'OUTREACH',
+          // origin stays empty: imported notes don't reliably say how a lead started
           email: email || undefined,
         },
       });

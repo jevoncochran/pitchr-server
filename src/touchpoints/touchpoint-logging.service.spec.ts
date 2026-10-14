@@ -10,7 +10,7 @@ import {
 // so the tests can check exactly which writes the service makes.
 const tx = {
   lead: { findUnique: jest.fn(), update: jest.fn() },
-  touchPoint: { create: jest.fn() },
+  touchPoint: { create: jest.fn(), count: jest.fn() },
   task: { create: jest.fn(), update: jest.fn(), findFirst: jest.fn() },
 };
 const mockDb = {
@@ -22,6 +22,7 @@ const TOUCHPOINT = { id: 'tp-1' };
 
 const lead = (overrides = {}) => ({
   id: 'lead-1',
+  origin: 'IN_PERSON_VISIT',
   sequenceActive: false,
   sequenceStep: 0,
   ...overrides,
@@ -41,6 +42,7 @@ describe('TouchpointLoggingService', () => {
     jest.clearAllMocks();
     tx.touchPoint.create.mockResolvedValue(TOUCHPOINT);
     tx.task.findFirst.mockResolvedValue(null);
+    tx.touchPoint.count.mockResolvedValue(0);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -67,6 +69,42 @@ describe('TouchpointLoggingService', () => {
         contactedBy: { connect: { id: USER_ID } },
         contacts: { connect: [{ id: 'c-1' }] },
       }),
+    });
+  });
+
+  describe('how the lead started (origin)', () => {
+    it("fills it in from a lead's very first touchpoint", async () => {
+      tx.lead.findUnique.mockResolvedValue(lead({ origin: null }));
+
+      await service.logTouchpoint(input({ type: 'INSTAGRAM_DM' }), USER_ID);
+
+      expect(tx.lead.update).toHaveBeenCalledWith({
+        where: { id: 'lead-1' },
+        data: { origin: 'DM' },
+      });
+    });
+
+    it('leaves it empty when the lead already has touchpoints', async () => {
+      tx.lead.findUnique.mockResolvedValue(lead({ origin: null }));
+      tx.touchPoint.count.mockResolvedValue(2);
+
+      await service.logTouchpoint(input({ type: 'VISIT_ATTEMPT' }), USER_ID);
+
+      expect(tx.lead.update).not.toHaveBeenCalledWith(
+        expect.objectContaining({ data: { origin: expect.anything() } }),
+      );
+    });
+
+    it("never changes one that's already set, and meetings don't set one", async () => {
+      tx.lead.findUnique.mockResolvedValue(lead({ origin: 'REFERRAL' }));
+      await service.logTouchpoint(input({ type: 'EMAIL' }), USER_ID);
+
+      tx.lead.findUnique.mockResolvedValue(lead({ origin: null }));
+      await service.logTouchpoint(input({ type: 'MEETING' }), USER_ID);
+
+      expect(tx.lead.update).not.toHaveBeenCalledWith(
+        expect.objectContaining({ data: { origin: expect.anything() } }),
+      );
     });
   });
 
@@ -306,6 +344,7 @@ describe('a failed email', () => {
     jest.clearAllMocks();
     tx.lead.findUnique.mockResolvedValue({
       id: 'lead-1',
+      origin: 'EMAIL',
       sequenceActive: true,
       sequenceStep: 1,
     });

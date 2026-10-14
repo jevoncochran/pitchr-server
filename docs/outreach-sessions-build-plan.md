@@ -147,7 +147,9 @@ Also: a shared `teamDateKey()` helper for "today in Tampa" (used by the snapshot
 
 ## Part D: Before trusting conversion numbers
 
-### ⏭️ Step 11: One-time conversion cleanup (no code)
+### ⬜ Step 11: One-time conversion cleanup (no code, deferred)
+**Deferred:** the local database is dev, and fixes based on real leads need to happen in **prod**. Do it against prod before V2 analytics relies on conversion numbers; V1 doesn't wait for it.
+
 Done last because it only matters once conversion numbers are used (V2 analytics). There are fewer than 20 conversions, so instead of building a report page:
 
 - A read-only query lists every Converted lead with its conversion date (or "no date"), plus any lead with a conversion date that isn't Converted.
@@ -156,7 +158,7 @@ Done last because it only matters once conversion numbers are used (V2 analytics
 
 ---
 
-## ⬜ Checkpoint: a real session
+## ⏭️ Checkpoint: a real session
 
 Run a real in-person session and a real DM session with it, phone only, no paper. Note anything slower than paper or confusing, and fix it before calling V1 done.
 
@@ -164,8 +166,8 @@ Run a real in-person session and a real DM session with it, phone only, no paper
 
 ## After V1
 
-- **Right after V1: one "How this lead started" field.** `source` (how we got the lead) and `discoveredVia` (how they heard about us) confuse even the owner, and their options overlap (both have Outreach, Referral, Networking, In person). Merge them into one field with grouped options. **We reached out:** cold outreach · walked in · networking event. **They came to us:** website form · referral · Instagram · Facebook · TikTok · YouTube · Google · walk-up · other. Start with a read-only look at the combinations existing leads have, then propose how each converts, for approval, before a migration converts them. Updates all three repos (including the snapshot's input). Do it before V2, so analytics like "do inbound leads convert faster?" use the new field.
-- **Fill in missing addresses (before the field test if possible).** 162 of 195 leads (150 excluding Converted / Not a Fit / Lost) have no address, so Navigate rarely works. One-time job, no feature to build: look each business up with Google Places (biased to Tampa Bay), show the matches for review (confident / check / not found), then save the approved ones as primary locations in one transaction. Also collects coordinates (half of V1.5's map work) and optionally phone and website. Needs a Google key usable from a script (likely a second, server-side key). Then stop new gaps: let add-lead and session quick-add search Google for the business and fill the address in.
+- **Right after V1: one "How this lead started" field.** Built ahead of the field test: see [lead-origin.md](lead-origin.md) and its [build plan](lead-origin-build-plan.md).
+- **Fill in missing addresses (before the field test if possible).** In the dev database, 162 of 195 leads (150 excluding Converted / Not a Fit / Lost) have no address (recount in prod, where the job should run), so Navigate rarely works. One-time job, no feature to build: look each business up with Google Places (biased to Tampa Bay), show the matches for review (confident / check / not found), then save the approved ones as primary locations in one transaction. Also collects coordinates (half of V1.5's map work) and optionally phone and website. Needs a Google key usable from a script (likely a second, server-side key). Then stop new gaps: let add-lead and session quick-add search Google for the business and fill the address in.
 - **pitchr-client: move to feature folders.** The client is organized by layer (`pages/`, `components/`, `constants/`, `types/`...), so one feature like sessions is spread across six folders. Move to `src/features/<feature>/` (pages, components, hooks, types, constants together), with shared UI in `src/components/ui/`, helpers in `src/lib/` and app setup in `src/app/`, matching pitchr-server and pitchr-ai. Mechanical, no behavior change; TypeScript and the tests catch broken imports.
 - **pitchr-client: split `LeadDetailPage`.** It's 2,738 lines (plus 809 in `useLeadDetail`), holding lead info, contacts, locations, attachments, tasks, touchpoints, notes, signals and dialogs. Split it into section components inside `features/leads/` (e.g. `LeadTouchpoints`, `LeadTasks`, `LeadContacts`), one section at a time, checking each in the app. Do this after the folder move.
 - **V1.5, maps:** coordinates for locations, map of leads, automatic best stop order. Cancel MyWay.

@@ -8,6 +8,7 @@ import {
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { teamDateKey } from 'src/common/team-time';
+import { ORIGIN_GROUP } from './lead-origin';
 
 // Where pitchr-ai runs. On Railway this is its private network address.
 const PITCHR_AI_URL = process.env.PITCHR_AI_URL ?? 'http://localhost:8000';
@@ -124,8 +125,10 @@ export class LeadSnapshotService {
         sequenceStep: lead.sequenceStep,
         isHot: lead.isHot,
         priority: lead.priority,
-        source: lead.source,
-        discoveredVia: lead.discoveredViaOther ?? lead.discoveredVia,
+        // How this lead started, e.g. DM (we reached out); "Other" sends its description
+        origin:
+          lead.origin === 'OTHER' ? (lead.originOther ?? 'OTHER') : lead.origin,
+        originGroup: lead.origin ? ORIGIN_GROUP[lead.origin] : null,
         referredBy: lead.referredByLead?.business ?? lead.referredByName,
         dormantReason: lead.dormantReason,
         dormantRevisitAt: lead.dormantRevisitAt,

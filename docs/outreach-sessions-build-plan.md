@@ -49,13 +49,24 @@ Before, logging a touchpoint on a lead's page was one request to save it, then 2
 - **Deleting:** a session's items go with it; its touchpoints stay (they just lose the session link). Deleting a touchpoint leaves its item, unlinked.
 - `response` has no database default: step 5 sets **Pending** when a DM, email or text is logged. Older touchpoints keep an empty response.
 
-### ⏭️ Step 4: Session endpoints
-- Plan: create a session, add / remove / reorder items.
-- Run: start, get the current session with its items, end (returns the summary).
-- List: my sessions; admins see everyone's.
-- Permissions: staff can only change their own sessions.
+### ✅ Step 4: Session endpoints
+**Files:** `src/sessions/` (`sessions.service.ts` + `.spec.ts`, `sessions.controller.ts`, `sessions.module.ts`), `src/app.module.ts`
 
-### ⬜ Step 5: Logging an item
+| Endpoint | Does |
+| --- | --- |
+| `POST /api/sessions` | Create a session (channel, plannedFor, area, goal, notes), optionally with leads in order |
+| `GET /api/sessions` | Your sessions with item counts; `?all=true` lists everyone's for admins |
+| `GET /api/sessions/:id` | One session, items in order, each with the lead's name, stage, industry, address and resulting touchpoint |
+| `PATCH /api/sessions/:id` · `DELETE /api/sessions/:id` | Edit details · delete (items go, touchpoints stay) |
+| `POST /api/sessions/:id/start` · `/end` | Start the timer · end and get a basic summary (duration, counts) |
+| `POST /api/sessions/:id/items` | Add leads to the end |
+| `PUT /api/sessions/:id/items/order` | Save a new order (must list every item once) |
+| `PATCH /api/sessions/:id/items/:itemId` | Skip, or put back on the plan |
+| `DELETE /api/sessions/:id/items/:itemId` | Remove a planned item |
+
+Rules: staff see and change only their own sessions, admins anyone's; an ended session's list can't change; a lead can't be planned twice in a session; completed items can't be skipped, removed or set by hand (logging completes them, step 5); the channel can't change after starting. 19 Jest tests (51 total).
+
+### ⏭️ Step 5: Logging an item
 - Extends step 1's endpoint with outcome / delivery / response, contact (existing or quick-added), note, left materials.
 - Quick-add lead in the same request (name, industry; discovered via can be **Tip**).
 - Marks the session item completed and links it to the touchpoint; unplanned contacts become new items.

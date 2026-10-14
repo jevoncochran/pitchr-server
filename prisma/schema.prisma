@@ -170,6 +170,11 @@ model Location {
   state   String
   zip   String
 
+  // From Google Places (the address backfill, later the map)
+  latitude      Float?
+  longitude     Float?
+  googlePlaceId String?
+
   phoneNumbers    PhoneNumber[]
 
   // Optional reverse relation to know if this location is primary

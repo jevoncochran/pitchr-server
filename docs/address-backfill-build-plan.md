@@ -25,10 +25,13 @@ Reviewed in Google Sheets and saved back over the review CSV. 142 approved (95 c
 - `save.ts`: dry run by default; `--apply` saves every approved row in one transaction (primary location with coordinates and place ID, phone, website only where missing), skipping leads that got an address since.
 - Dry run on prod with the reviewed file: 142 addresses (139 with a phone) and 112 websites.
 
-### ⏭️ Step 5: Deploy, save, sync dev
-1. Deploy pitchr-server so prod gets its pending migrations (stage history, sessions, lead origin, coordinates).
-2. `save.ts --db prod --apply` with the reviewed file.
-3. Reset dev from prod in Neon ("Reset from parent").
+### ✅ Step 5: Deploy and save
+- Deployed 10/14/26: prod ran its five pending migrations (stage history, sessions, both lead origin ones, coordinates).
+- `save.ts --db prod --apply`: 142 primary locations with coordinates and Google place IDs, 139 phone numbers and 112 websites, in one transaction.
+- Prod afterward: 21 of 196 leads without an address (18 active), down from 162 (150 active); 41 without a website, down from 152. The 21 are the 20 skipped in review plus one lead added after the lookup.
 
-### ⬜ Step 6: No new gaps
+### ⏭️ Step 6: Sync dev
+Reset dev from prod in Neon ("Reset from parent"). This replaces everything on dev, including dev-only test data.
+
+### ⬜ Step 7: No new gaps
 "Find on Google" on add lead and session quick-add fills in the address, phone and website.

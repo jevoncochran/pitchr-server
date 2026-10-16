@@ -41,7 +41,15 @@ const ITEM_INCLUDE = {
       pipelineStage: true,
       industry: { select: { name: true } },
       primaryLocation: {
-        select: { addressLine1: true, city: true, state: true, zip: true },
+        select: {
+          addressLine1: true,
+          city: true,
+          state: true,
+          zip: true,
+          // For the map and route planning (docs/route-planning.md)
+          latitude: true,
+          longitude: true,
+        },
       },
       // For "who did you talk to?" on the session screen
       contacts: {
@@ -66,6 +74,29 @@ const ITEM_INCLUDE = {
     },
   },
 } satisfies Prisma.SessionItemInclude;
+
+/**
+ * Forgets a session's optimized route (line, totals, each stop's drive) once
+ * its list changes by hand, so the screen never shows drive times that no
+ * longer match. Returns writes to run in the caller's transaction.
+ */
+export function clearRoute(db: DatabaseService, sessionId: string) {
+  return [
+    db.outreachSession.update({
+      where: { id: sessionId },
+      data: {
+        routePolyline: null,
+        routeSeconds: null,
+        routeMeters: null,
+        routeOptimizedAt: null,
+      },
+    }),
+    db.sessionItem.updateMany({
+      where: { sessionId },
+      data: { legSeconds: null, legMeters: null },
+    }),
+  ];
+}
 
 // Outcomes where nobody was spoken to
 const NO_CONVERSATION: TouchPointOutcome[] = [
@@ -297,13 +328,16 @@ export class SessionsService {
 
     const nextPosition =
       existing.reduce((max, item) => Math.max(max, item.position), -1) + 1;
-    await this.databaseService.sessionItem.createMany({
-      data: leadIds.map((leadId, i) => ({
-        sessionId: id,
-        leadId,
-        position: nextPosition + i,
-      })),
-    });
+    await this.databaseService.$transaction([
+      this.databaseService.sessionItem.createMany({
+        data: leadIds.map((leadId, i) => ({
+          sessionId: id,
+          leadId,
+          position: nextPosition + i,
+        })),
+      }),
+      ...clearRoute(this.databaseService, id),
+    ]);
     return this.findOne(id, user);
   }
 
@@ -326,14 +360,16 @@ export class SessionsService {
       );
     }
 
-    await this.databaseService.$transaction(
-      itemIds.map((itemId, position) =>
+    await this.databaseService.$transaction([
+      ...itemIds.map((itemId, position) =>
         this.databaseService.sessionItem.update({
           where: { id: itemId },
           data: { position },
         }),
       ),
-    );
+      // A hand-made order no longer matches the optimized route's drive times
+      ...clearRoute(this.databaseService, id),
+    ]);
     return this.findOne(id, user);
   }
 
@@ -372,7 +408,10 @@ export class SessionsService {
         "A completed item can't be removed: it's linked to a touchpoint",
       );
     }
-    await this.databaseService.sessionItem.delete({ where: { id: itemId } });
+    await this.databaseService.$transaction([
+      this.databaseService.sessionItem.delete({ where: { id: itemId } }),
+      ...clearRoute(this.databaseService, id),
+    ]);
     return this.findOne(id, user);
   }
 

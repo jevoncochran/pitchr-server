@@ -1,6 +1,6 @@
 # Lead origin
 
-**Status:** Building. Build plan: [lead-origin-build-plan.md](lead-origin-build-plan.md).
+**Status:** Built (October 2026). Build plan: [lead-origin-build-plan.md](lead-origin-build-plan.md).
 
 One field, `origin` (**Lead origin** on screen), says how each lead started: whether we reached out to them (and how), or they came to us (and how). It replaces two fields, `source` (how we got the lead) and `discoveredVia` (how they heard about us). Their options overlapped (both had Outreach, Referral, Networking, In person) and confused even the owner.
 
@@ -43,7 +43,7 @@ Existing leads keep what was explicitly entered in `source` / `discoveredVia`. `
 | Outreach or empty, with touchpoints | In-person visit |
 | Outreach or empty, never contacted | Empty |
 
-On dev (10/14/26): 155 in-person visits, 7 networking events, 3 approached us, 1 referral and 29 empty (never contacted).
+In prod after the conversion (10/14/26, 196 leads): 150 in-person visits, 7 networking events, 3 approached us, 1 referral and 35 empty (never contacted).
 
 This takes two migrations: `20261016000000_add_lead_origin` first guessed from each lead's first touchpoint; `20261016010000_lead_origin_explicit_only` replaces those guesses with In-person visit (see the build plan).
 

@@ -2,10 +2,15 @@
 
 NestJS + Prisma API for the Pitchr CRM. Sibling repos: `../pitchr-client` (React) and `../pitchr-ai` (FastAPI AI service, called from here with the `X-Internal-Api-Key` header).
 
-## Lead fields that are easy to mix up
+## Databases
 
-- `source` (LeadSource) is how **we** got the lead: outreach, referral, form, networking, in person / walk-up.
-- `discoveredVia` (DiscoveredVia) is how **they** heard about us. It's only used for leads that came in through a form (shown as "How they heard about us").
+- `.env` `DATABASE_URL` / `DIRECT_URL` point at **dev** (a Neon branch of prod). `PROD_DATABASE_URL` is **production**.
+- **Never make any change to the production database without the user's explicit sign-off.** That includes scripts with `--apply`, hand-run migrations, SQL writes, and Prisma commands that can write or reset. Show a dry run of exactly what would change first, and get a fresh yes every time. Schema changes reach prod only through deploys (Railway runs `prisma migrate deploy`), which the user controls.
+- Never pass a real database (dev or prod) as `--shadow-database-url` or to anything that resets a database: Prisma wipes the shadow database. This erased dev once (10/16/26).
+
+## Lead origin
+
+`origin` (`LeadOrigin`) is how a lead started, set only by hand; it replaced `source` and `discoveredVia`. See `docs/lead-origin.md`.
 
 ## Docs
 

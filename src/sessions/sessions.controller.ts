@@ -21,6 +21,10 @@ import {
   LogSessionItemInput,
   SessionLoggingService,
 } from './session-logging.service';
+import {
+  OptimizeRouteInput,
+  RoutePlanningService,
+} from './route-planning.service';
 
 type AuthedRequest = { user: SessionUser };
 
@@ -29,6 +33,7 @@ export class SessionsController {
   constructor(
     private readonly sessionsService: SessionsService,
     private readonly sessionLoggingService: SessionLoggingService,
+    private readonly routePlanningService: RoutePlanningService,
   ) {}
 
   @Post()
@@ -88,6 +93,16 @@ export class SessionsController {
     @Request() req: AuthedRequest,
   ) {
     return this.sessionsService.addItems(id, body.leadIds, req.user);
+  }
+
+  // Put the planned stops in the fastest driving order (one Google Routes call)
+  @Post(':id/route')
+  optimizeRoute(
+    @Param('id') id: string,
+    @Body() input: OptimizeRouteInput,
+    @Request() req: AuthedRequest,
+  ) {
+    return this.routePlanningService.optimize(id, input, req.user);
   }
 
   @Put(':id/items/order')

@@ -131,7 +131,7 @@ Notes:
 
 - Google Maps charges per request beyond a monthly free allowance; one person planning a few routes a week should stay within it (verify current pricing).
 - The browser Maps key must be restricted to Pitchr's domains in Google Cloud. Route calculations go through NestJS with a separate server-side key.
-- MyWay features we won't rebuild: live re-routing, ETAs, route sharing. Driving is handed off to Google/Apple Maps.
+- MyWay features we won't rebuild: live re-routing and route sharing. Driving is handed off to Google/Apple Maps. Drive times between stops are shown (they come with the optimized route). The details are in [route-planning.md](route-planning.md).
 
 ## Built for a team
 
@@ -188,7 +188,7 @@ Rules for showing numbers:
 
 - **V1, logging, planned sessions and conversions:** sessions (per person), outcomes / delivery / response, come back later with timing, quick-add lead, the phone logging screen, end-of-session summary, check-in tasks resolving responses, planned session items from a list (pick, drag to order, Navigate buttons, log through them), automatic conversion dates, stage history, a one-time conversion cleanup.
 - **Right after V1: one "How this lead started" field.** Being built: see [lead-origin.md](lead-origin.md).
-- **V1.5, maps:** coordinates for every location, map of leads, automatic best stop order. MyWay can be cancelled here.
+- **V1.5, maps:** coordinates for every location, map of leads, automatic best stop order. MyWay can be cancelled here. Being built: see [route-planning.md](route-planning.md).
 - **V2, analytics and team views:** conversion and outcome metrics, per-person filters and comparisons, double-visit warnings.
 - **Later: automatic reply detection.** A Gmail connection could detect replies to emails sent to a lead and fill in the response and date. Instagram's business API is possible but restricted; texts aren't realistic.
 - **V3, AI:** voice note → structured log (Claude fills outcome, contact and note); a snapshot shown before each item; an AI summary of what's working.

@@ -2,7 +2,7 @@
 
 How the lead origin field gets built. The feature is described in [lead-origin.md](lead-origin.md).
 
-**Status:** ✅ done · ⏭️ next · ⬜ not started
+**Status:** ✅ Complete (10/14/26). ✅ done · ⏭️ next · ⬜ not started
 
 ### ✅ Step 1: Look at existing data and agree on the conversion (no code)
 A read-only look at dev (10/14/26): `discoveredVia` was empty on all 195 leads; `source` was Outreach on 165, empty on 19, Networking on 7, In person on 3 and Referral on 1. Since "Outreach" mixed visits and DMs, the first touchpoint decides those. The options and the conversion table in the spec were approved after two rounds: no "cold" prefix, "In-person visit" (not "walked in"), "Approached us" for people who come up to us in public, and leads without a reliable record (never contacted, or the first contact wasn't logged) stay empty.
@@ -49,5 +49,5 @@ After the first migration ran on dev, AR Aesthetics showed the problem with usin
 
 - **Wording:** the field is called **Lead origin** on screen (it was "How this lead started"), and the lead page shows the group first: "We reached out · In-person visit". Analytics says "Conversion by Lead Origin". The snapshot prompt keeps its own wording for Claude.
 
-### ⏭️ Step 7: Apply
-Apply the second migration to dev, check the lead page, add lead, a session quick-add and analytics in the app, then deploy so both migrations convert prod.
+### ✅ Step 7: Apply
+Deployed 10/14/26: prod ran both migrations (with stage history, sessions and the address coordinates), then dev was reset from prod in Neon, so dev no longer needed the second migration applied by hand. Afterward (196 leads): 150 in-person visits, 7 networking events, 3 approached us, 1 referral, 35 empty. That's 6 fewer in-person visits and 6 more empty than dev's preview, because prod's leads and touchpoints differed slightly from dev's copy at the time.

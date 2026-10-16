@@ -508,6 +508,17 @@ model OutreachSession {
   goal        Int?
   notes       String?
 
+  // The last optimized route (docs/route-planning.md); cleared when the
+  // order is changed by hand
+  routePolyline     String?
+  routeStartLabel   String?
+  routeStartLat     Float?
+  routeStartLng     Float?
+  routeReturns      Boolean?
+  routeSeconds      Int?
+  routeMeters       Int?
+  routeOptimizedAt  DateTime?
+
   items       SessionItem[]
   touchPoints TouchPoint[]
 
@@ -532,6 +543,9 @@ model SessionItem {
   // Set by "come back later today"
   plannedTime  DateTime?
   status       SessionItemStatus @default(PLANNED)
+  // Drive from the previous point of the optimized route to this stop
+  legSeconds   Int?
+  legMeters    Int?
 
   // The touchpoint this item produced, once logged
   touchPoint   TouchPoint?       @relation(fields: [touchPointId], references: [id], onDelete: SetNull)

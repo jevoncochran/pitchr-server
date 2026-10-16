@@ -30,8 +30,8 @@ Reviewed in Google Sheets and saved back over the review CSV. 142 approved (95 c
 - `save.ts --db prod --apply`: 142 primary locations with coordinates and Google place IDs, 139 phone numbers and 112 websites, in one transaction.
 - Prod afterward: 21 of 196 leads without an address (18 active), down from 162 (150 active); 41 without a website, down from 152. The 21 are the 20 skipped in review plus one lead added after the lookup.
 
-### ⏭️ Step 6: Sync dev
-Reset dev from prod in Neon ("Reset from parent"). This replaces everything on dev, including dev-only test data.
+### ✅ Step 6: Sync dev
+Dev reset from prod in Neon ("Reset from parent"), so dev has the 142 Google addresses and the converted lead origins.
 
-### ⬜ Step 7: No new gaps
+### ⏭️ Step 7: No new gaps
 "Find on Google" on add lead and session quick-add fills in the address, phone and website.

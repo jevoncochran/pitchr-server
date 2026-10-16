@@ -20,6 +20,7 @@ const mockDb = {
     findUnique: jest.fn(),
     createMany: jest.fn(),
     update: jest.fn(),
+    updateMany: jest.fn(),
     delete: jest.fn(),
   },
   touchPoint: { findMany: jest.fn() },
@@ -213,6 +214,27 @@ describe('SessionsService', () => {
         data: { position: 1 },
       });
       expect(mockDb.$transaction).toHaveBeenCalled();
+    });
+
+    it('a hand-made order clears the optimized route and drive times', async () => {
+      mockDb.sessionItem.findMany.mockResolvedValue([
+        { id: 'i-1' },
+        { id: 'i-2' },
+      ]);
+
+      await service.reorderItems('s-1', ['i-2', 'i-1'], ME);
+
+      expect(mockDb.outreachSession.update).toHaveBeenCalledWith({
+        where: { id: 's-1' },
+        data: expect.objectContaining({
+          routePolyline: null,
+          routeSeconds: null,
+        }),
+      });
+      expect(mockDb.sessionItem.updateMany).toHaveBeenCalledWith({
+        where: { sessionId: 's-1' },
+        data: { legSeconds: null, legMeters: null },
+      });
     });
 
     it('rejects a reorder that leaves out or repeats an item', async () => {

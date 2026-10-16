@@ -123,6 +123,8 @@ src/
 | [Lead origin build plan](docs/lead-origin-build-plan.md) | How it was built, including the conversion of existing leads |
 | [Lead addresses from Google](docs/address-backfill.md) | The one-time Google Places backfill of lead addresses (with review) and keeping new leads from having gaps |
 | [Lead addresses build plan](docs/address-backfill-build-plan.md) | Step by step |
+| [Route planning](docs/route-planning.md) | Optimized stop order, map and swipe-up list for in-person sessions (replaces MyWay) |
+| [Route planning build plan](docs/route-planning-build-plan.md) | Step by step |
 | [Lead snapshot](https://github.com/jevoncochran/pitchr-ai/blob/HEAD/docs/lead-snapshot.md) (in pitchr-ai) | The AI lead snapshot. NestJS serves it at `GET /api/leads/:id/snapshot` |
 
 Specs describe how a feature works now and are updated whenever it changes.

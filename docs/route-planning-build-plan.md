@@ -53,7 +53,7 @@ With the owner's OK: the 33 locations still missing coordinates on dev were geoc
   - The map never loaded: the Maps script's load event fires before Google is ready. `loadGoogleMaps()` now uses Google's `callback` parameter.
   - Picking an address in the Optimize dialog was immediately undone, because the address search reports the picked text as a change; the dialog now only clears its pick on real typing (+ test).
   - Pins hid behind the sheet on phones; the map now leaves room at the bottom when fitting the stops.
-  - The run screen's full-screen map and List covered less than the screen: the phone tab bar sat on top. Both now sit above it.
+  - The phone tab bar sat on top of full-screen popups (same layer, later in the page), hiding their bottom buttons: the run screen's map and List, the lead picker's **Add leads** (found by the owner on a phone) and the run screen's quick-add. Fixed once in the layout: the tab bar now sits below every popup (page sheet z-10, More sheet z-20, tab bar z-30, popups z-40+), documented in `InternalLayout.tsx`.
   - The first stop of a route said "from the last stop"; it now says "from the start".
 
 ### ✅ Step 8: Compare with MyWay

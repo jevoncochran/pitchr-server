@@ -143,6 +143,24 @@ describe('SessionLoggingService', () => {
     );
   });
 
+  it('a quick-added business can be saved without an industry or business type', async () => {
+    tx.lead.create.mockResolvedValue({ id: 'lead-new', pipelineStage: 'NEW' });
+
+    await service.log(
+      's-1',
+      { newLead: { business: 'La Unión Hall' }, outcome: 'INTERESTED' },
+      ME,
+    );
+
+    expect(tx.lead.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        business: 'La Unión Hall',
+        industryId: null,
+        businessTypeId: null,
+      }),
+    });
+  });
+
   it('a quick-added business can be saved without an origin', async () => {
     tx.lead.create.mockResolvedValue({ id: 'lead-new', pipelineStage: 'NEW' });
 

@@ -29,6 +29,17 @@ export class ContactsController {
     return this.contactsService.findByLead(leadId);
   }
 
+  // A business card's different value (docs/business-card-scan.md): take it, or keep what's on file
+  @Post('suggestions/:suggestionId/replace')
+  replaceWithSuggestion(@Param('suggestionId') suggestionId: string) {
+    return this.contactsService.resolveSuggestion(suggestionId, 'replace');
+  }
+
+  @Delete('suggestions/:suggestionId')
+  keepCurrentValue(@Param('suggestionId') suggestionId: string) {
+    return this.contactsService.resolveSuggestion(suggestionId, 'keep');
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contactsService.findOne(id);

@@ -36,8 +36,9 @@ export interface LogSessionItemInput {
   /** A business added on the spot */
   newLead?: {
     business: string;
-    industryId: string;
-    businessTypeId: string;
+    /** Optional: can be filled in later on the lead page */
+    industryId?: string | null;
+    businessTypeId?: string | null;
     /** How this lead started (docs/lead-origin.md); empty if not known */
     origin?: LeadOrigin | null;
     /** Only with origin OTHER */
@@ -175,8 +176,8 @@ export class SessionLoggingService {
             const lead = await tx.lead.create({
               data: {
                 business: input.newLead.business.trim(),
-                industryId: input.newLead.industryId,
-                businessTypeId: input.newLead.businessTypeId,
+                industryId: input.newLead.industryId || null,
+                businessTypeId: input.newLead.businessTypeId || null,
                 ...originFields(input.newLead),
               },
             });
@@ -299,11 +300,6 @@ export class SessionLoggingService {
 function validateNewLead(newLead: NonNullable<LogSessionItemInput['newLead']>) {
   if (!newLead.business?.trim()) {
     throw new BadRequestException('A new lead needs a business name');
-  }
-  if (!newLead.industryId || !newLead.businessTypeId) {
-    throw new BadRequestException(
-      'A new lead needs an industry and a business type',
-    );
   }
   parseOrigin(newLead.origin);
 }

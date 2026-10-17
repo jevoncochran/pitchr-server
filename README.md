@@ -125,7 +125,12 @@ src/
 | [Lead addresses build plan](docs/address-backfill-build-plan.md) | Step by step |
 | [Route planning](docs/route-planning.md) | Optimized stop order, map and swipe-up list for in-person sessions (replaces MyWay) |
 | [Route planning build plan](docs/route-planning-build-plan.md) | Step by step |
+| [Business card scan](docs/business-card-scan.md) | Spec draft: business card photos uploaded to a lead become contacts, or fill in existing ones |
+| [Business card scan build plan](docs/business-card-scan-build-plan.md) | Step by step |
+| [Visit debrief](docs/visit-debrief.md) | Spec draft: say what happened after a visit and the visit form fills itself in for review |
+| [Visit debrief build plan](docs/visit-debrief-build-plan.md) | Step by step |
 | [Lead snapshot](https://github.com/jevoncochran/pitchr-ai/blob/HEAD/docs/lead-snapshot.md) (in pitchr-ai) | The AI lead snapshot. NestJS serves it at `GET /api/leads/:id/snapshot` |
+| [Prospecting agent](https://github.com/jevoncochran/pitchr-ai/blob/HEAD/docs/prospecting.md) (in pitchr-ai) | Idea (parked): find and check new businesses by type and city, for review before they become leads |
 
 Specs describe how a feature works now and are updated whenever it changes.
 

@@ -49,10 +49,13 @@ model Lead {
 
   contacts  Contact[]
 
-  industry    Industry    @relation(fields: [industryId], references: [id])
-  industryId    String
-  businessType    BusinessType    @relation(fields: [businessTypeId], references: [id])
-  businessTypeId    String
+  // Optional: a lead can be saved before they're known (e.g. from a business
+  // card at a chance meeting); the lead page asks for them until they're set.
+  // An industry or business type that leads use can't be deleted.
+  industry    Industry?    @relation(fields: [industryId], references: [id], onDelete: Restrict)
+  industryId    String?
+  businessType    BusinessType?    @relation(fields: [businessTypeId], references: [id], onDelete: Restrict)
+  businessTypeId    String?
 
   igHandle    String?
   igFollowerCount   Int?
@@ -135,6 +138,8 @@ model Contact {
   touchpoints TouchPoint[] @relation("ContactTouchPoints")
   notes       Note[]
   attachments Attachment[]
+
+  changeSuggestions ContactChangeSuggestion[]
 }
 
 model Industry {
@@ -273,6 +278,52 @@ model Attachment {
   mimeType    String
   size        Int
   caption     String?
+
+  // Business card scan (docs/business-card-scan.md). Null for files that are never read
+  // (not an image, or not on a lead).
+  businessCardScan      BusinessCardScanStatus?
+  businessCardScannedAt DateTime?
+  // What was read for this photo: its role (a person's card, a side with only
+  // the business, not a business card), the person on it and the business
+  businessCardData      Json?
+  // Photos uploaded together are read together (up to 6: several people's
+  // business cards and a back they share)
+  businessCardBatchId   String?
+
+  contactChangeSuggestions ContactChangeSuggestion[]
+
+  @@index([businessCardBatchId])
+}
+
+enum BusinessCardScanStatus {
+  PENDING
+  BUSINESS_CARD
+  NOT_BUSINESS_CARD
+  // A business card that could belong to more than one contact: waiting for a pick
+  NEEDS_MATCH
+  // A business card for a different business than the lead's: waiting for Add anyway or Remove
+  OTHER_BUSINESS
+  FAILED
+}
+
+// A business card disagreed with a value already on a contact. Never applied on its
+// own: Replace or Keep deletes it. One per contact and field (the latest business card wins).
+model ContactChangeSuggestion {
+  id             String      @id @default(uuid())
+  createdAt      DateTime    @default(now())
+
+  contact        Contact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId      String
+
+  // firstName, lastName, title, email or phone
+  field          String
+  currentValue   String?
+  suggestedValue String
+
+  attachment     Attachment? @relation(fields: [attachmentId], references: [id], onDelete: SetNull)
+  attachmentId   String?
+
+  @@unique([contactId, field])
 }
 
 enum SequencePosition {

@@ -8,7 +8,7 @@ import {
   Delete,
   Request,
 } from '@nestjs/common';
-import { LeadsService } from './leads.service';
+import { LeadsService, NewLeadDetails } from './leads.service';
 import { LeadSnapshotService } from './lead-snapshot.service';
 import { Prisma } from '@prisma/client';
 
@@ -21,10 +21,17 @@ export class LeadsController {
 
   @Post()
   async create(
-    @Body() createLeadDto: Prisma.LeadCreateInput,
+    @Body() body: Prisma.LeadCreateInput & NewLeadDetails,
     @Request() req: { user: { id: string } },
   ) {
-    return this.leadsService.create(createLeadDto, req.user.id);
+    const { location, contacts, howWeMet, businessCardAttachmentIds, ...lead } =
+      body;
+    return this.leadsService.create(lead, req.user.id, {
+      location,
+      contacts,
+      howWeMet,
+      businessCardAttachmentIds,
+    });
   }
 
   @Get()

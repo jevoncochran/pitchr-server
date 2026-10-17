@@ -61,3 +61,4 @@ package-lock.json
 
 # Address backfill lookups (real business data)
 scripts/address-backfill/output/
+scripts/business-card-scan/output/

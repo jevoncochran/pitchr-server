@@ -14,14 +14,12 @@ const ADDRESS_FIELDS = ['addressLine1', 'city', 'state', 'zip'] as const;
 
 @Injectable()
 export class LocationsService {
-  private readonly logger = new Logger(LocationsService.name);
-
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createLocationDto: Prisma.LocationCreateInput) {
     const coordinates =
       createLocationDto.latitude == null
-        ? await this.lookUpCoordinates(createLocationDto)
+        ? await lookUpCoordinates(createLocationDto)
         : {};
     return this.databaseService.location.create({
       data: { ...createLocationDto, ...coordinates },
@@ -46,7 +44,7 @@ export class LocationsService {
         where: { id },
       });
       if (!current) throw new NotFoundException('Location not found');
-      coordinates = await this.lookUpCoordinates({
+      coordinates = await lookUpCoordinates({
         ...current,
         ...(updateLocationDto as AddressParts),
       });
@@ -60,29 +58,32 @@ export class LocationsService {
   async remove(id: string) {
     return this.databaseService.location.delete({ where: { id } });
   }
+}
 
-  /**
-   * Coordinates for a hand-typed address (the address search sends its own).
-   * Never blocks saving: if Google can't help, the location is saved without
-   * coordinates and simply isn't on the map.
-   */
-  private async lookUpCoordinates(address: AddressParts) {
-    const text = ADDRESS_FIELDS.map((f) => address[f])
-      .filter((part) => typeof part === 'string' && part.trim())
-      .join(', ');
-    const none = { latitude: null, longitude: null, googlePlaceId: null };
-    if (!text) return none;
-    try {
-      const found = await geocodeAddress(text);
-      if (!found) return none;
-      return {
-        latitude: found.latitude,
-        longitude: found.longitude,
-        googlePlaceId: found.placeId,
-      };
-    } catch (error) {
-      this.logger.warn(`Couldn't look up coordinates: ${error}`);
-      return none;
-    }
+const logger = new Logger(LocationsService.name);
+
+/**
+ * Coordinates for a hand-typed address (the address search sends its own).
+ * Never blocks saving: if Google can't help, the location is saved without
+ * coordinates and simply isn't on the map. Also used when a lead is created
+ * with an address (docs/business-card-scan.md).
+ */
+export async function lookUpCoordinates(address: AddressParts) {
+  const text = ADDRESS_FIELDS.map((f) => address[f])
+    .filter((part) => typeof part === 'string' && part.trim())
+    .join(', ');
+  const none = { latitude: null, longitude: null, googlePlaceId: null };
+  if (!text) return none;
+  try {
+    const found = await geocodeAddress(text);
+    if (!found) return none;
+    return {
+      latitude: found.latitude,
+      longitude: found.longitude,
+      googlePlaceId: found.placeId,
+    };
+  } catch (error) {
+    logger.warn(`Couldn't look up coordinates: ${error}`);
+    return none;
   }
 }

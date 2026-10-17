@@ -106,7 +106,7 @@ The bar: logging each item must be faster than writing on paper.
 
 1. **Start session:** pick channel; optional area and goal; or start from a planned route (below).
 2. **Log each item** (about 10 seconds):
-   - The next planned item, or search for a lead, or **quick-add** a business (name, industry and business type; its source, how we got the lead, defaults to Outreach).
+   - The next planned item, or search for a lead, or **quick-add** a business (name; industry and business type are optional and can be added later on the lead page; its source, how we got the lead, defaults to Outreach).
    - In person / call: tap the **outcome**, and pick or quick-add the **contact** spoken to.
    - DM / email / text: **Sent** is preselected; response starts Pending.
    - Optional: note, left materials, come-back-later timing.

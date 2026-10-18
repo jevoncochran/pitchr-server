@@ -1,4 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { TouchPointOutcome } from '@prisma/client';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseService } from 'src/database/database.service';
 import {
@@ -281,20 +282,31 @@ describe('parseResults (outcomes, delivery and responses)', () => {
     ).toThrow(BadRequestException);
   });
 
-  it('comeBackAt only goes with "come back later"', () => {
-    expect(
-      parseResults({
-        ...base,
-        type: 'IN_PERSON',
-        outcome: 'COME_BACK_LATER',
-        comeBackAt: '2026-10-14T19:00:00.000Z',
-      }).comeBackAt,
-    ).toEqual(new Date('2026-10-14T19:00:00.000Z'));
+  it.each(['COME_BACK_LATER', 'INTERESTED', 'DECISION_MAKER_NOT_AVAILABLE'])(
+    'comeBackAt goes with %s',
+    (outcome) => {
+      expect(
+        parseResults({
+          ...base,
+          type: 'IN_PERSON',
+          outcome: outcome as TouchPointOutcome,
+          comeBackAt: '2026-10-14T19:00:00.000Z',
+        }).comeBackAt,
+      ).toEqual(new Date('2026-10-14T19:00:00.000Z'));
+    },
+  );
+
+  it.each([
+    'NOT_INTERESTED',
+    'HAS_PROVIDER',
+    'MEETING_BOOKED',
+    'BUSINESS_CLOSED',
+  ])('comeBackAt does not go with %s', (outcome) => {
     expect(() =>
       parseResults({
         ...base,
         type: 'IN_PERSON',
-        outcome: 'INTERESTED',
+        outcome: outcome as TouchPointOutcome,
         comeBackAt: '2026-10-14T19:00:00.000Z',
       }),
     ).toThrow(BadRequestException);

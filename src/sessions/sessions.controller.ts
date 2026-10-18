@@ -25,6 +25,7 @@ import {
   OptimizeRouteInput,
   RoutePlanningService,
 } from './route-planning.service';
+import { DebriefInput, VisitDebriefService } from './visit-debrief.service';
 
 type AuthedRequest = { user: SessionUser };
 
@@ -34,6 +35,7 @@ export class SessionsController {
     private readonly sessionsService: SessionsService,
     private readonly sessionLoggingService: SessionLoggingService,
     private readonly routePlanningService: RoutePlanningService,
+    private readonly visitDebriefService: VisitDebriefService,
   ) {}
 
   @Post()
@@ -69,6 +71,17 @@ export class SessionsController {
   @Post(':id/start')
   start(@Param('id') id: string, @Request() req: AuthedRequest) {
     return this.sessionsService.start(id, req.user);
+  }
+
+  // "Fill in" (docs/visit-debrief.md): a dictated note becomes a proposal for
+  // the visit form. Saves the note and proposal; nothing on the lead changes.
+  @Post(':id/debrief')
+  debrief(
+    @Param('id') id: string,
+    @Body() input: DebriefInput,
+    @Request() req: AuthedRequest,
+  ) {
+    return this.visitDebriefService.debrief(id, input, req.user);
   }
 
   // Log one lead: a planned item (itemId), or an unplanned / quick-added lead

@@ -50,9 +50,7 @@ export class TouchpointsService {
         sent: emailTotal,
         responded: emailResponded,
         rate:
-          emailTotal > 0
-            ? Math.round((emailResponded / emailTotal) * 100)
-            : 0,
+          emailTotal > 0 ? Math.round((emailResponded / emailTotal) * 100) : 0,
       },
     };
   }

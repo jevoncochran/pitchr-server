@@ -15,6 +15,7 @@ import {
   TouchPointResponse,
   TouchPointType,
 } from '@prisma/client';
+import { sameValue } from 'src/attachments/business-card-scan-rules';
 import { teamDateKey } from 'src/common/team-time';
 import { DatabaseService } from 'src/database/database.service';
 import { originFields, parseOrigin } from 'src/leads/lead-origin';
@@ -61,13 +62,36 @@ export interface LogSessionItemInput {
   /** Contacts spoken to (must belong to the lead) */
   contactIds?: string[];
   /** A contact added on the spot */
-  newContact?: {
-    firstName: string;
-    lastName?: string | null;
+  newContact?: NewSessionContact;
+  /**
+   * Contacts added on the spot (e.g. from a visit debrief). `spokeWith: false`
+   * adds them without counting them as spoken to (the owner who wasn't in).
+   */
+  newContacts?: (NewSessionContact & { spokeWith?: boolean })[];
+  /**
+   * What a visit debrief learned about contacts on file (docs/visit-debrief.md):
+   * an empty title is filled in, a different one becomes a Replace/Keep
+   * suggestion, and isDecisionMaker is only ever turned on.
+   */
+  contactUpdates?: {
+    contactId: string;
     title?: string | null;
     isDecisionMaker?: boolean;
-  };
+  }[];
+  /** The visit debrief this was filled in from, linked to the touchpoint */
+  debriefId?: string | null;
 }
+
+interface NewSessionContact {
+  firstName: string;
+  lastName?: string | null;
+  title?: string | null;
+  isDecisionMaker?: boolean;
+}
+
+// A session logged before it was started: its photos are the lead's from the
+// last 12 hours
+const HALF_DAY_MS = 12 * 60 * 60 * 1000;
 
 // The touchpoint type each channel logs by default
 const CHANNEL_TYPE: Record<SessionChannel, TouchPointType | null> = {
@@ -111,7 +135,11 @@ export class SessionLoggingService {
       );
     }
     if (input.newLead) validateNewLead(input.newLead);
-    if (input.newContact && !input.newContact.firstName?.trim()) {
+    const newContacts = [
+      ...(input.newContact ? [{ ...input.newContact, spokeWith: true }] : []),
+      ...(input.newContacts ?? []),
+    ];
+    if (newContacts.some((contact) => !contact.firstName?.trim())) {
       throw new BadRequestException('A new contact needs a first name');
     }
 
@@ -141,7 +169,7 @@ export class SessionLoggingService {
         teamDateKey(parsed.comeBackAt) !== teamDateKey(now)
       ) {
         throw new BadRequestException(
-          'Only a "come back later" time later today can go back on the route',
+          'Only a come-back time later today can go back on the route',
         );
       }
     }
@@ -203,29 +231,35 @@ export class SessionLoggingService {
 
         // Who we spoke to
         const contactIds = [...(input.contactIds ?? [])];
-        if (contactIds.length > 0) {
+        const updates = input.contactUpdates ?? [];
+        const onFile = new Set([
+          ...contactIds,
+          ...updates.map((update) => update.contactId),
+        ]);
+        if (onFile.size > 0) {
           const owned = await tx.contact.count({
-            where: { id: { in: contactIds }, leadId },
+            where: { id: { in: [...onFile] }, leadId },
           });
-          if (owned !== new Set(contactIds).size) {
+          if (owned !== onFile.size) {
             throw new BadRequestException(
               "One or more contacts don't belong to this lead",
             );
           }
         }
-        if (input.newContact) {
+        for (const newContact of newContacts) {
           const contact = await tx.contact.create({
             data: {
-              firstName: input.newContact.firstName.trim(),
-              lastName: input.newContact.lastName?.trim() || null,
-              title: input.newContact.title?.trim() || null,
-              isDecisionMaker: input.newContact.isDecisionMaker ?? false,
+              firstName: newContact.firstName.trim(),
+              lastName: newContact.lastName?.trim() || null,
+              title: newContact.title?.trim() || null,
+              isDecisionMaker: newContact.isDecisionMaker ?? false,
               leadId,
               userId: user.id,
             },
           });
-          contactIds.push(contact.id);
+          if (newContact.spokeWith !== false) contactIds.push(contact.id);
         }
+        await applyContactUpdates(tx, updates);
 
         // The touchpoint, with the same sequence rules as the lead page
         const touchpoint = await this.touchpointLoggingService.logWithin(
@@ -243,7 +277,39 @@ export class SessionLoggingService {
           },
         });
 
-        // Come back later: a follow-up task at the time they named
+        // The visit debrief this was filled in from (docs/visit-debrief.md)
+        if (input.debriefId) {
+          const { count } = await tx.visitDebrief.updateMany({
+            where: {
+              id: input.debriefId,
+              sessionId,
+              leadId,
+              touchPointId: null,
+            },
+            data: { touchPointId: touchpoint.id },
+          });
+          if (count !== 1) {
+            throw new BadRequestException("That debrief isn't for this visit");
+          }
+        }
+
+        // A visit's photos (business cards, the storefront) go with its
+        // touchpoint: the lead's photos from this session not on one yet
+        if (parsed.type === TouchPointType.IN_PERSON) {
+          await tx.attachment.updateMany({
+            where: {
+              leadId,
+              touchpointId: null,
+              createdAt: {
+                gte: session.startedAt ?? new Date(now.getTime() - HALF_DAY_MS),
+              },
+            },
+            data: { touchpointId: touchpoint.id },
+          });
+        }
+
+        // Going back (come back later, interested, decision-maker not
+        // available): a follow-up task at the time they named
         if (parsed.comeBackAt) {
           await tx.task.create({
             data: {
@@ -294,6 +360,47 @@ export class SessionLoggingService {
       suggestedStage,
       session: await this.sessionsService.findOne(sessionId, user),
     };
+  }
+}
+
+/**
+ * What a visit debrief learned about contacts on file, with business card
+ * scan's rule: fill in an empty title, suggest a different one (Replace /
+ * Keep), and only ever turn isDecisionMaker on.
+ */
+async function applyContactUpdates(
+  tx: Prisma.TransactionClient,
+  updates: NonNullable<LogSessionItemInput['contactUpdates']>,
+) {
+  for (const update of updates) {
+    const contact = await tx.contact.findUniqueOrThrow({
+      where: { id: update.contactId },
+      select: { title: true, isDecisionMaker: true },
+    });
+    const data: Prisma.ContactUpdateInput = {};
+    const title = update.title?.trim();
+    const current = contact.title?.trim();
+    if (title && !current) data.title = title;
+    else if (title && current && !sameValue('title', current, title)) {
+      await tx.contactChangeSuggestion.upsert({
+        where: {
+          contactId_field: { contactId: update.contactId, field: 'title' },
+        },
+        create: {
+          contactId: update.contactId,
+          field: 'title',
+          currentValue: current,
+          suggestedValue: title,
+        },
+        update: { currentValue: current, suggestedValue: title },
+      });
+    }
+    if (update.isDecisionMaker && !contact.isDecisionMaker) {
+      data.isDecisionMaker = true;
+    }
+    if (Object.keys(data).length > 0) {
+      await tx.contact.update({ where: { id: update.contactId }, data });
+    }
   }
 }
 

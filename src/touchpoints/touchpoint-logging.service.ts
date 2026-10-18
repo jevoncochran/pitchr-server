@@ -15,6 +15,17 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 
 /** What the client sends to log a touchpoint for a lead. */
+/**
+ * Outcomes that can come with a time to go back ("interested, come back
+ * tomorrow", "the owner's in Thursday"): a follow-up task is created for it.
+ * See pitchr-server docs/visit-debrief.md.
+ */
+export const COME_BACK_OUTCOMES: TouchPointOutcome[] = [
+  TouchPointOutcome.COME_BACK_LATER,
+  TouchPointOutcome.INTERESTED,
+  TouchPointOutcome.DECISION_MAKER_NOT_AVAILABLE,
+];
+
 export interface LogTouchpointInput {
   leadId: string;
   date: string;
@@ -37,7 +48,7 @@ export interface LogTouchpointInput {
   responseText?: string | null;
   /** When the outcome is HAS_PROVIDER (defaults to UNKNOWN) */
   providerType?: ProviderType | null;
-  /** When the outcome is COME_BACK_LATER and they named a time */
+  /** When we're going back (COME_BACK_OUTCOMES) and they named a time */
   comeBackAt?: string | null;
   leftMaterials?: boolean;
   sessionId?: string | null;
@@ -284,17 +295,17 @@ export function parseResults(input: LogTouchpointInput) {
     throw new BadRequestException('responseText only goes with a reply');
   }
 
-  // Provider type and "come back later" timing belong to visit and call outcomes
+  // Provider type and come-back timing belong to visit and call outcomes
   const hasProvider = outcome === TouchPointOutcome.HAS_PROVIDER;
-  const comeBackLater = outcome === TouchPointOutcome.COME_BACK_LATER;
+  const goingBack = !!outcome && COME_BACK_OUTCOMES.includes(outcome);
   if (input.providerType && !hasProvider) {
     throw new BadRequestException(
       'providerType only applies to "has a provider"',
     );
   }
-  if (input.comeBackAt && !comeBackLater) {
+  if (input.comeBackAt && !goingBack) {
     throw new BadRequestException(
-      'comeBackAt only applies to "come back later"',
+      'comeBackAt only applies to "come back later", "interested" and "decision-maker not available"',
     );
   }
   let comeBackAt: Date | null = null;

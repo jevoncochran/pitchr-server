@@ -4,11 +4,17 @@ import { SessionsController } from './sessions.controller';
 import { SessionsService } from './sessions.service';
 import { SessionLoggingService } from './session-logging.service';
 import { RoutePlanningService } from './route-planning.service';
+import { VisitDebriefService } from './visit-debrief.service';
 import { TouchpointsModule } from 'src/touchpoints/touchpoints.module';
 
 @Module({
   imports: [DatabaseModule, TouchpointsModule],
   controllers: [SessionsController],
-  providers: [SessionsService, SessionLoggingService, RoutePlanningService],
+  providers: [
+    SessionsService,
+    SessionLoggingService,
+    RoutePlanningService,
+    VisitDebriefService,
+  ],
 })
 export class SessionsModule {}
